@@ -17,11 +17,11 @@ class AssetManager {
 
     downloadAll(callback) {
         if (this.downloadQueue.length === 0) setTimeout(callback, 10);
-        for (var i = 0; i < this.downloadQueue.length; i++) {
-            var img = new Image();
-            var that = this;
+        for (let i = 0; i < this.downloadQueue.length; i++) {
+            let img = new Image();
+            let that = this;
 
-            var path = this.downloadQueue[i];
+            let path = this.downloadQueue[i];
             console.log(path);
 
             img.addEventListener("load", function () {
