@@ -20,32 +20,44 @@ class Hero {
     };
 
     update() {
-        let walkLen = this.walkSpeed * this.game.clockTick;
+        let walkOrth = this.walkSpeed * this.game.clockTick;
+        let walkDiag = walkOrth * Math.sin(Math.PI / 4);
         if (this.game.right && !this.game.left) {
             this.action = 1;
             if (this.game.up && !this.game.down) {
                 // move northeast
+                this.x += walkDiag;
+                this.y -= walkDiag;
             } else if (this.game.down) {
                 // move southeast
+                this.x += walkDiag;
+                this.y += walkDiag;
             } else {
                 // move east
-                this.x += Math.max(walkLen, this.game.surfaceWidth - this.width);
+                this.x += walkOrth;
             }
         } else if (this.game.left) {
             this.action = 1;
             if (this.game.up && !this.game.down) {
                 // move northwest
+                this.x -= walkDiag;
+                this.y -= walkDiag;
             } else if (this.game.down) {
                 // move southwest
+                this.x -= walkDiag;
+                this.y += walkDiag;
             } else {
                 // move west
+                this.x -= walkOrth;
             }
         } else if (this.game.up && !this.game.down) {
             this.action = 1;
             // move north
+            this.y -= walkOrth;
         } else if (this.game.down) {
             this.action = 1;
             // move south
+            this.y += walkOrth;
         } else {
             this.action = 0;
         }
