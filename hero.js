@@ -22,45 +22,55 @@ class Hero {
     update() {
         let walkOrth = this.walkSpeed * this.game.clockTick;
         let walkDiag = walkOrth * Math.sin(Math.PI / 4);
-        if (this.game.right && !this.game.left) {
+        let delX = 0;
+        let delY = 0;
+        if (this.game.right && !this.game.left) {d
             this.action = 1;
+            this.facing = 0;
             if (this.game.up && !this.game.down) {
                 // move northeast
-                this.x += walkDiag;
-                this.y -= walkDiag;
+                delX += walkDiag;
+                delY -= walkDiag;
             } else if (this.game.down) {
                 // move southeast
-                this.x += walkDiag;
-                this.y += walkDiag;
+                delX += walkDiag;
+                delY += walkDiag;
             } else {
                 // move east
-                this.x += walkOrth;
+                delX += walkOrth;
             }
         } else if (this.game.left) {
             this.action = 1;
+            this.facing = 2;
             if (this.game.up && !this.game.down) {
                 // move northwest
-                this.x -= walkDiag;
-                this.y -= walkDiag;
+                delX -= walkDiag;
+                delY -= walkDiag;
             } else if (this.game.down) {
                 // move southwest
-                this.x -= walkDiag;
-                this.y += walkDiag;
+                delX -= walkDiag;
+                delY += walkDiag;
             } else {
                 // move west
-                this.x -= walkOrth;
+                delX -= walkOrth;
             }
         } else if (this.game.up && !this.game.down) {
             this.action = 1;
+            this.facing = 1;
             // move north
-            this.y -= walkOrth;
+            delY -= walkOrth;
         } else if (this.game.down) {
             this.action = 1;
+            this.facing = 3;
             // move south
-            this.y += walkOrth;
+            delY += walkOrth;
         } else {
             this.action = 0;
         }
+
+        // TODO: Implement collision
+        this.x += delX;
+        this.y += delY;
     };
 
     draw(ctx) {

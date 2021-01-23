@@ -72,18 +72,22 @@ class GameEngine {
             switch (e.code) {
                 case "ArrowLeft":
                 case "KeyA":
+                    console.log("left");
                     that.left = true;
                     break;
                 case "ArrowRight":
                 case "KeyD":
+                    console.log("right");
                     that.right = true;
                     break;
                 case "ArrowUp":
                 case "KeyW":
+                    console.log("up");
                     that.up = true;
                     break;
                 case "ArrowDown":
                 case "KeyS":
+                    console.log("down");
                     that.down = true;
                     break;
             }
@@ -146,4 +150,4 @@ class GameEngine {
         this.update();
         this.draw();
     };
-};
+}
