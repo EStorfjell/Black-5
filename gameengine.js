@@ -72,22 +72,22 @@ class GameEngine {
             switch (e.code) {
                 case "ArrowLeft":
                 case "KeyA":
-                    console.log("left");
+                    // console.log("left");
                     that.left = true;
                     break;
                 case "ArrowRight":
                 case "KeyD":
-                    console.log("right");
+                    // console.log("right");
                     that.right = true;
                     break;
                 case "ArrowUp":
                 case "KeyW":
-                    console.log("up");
+                    // console.log("up");
                     that.up = true;
                     break;
                 case "ArrowDown":
                 case "KeyS":
-                    console.log("down");
+                    // console.log("down");
                     that.down = true;
                     break;
             }

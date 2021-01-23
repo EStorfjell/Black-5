@@ -24,7 +24,7 @@ class Hero {
         let walkDiag = walkOrth * Math.sin(Math.PI / 4);
         let delX = 0;
         let delY = 0;
-        if (this.game.right && !this.game.left) {d
+        if (this.game.right && !this.game.left) {
             this.action = 1;
             this.facing = 0;
             if (this.game.up && !this.game.down) {
