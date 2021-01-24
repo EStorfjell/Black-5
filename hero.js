@@ -13,7 +13,7 @@ class Hero {
         this.action = 0 // 0 = idle, 1 = walking
         this.facing = 0 // 0 = east, 1 = north, 2 = west, 3 = south
 
-        this.walkSpeed = 100; // pixels per second
+        this.walkSpeed = 200; // pixels per second
 
         this.animations = [];
         this.loadAnimations();
@@ -21,7 +21,7 @@ class Hero {
 
     update() {
         let walkOrth = this.walkSpeed * this.game.clockTick;
-        let walkDiag = walkOrth * Math.sin(Math.PI / 4);
+        let walkDiag = walkOrth / Math.SQRT2;
         let delX = 0;
         let delY = 0;
         if (this.game.right && !this.game.left) {
@@ -31,7 +31,7 @@ class Hero {
                 // move northeast
                 delX += walkDiag;
                 delY -= walkDiag;
-            } else if (this.game.down) {
+            } else if (this.game.down && !this.game.up) {
                 // move southeast
                 delX += walkDiag;
                 delY += walkDiag;
@@ -39,14 +39,14 @@ class Hero {
                 // move east
                 delX += walkOrth;
             }
-        } else if (this.game.left) {
+        } else if (this.game.left && !this.game.right) {
             this.action = 1;
             this.facing = 2;
             if (this.game.up && !this.game.down) {
                 // move northwest
                 delX -= walkDiag;
                 delY -= walkDiag;
-            } else if (this.game.down) {
+            } else if (this.game.down && !this.game.up) {
                 // move southwest
                 delX -= walkDiag;
                 delY += walkDiag;
@@ -59,7 +59,7 @@ class Hero {
             this.facing = 1;
             // move north
             delY -= walkOrth;
-        } else if (this.game.down) {
+        } else if (this.game.down && !this.game.up) {
             this.action = 1;
             this.facing = 3;
             // move south
