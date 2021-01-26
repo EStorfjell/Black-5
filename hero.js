@@ -1,8 +1,6 @@
 class Hero {
-    constructor(game) {
-        Object.assign(this, {game});
-        this.x = 0;
-        this.y = 0;
+    constructor(game, x, y) {
+        Object.assign(this, {game, x, y});
 
         // sprite sheet
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/hero.png");
@@ -105,5 +103,13 @@ class Hero {
         // south
         this.animations[1][3] = new Animator(this.spritesheet, 11, 18, this.width, this.height, 4, 0.15, 23, false, true);
 
+    }
+
+    getX() {
+        return this.x;
+    }
+
+    getY() {
+        return this.y;
     }
 }
