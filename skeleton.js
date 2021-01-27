@@ -1,17 +1,15 @@
-class Zombie {
+class Skeleton {
     constructor(game, hero, x, y) {
-        Object.assign(this, { game, hero, x, y });
+        Object.assign(this, {game, hero, x, y});
 
         // sprite sheet
-        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/zombie.png");
+        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/skeleton.png");
         this.width = 25; // character width
         this.height = 46; // character height
 
         // character states
         this.action = 0 // 0 = idle, 1 = walking
         this.facing = 0 // 0 = east, 1 = north, 2 = west, 3 = south
-        this.health = 100;
-        this.attackDamage = 10;
         this.dead = false;
 
         this.walkSpeed = 75; // pixels per second
@@ -27,16 +25,16 @@ class Zombie {
         let heroX = this.hero.getX();
         // The hero's current y-coordinate
         let heroY = this.hero.getY();
-        // The distance between the hero and this zombie in the x-direction
+        // The distance between the hero and this skeleton in the x-direction
         let deltaX = Math.abs(this.x - heroX);
-        // The distance between the hero and this zombie in the y-direction
+        // The distance between the hero and this skeleton in the y-direction
         let deltaY = Math.abs(this.y - heroY);
-        // The angle of a right triangle in which the zombie is on one
+        // The angle of a right triangle in which the skeleton is on one
         // end, and the hero is on the other
         let angle = Math.atan(deltaY / deltaX);
-        // The distance in the x-direction the zombie will walk this tick
+        // The distance in the x-direction the skeleton will walk this tick
         let walkX = walkOrth * Math.cos(angle);
-        // This value is negative if the hero is to the left of the zombie
+        // This value is negative if the hero is to the left of the skeleton
         if (heroX < this.x) walkX = -walkX;
         return walkX;
     }
@@ -47,56 +45,55 @@ class Zombie {
         let heroX = this.hero.getX();
         // The hero's current y-coordinate
         let heroY = this.hero.getY();
-        // The distance between the hero and this zombie in the x-direction
+        // The distance between the hero and this skeleton in the x-direction
         let deltaX = Math.abs(this.x - heroX);
-        // The distance between the hero and this zombie in the y-direction
+        // The distance between the hero and this skeleton in the y-direction
         let deltaY = Math.abs(this.y - heroY);
-        // The angle of a right triangle in which the zombie is on one
+        // The angle of a right triangle in which the skeleton is on one
         // end, and the hero is on the other
         let angle = Math.atan(deltaY / deltaX);
-        // The distance in the y-direction the zombie will walk this tick
+        // The distance in the y-direction the skeleton will walk this tick
         let walkY = walkOrth * Math.sin(angle);
         // This value is negative if the hero is above (from the player's perspective)
-        // the zombie
+        // the skeleton
         if (heroY < this.y) walkY = -walkY;
         return walkY;
     }
 
     update() {
-        // The hero's current x-coordinate
-        let heroX = this.hero.getX();
-        // The hero's current y-coordinate
-        let heroY = this.hero.getY();
+                // The hero's current x-coordinate
+                let heroX = this.hero.getX();
+                // The hero's current y-coordinate
+                let heroY = this.hero.getY();
+        
+                // The cartesian distance between the hero and the skeleton
+                let distance = Math.sqrt((Math.abs(this.x - heroX)) ^ 2 + (Math.abs(this.y - heroY)) ^ 2);
+        
+                if (distance <= 5) {
+                    this.action = 0;
+                    // Attack the player
+                }
 
-        // The cartesian distance between the hero and the zombie
-        let distance = Math.sqrt((this.x - heroX) ^ 2 + (this.y - heroY) ^ 2);
-
-        if (distance <= 5) {
-            this.action = 0;
-            // The zombie will attack the player
-            this.hero.takeDamage(this.attackDamage, 25, heroX - this.x, heroY - this.y);
-        } else {
-            this.action = 1;
-            // The total distance this zombie will walk this tick
-            let walkOrth = this.walkSpeed * this.game.clockTick;
-            let delX = this.getNextXValue(walkOrth);
-            let delY = this.getNextYValue(walkOrth);
-            // The player is to the right of the zombie
-            if (delX > 0) this.facing = 0;
-            // The player is to the left of the zombie
-            else this.facing = 2;
-            // The player is above or below the zombie at over 45 degrees
-            if (Math.atan(Math.abs(this.y - heroY) / Math.abs(this.x - heroX) > Math.PI / 4)) {
-                // The player is above the zombie
-                if (heroY < this.y) this.facing = 1;
-                // The player is below the zombie
-                else this.facing = 3;
-            }
-
-            // TODO: Implement collision
-            this.x += delX;
-            this.y += delY;
+        this.action = 1;
+        // The total distance this skeleton will walk this tick
+        let walkOrth = this.walkSpeed * this.game.clockTick;
+        let delX = this.getNextXValue(walkOrth);
+        let delY = this.getNextYValue(walkOrth);
+        // The player is to the right of the skeleton
+        if (delX > 0) this.facing = 0;
+        // The player is to the left of the skeleton
+        else this.facing = 2;
+        // The player is above or below the skeleton at over 45 degrees
+        if (Math.atan(Math.abs(this.y - this.hero.getY()) / Math.abs(this.x - this.hero.getX())) > Math.PI / 4) {
+            // The player is above the skeleton
+            if (this.hero.getY() < this.y) this.facing = 1;
+            // The player is below the skeleton
+            else this.facing = 3;
         }
+
+        // TODO: Implement collision
+        this.x += delX;
+        this.y += delY;
     };
 
     draw(ctx) {
