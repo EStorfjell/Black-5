@@ -1,4 +1,4 @@
-class SceneManager {
+class EntityManager {
     constructor(gameEngine) {
         this.gameEngine = gameEngine;
 
@@ -29,5 +29,5 @@ class Map {
 
     draw(ctx) {
         ctx.drawImage(this.image, 0, 0, 640, 480);
-    }
+    };
 }
