@@ -14,6 +14,8 @@ class Hero {
 
         this.walkSpeed = 200; // pixels per second
 
+        this.updateBB();
+
         this.animations = [];
         this.loadAnimations();
     };
@@ -70,6 +72,8 @@ class Hero {
         // TODO: Implement collision
         this.x += delX;
         this.y += delY;
+
+        this.updateBB();
     };
 
     draw(ctx) {
@@ -104,6 +108,11 @@ class Hero {
         // south
         this.animations[1][3] = new Animator(this.spritesheet, 11, 18, this.width, this.height, 4, 0.15, 23, false, true);
 
+    }
+
+    updateBB() {
+        this.lastBB = this.BB;
+        this.BB = new BoundingBox(this.x, this.y, this.width, this.height);
     }
 
     getX() {
