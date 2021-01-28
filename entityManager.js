@@ -14,6 +14,8 @@ class EntityManager {
         this.gameEngine.addEntity(zombie);
         let skeleton = new Skeleton(this.gameEngine, this.hero, 200, 300);
         this.gameEngine.addEntity(skeleton);
+        let witch = new Witch(this.gameEngine, this.hero, 300, 400);
+        this.gameEngine.addEntity(witch);
 
         this.gameEngine.addEntity(this.hero);
     };
