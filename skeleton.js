@@ -1,19 +1,22 @@
 class Skeleton {
     constructor(game, hero, x, y) {
-        Object.assign(this, {game, hero, x, y});
+        Object.assign(this, { game, hero, x, y });
 
         // sprite sheet
-        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/skeleton.png");
+        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/skeleton_crossbow.png");
         this.width = 25; // character width
         this.height = 46; // character height
 
         // character states
         this.action = 0 // 0 = idle, 1 = walking
         this.facing = 0 // 0 = east, 1 = north, 2 = west, 3 = south
+        this.health = 100;
+        this.attackDamage = 10;
         this.dead = false;
 
         this.walkSpeed = 75; // pixels per second
-        this.velocity = { x: 0, y: 0 };
+
+        this.updateBB();
 
         this.animations = [];
         this.loadAnimations();
@@ -61,18 +64,10 @@ class Skeleton {
     }
 
     update() {
-                // The hero's current x-coordinate
-                let heroX = this.hero.getX();
-                // The hero's current y-coordinate
-                let heroY = this.hero.getY();
-        
-                // The cartesian distance between the hero and the skeleton
-                let distance = Math.sqrt((Math.abs(this.x - heroX)) ^ 2 + (Math.abs(this.y - heroY)) ^ 2);
-        
-                if (distance <= 5) {
-                    this.action = 0;
-                    // Attack the player
-                }
+        // The hero's current x-coordinate
+        let heroX = this.hero.getX();
+        // The hero's current y-coordinate
+        let heroY = this.hero.getY();
 
         this.action = 1;
         // The total distance this skeleton will walk this tick
@@ -91,9 +86,22 @@ class Skeleton {
             else this.facing = 3;
         }
 
-        // TODO: Implement collision
         this.x += delX;
         this.y += delY;
+
+        this.updateBB();
+
+        // Collision check and handling
+        var that = this;
+        this.game.entities.forEach(function (entity) {
+            if (entity.BB && that.BB.collide(entity.BB)) {
+                if (entity instanceof Hero) {
+                    that.action = 0;
+                    // The zombie will attack the player
+                    that.hero.takeDamage(that.attackDamage, 25, heroX - that.x, heroY - that.y);
+                }
+            }
+        });
     };
 
     draw(ctx) {
@@ -110,23 +118,32 @@ class Skeleton {
 
         // idle
         // east
-        this.animations[0][0] = new Animator(this.spritesheet, 13, 146, this.width, this.height, 1, 0.15, 23, false, true);
+        this.animations[1][0] = new AdvancedAnimator(this.spritesheet, [73], [204], [56], [44], 0.15, false, true);
         // north
-        this.animations[0][1] = new Animator(this.spritesheet, 11, 210, this.width, this.height, 1, 0.15, 23, false, true);
+        this.animations[1][1] = new AdvancedAnimator(this.spritesheet, [99], [316], [21], [45], 0.15, false, true);
         // west
-        this.animations[0][2] = new Animator(this.spritesheet, 10, 82, this.width, this.height, 1, 0.15, 23, false, true);
+        this.animations[1][2] = new AdvancedAnimator(this.spritesheet, [37], [140], [56], [44], 0.15, false, true);
         // south
-        this.animations[0][3] = new Animator(this.spritesheet, 11, 18, this.width, this.height, 1, 0.15, 23, false, true);
+        this.animations[1][3] = new AdvancedAnimator(this.spritesheet, [98], [28], [26], [73], 0.15, false, true);
 
         // walking
         // east
-        this.animations[1][0] = new Animator(this.spritesheet, 13, 146, this.width, this.height, 4, 0.15, 23, false, true);
+        this.animations[1][0] = new AdvancedAnimator(this.spritesheet, [73, 141, 209, 277],
+            [204, 205, 204, 205], [56, 55, 56, 57], [44, 44, 44, 44], 0.15, false, true);
         // north
-        this.animations[1][1] = new Animator(this.spritesheet, 11, 210, this.width, this.height, 4, 0.15, 23, false, true);
+        this.animations[1][1] = new AdvancedAnimator(this.spritesheet, [99, 147, 195, 243], [316, 317, 316, 317],
+            [21, 21, 21, 21], [45, 45, 45, 45], 0.15, false, true);
         // west
-        this.animations[1][2] = new Animator(this.spritesheet, 10, 82, this.width, this.height, 4, 0.15, 23, false, true);
+        this.animations[1][2] = new AdvancedAnimator(this.spritesheet, [37, 105, 173, 241], [140, 141, 140, 141],
+            [56, 56, 56, 56], [44, 44, 44, 44], 0.15, false, true);
         // south
-        this.animations[1][3] = new Animator(this.spritesheet, 11, 18, this.width, this.height, 4, 0.15, 23, false, true);
+        this.animations[1][3] = new AdvancedAnimator(this.spritesheet, [98, 146, 194, 242], [28, 29, 28, 29],
+            [26, 26, 26, 26], [73, 73, 73, 73], 0.15, false, true);
 
+    }
+
+    updateBB() {
+        this.lastBB = this.BB;
+        this.BB = new BoundingBox(this.x, this.y, this.width, this.height);
     }
 }
