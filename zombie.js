@@ -75,10 +75,6 @@ class Zombie {
         this.action = 1;
         // The total distance this zombie will walk this tick
         let walkOrth = this.walkSpeed * this.game.clockTick;
-        
-        //hero coordinates
-        let heroX = this.hero.getX();
-        let heroY = this.hero.getY();
 
         let delX = this.getNextXValue(walkOrth);
         let delY = this.getNextYValue(walkOrth);
