@@ -12,6 +12,8 @@ class Skeleton {
         this.facing = 0 // 0 = east, 1 = north, 2 = west, 3 = south
         this.health = 100;
         this.attackDamage = 10;
+        this.firingRate = 1; // shots per second
+        this.elapsedTime = 0; // The time since the skeleton last shot
         this.dead = false;
 
         this.walkSpeed = 75; // pixels per second
@@ -69,6 +71,8 @@ class Skeleton {
         // The hero's current y-coordinate
         let heroY = this.hero.getY();
 
+        let distance = Math.sqrt((this.x - heroX) ^ 2 + (this.y - heroY) ^ 2);
+
         this.action = 1;
         // The total distance this skeleton will walk this tick
         let walkOrth = this.walkSpeed * this.game.clockTick;
@@ -91,17 +95,12 @@ class Skeleton {
 
         this.updateBB();
 
-        // Collision check and handling
-        var that = this;
-        this.game.entities.forEach(function (entity) {
-            if (entity.BB && that.BB.collide(entity.BB)) {
-                if (entity instanceof Hero) {
-                    that.action = 0;
-                    // The zombie will attack the player
-                    that.hero.takeDamage(that.attackDamage, 25, heroX - that.x, heroY - that.y);
-                }
-            }
-        });
+        this.elapsedTime += this.game.clockTick;
+        if (distance <= 25 && this.elapsedTime >= this.firingRate) {
+            let arrow = new SkeletonArrow(this.game, this.hero.getX(), this.hero.getY(), this.hero, this.x, this.y);
+            this.game.addEntity(arrow);
+            this.elapsedTime = 0;
+        }
     };
 
     draw(ctx) {
@@ -118,13 +117,13 @@ class Skeleton {
 
         // idle
         // east
-        this.animations[1][0] = new AdvancedAnimator(this.spritesheet, [73], [204], [56], [44], 0.15, false, true);
+        this.animations[0][0] = new AdvancedAnimator(this.spritesheet, [73], [204], [56], [44], 0.15, false, true);
         // north
-        this.animations[1][1] = new AdvancedAnimator(this.spritesheet, [99], [316], [21], [45], 0.15, false, true);
+        this.animations[0][1] = new AdvancedAnimator(this.spritesheet, [99], [316], [21], [45], 0.15, false, true);
         // west
-        this.animations[1][2] = new AdvancedAnimator(this.spritesheet, [37], [140], [56], [44], 0.15, false, true);
+        this.animations[0][2] = new AdvancedAnimator(this.spritesheet, [37], [140], [56], [44], 0.15, false, true);
         // south
-        this.animations[1][3] = new AdvancedAnimator(this.spritesheet, [98], [28], [26], [73], 0.15, false, true);
+        this.animations[0][3] = new AdvancedAnimator(this.spritesheet, [98], [28], [26], [73], 0.15, false, true);
 
         // walking
         // east

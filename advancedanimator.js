@@ -6,8 +6,8 @@ class AdvancedAnimator {
     /**
      * Constructor for an AdvancedAnimator.
      * @param {String} spritesheet The path of the sprite sheet
-     * @param {Number[]} xStarts An array with the top left x-coordinates of the frames
-     * @param {Number[]} yStarts An array with the top left y-coordinates of the frames
+     * @param {Number[]} xStarts An array with the left edge x-coordinates of the frames
+     * @param {Number[]} yStarts An array with the top edge y-coordinates of the frames
      * @param {Number[]} widths An array of the widths of the frames
      * @param {Number[]} heights An array of the heights of the frames
      * @param {Number} frameDuration The duration of each frame in seconds

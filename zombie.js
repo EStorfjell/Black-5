@@ -12,6 +12,8 @@ class Zombie {
         this.facing = 0 // 0 = east, 1 = north, 2 = west, 3 = south
         this.health = 100;
         this.attackDamage = 10;
+        this.attackRate = 1; // attacks per second
+        this.elapsedTime = 0; // The time since the zombie last attacked
         this.dead = false;
 
         this.walkSpeed = 75; // pixels per second

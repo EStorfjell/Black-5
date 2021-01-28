@@ -135,7 +135,10 @@ class Hero {
      */
     takeDamage(damage, knockback = 0, xVectorComp = 0, yVectorComp = 0) {
         this.health -= damage;
-        if (this.health <= 0) console.log("The player died.");
+        if (this.health <= 0) {
+            console.log("The player died.");
+            this.removeFromWorld = true;
+        }
         if (knockback != 0) {
             // TODO: Allow a knockback to be applied over a period of time rather than all at once
             // The angle of the knockback measured relative to the x-axis

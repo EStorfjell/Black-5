@@ -5,6 +5,7 @@ const ASSET_MANAGER = new AssetManager();
 ASSET_MANAGER.queueDownload("./sprites/hero.png")
 ASSET_MANAGER.queueDownload("./sprites/zombie.png")
 ASSET_MANAGER.queueDownload("./sprites/skeleton_crossbow.png")
+ASSET_MANAGER.queueDownload("./sprites/skeleton_arrow.png")
 
 ASSET_MANAGER.downloadAll(function () {
     let canvas = document.getElementById('gameWorld');
