@@ -2,6 +2,7 @@ let gameEngine = new GameEngine();
 
 const ASSET_MANAGER = new AssetManager();
 
+ASSET_MANAGER.queueDownload("./maps/Map1.png");
 ASSET_MANAGER.queueDownload("./sprites/hero.png")
 ASSET_MANAGER.queueDownload("./sprites/zombie.png")
 ASSET_MANAGER.queueDownload("./sprites/skeleton_crossbow.png")
