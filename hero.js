@@ -10,8 +10,11 @@ class Hero {
         // character states
         this.action = 0 // 0 = idle, 1 = walking
         this.facing = 0 // 0 = east, 1 = north, 2 = west, 3 = south
+        this.health = 100;
 
         this.walkSpeed = 200; // pixels per second
+
+        this.updateBB();
 
         this.animations = [];
         this.loadAnimations();
@@ -69,6 +72,8 @@ class Hero {
         // TODO: Implement collision
         this.x += delX;
         this.y += delY;
+
+        this.updateBB();
     };
 
     draw(ctx) {
@@ -105,11 +110,47 @@ class Hero {
 
     }
 
+    updateBB() {
+        this.lastBB = this.BB;
+        this.BB = new BoundingBox(this.x, this.y, this.width, this.height);
+    }
+
     getX() {
         return this.x;
     }
 
     getY() {
         return this.y;
+    }
+
+    /**
+     * Causes the hero to take damage with the option of adding knockback.
+     * An easy way to calculate the vector components is
+     * xVectorComp = (heroLocationX - damageDealerLocationX) and
+     * yVectorComp = (heroLocationY - damageDealerLocationY).
+     * @param {Number} damage The damage dealt to the player
+     * @param {Number} knockback Knockback distance measured in pixels
+     * @param {Number} xVectorComp The x-component of a vector specifying the knockback direction
+     * @param {Number} yVectorComp The y-component of a vector specifying the knockback direction
+     */
+    takeDamage(damage, knockback = 0, xVectorComp = 0, yVectorComp = 0) {
+        this.health -= damage;
+        if (this.health <= 0) {
+            console.log("The player died.");
+            this.removeFromWorld = true;
+        }
+        if (knockback != 0) {
+            // TODO: Allow a knockback to be applied over a period of time rather than all at once
+            // The angle of the knockback measured relative to the x-axis
+            let angle = Math.atan(Math.abs(yVectorComp) / Math.abs(xVectorComp));
+            // The new x-coordinate of the hero
+            let deltaX = knockback * Math.cos(angle);
+            // The new y-coordinate of the hero
+            let deltaY = knockback * Math.sin(angle);
+            if (xVectorComp < 0) deltaX = -deltaX;
+            if (yVectorComp < 0) deltaY = -deltaY;
+            this.x += deltaX;
+            this.y += deltaY;
+        }
     }
 }

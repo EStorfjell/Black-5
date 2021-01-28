@@ -1,6 +1,6 @@
 class Zombie {
     constructor(game, hero, x, y) {
-        Object.assign(this, {game, hero, x, y});
+        Object.assign(this, { game, hero, x, y });
 
         // sprite sheet
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/zombie.png");
@@ -10,10 +10,15 @@ class Zombie {
         // character states
         this.action = 0 // 0 = idle, 1 = walking
         this.facing = 0 // 0 = east, 1 = north, 2 = west, 3 = south
+        this.health = 100;
+        this.attackDamage = 10;
+        this.attackRate = 1; // attacks per second
+        this.elapsedTime = 0; // The time since the zombie last attacked
         this.dead = false;
 
         this.walkSpeed = 75; // pixels per second
-        this.velocity = { x: 0, y: 0 };
+
+        this.updateBB();
 
         this.animations = [];
         this.loadAnimations();
@@ -61,6 +66,12 @@ class Zombie {
     }
 
     update() {
+        // The hero's current x-coordinate
+        let heroX = this.hero.getX();
+        // The hero's current y-coordinate
+        let heroY = this.hero.getY();
+
+        // The zombie will walk forward
         this.action = 1;
         // The total distance this zombie will walk this tick
         let walkOrth = this.walkSpeed * this.game.clockTick;
@@ -83,9 +94,23 @@ class Zombie {
         } else if (cardinal[1] < 0 && cardinal[2] < 1) { // SOUTH
             this.facing = 3;
         }
-        // TODO: Implement collision
+      
         this.x += delX;
         this.y += delY;
+
+        this.updateBB();
+
+        // Collision check and handling
+        var that = this;
+        this.game.entities.forEach(function (entity) {
+            if (entity.BB && that.BB.collide(entity.BB)) {
+                if (entity instanceof Hero) {
+                    that.action = 0;
+                    // The zombie will attack the player
+                    that.hero.takeDamage(that.attackDamage, 25, heroX - that.x, heroY - that.y);
+                }
+            }
+        });
     };
 
     draw(ctx) {
@@ -120,5 +145,10 @@ class Zombie {
         // south
         this.animations[1][3] = new Animator(this.spritesheet, 11, 18, this.width, this.height, 4, 0.15, 23, false, true);
 
+    }
+
+    updateBB() {
+        this.lastBB = this.BB;
+        this.BB = new BoundingBox(this.x, this.y, this.width, this.height);
     }
 }
