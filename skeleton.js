@@ -97,8 +97,23 @@ class Skeleton {
 
         this.elapsedTime += this.game.clockTick;
         if (distance <= 25 && this.elapsedTime >= this.firingRate) {
-            let arrow = new SkeletonArrow(this.game, this.hero.getX(), this.hero.getY(), this.hero, this.x, this.y);
-            this.game.addEntity(arrow);
+            if (this.facing == 0) {
+                // The skeleton is facing east
+                let arrow = new SkeletonArrow(this.game, this.hero.getX(), this.hero.getY(), this.hero, this.x + 22, this.y + 23);
+                this.game.addEntity(arrow);
+            } else if (this.facing == 1) {
+                // The skeleton is facing north
+                let arrow = new SkeletonArrow(this.game, this.hero.getX(), this.hero.getY(), this.hero, this.x + 10, this.y);
+                this.game.addEntity(arrow);
+            } else if (this.facing == 2) {
+                // The skeleton is facing west
+                let arrow = new SkeletonArrow(this.game, this.hero.getX(), this.hero.getY(), this.hero, this.x, this.y + 23);
+                this.game.addEntity(arrow);
+            } else if (this.facing == 3) {
+                // The skeleton is facing south
+                let arrow = new SkeletonArrow(this.game, this.hero.getX(), this.hero.getY(), this.hero, this.x + 8, this.y + 39);
+                this.game.addEntity(arrow);
+            }
             this.elapsedTime = 0;
         }
     };
