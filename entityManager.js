@@ -10,6 +10,8 @@ class EntityManager {
     loadLevelOne() {
         let zombie = new Zombie(this.gameEngine, this.hero, 300, 400);
         this.gameEngine.addEntity(zombie);
+        let witch = new Witch(this.gameEngine, this.hero, 300, 400);
+        this.gameEngine.addEntity(witch);
 
         this.gameEngine.addEntity(this.hero);
     }
