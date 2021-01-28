@@ -10,10 +10,12 @@ class EntityManager {
     loadLevelOne() {
         let map = new Map(gameEngine, "./maps/Map1.png");
         this.gameEngine.addEntity(map);
-        let zombie = new Zombie(this.gameEngine, this.hero, 300, 400);
+        let zombie = new Zombie(this.gameEngine, this.hero, 400, 100);
         this.gameEngine.addEntity(zombie);
-        let skeleton = new Skeleton(this.gameEngine, this.hero, 200, 300);
+        let skeleton = new Skeleton(this.gameEngine, this.hero, 100, 200);
         this.gameEngine.addEntity(skeleton);
+        let witch = new Witch(this.gameEngine, this.hero, 400, 400);
+        this.gameEngine.addEntity(witch);
 
         this.gameEngine.addEntity(this.hero);
     };
