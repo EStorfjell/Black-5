@@ -8,9 +8,9 @@ class SceneManager {
     };
 
     loadLevelOne() {
-        let map = new Map(this.game, LevelOne);
+        let map = new Map(this.game, LEVELS.LEVEL_ONE);
         this.game.addEntity(map);
-        map.init(this.game);
+        map.init();
 
         let zombie = new Zombie(this.game, this.hero, 400, 100);
         this.game.addEntity(zombie);

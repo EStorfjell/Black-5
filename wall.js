@@ -13,6 +13,7 @@ class Wall {
     };
 
     updateBB() {
+        //
         this.lastBB = this.BB;
         this.BB = new BoundingBox(this.x, this.y, this.width, this.height);
     };

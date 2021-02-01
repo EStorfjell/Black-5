@@ -4,7 +4,7 @@ class Map {
         this.image = ASSET_MANAGER.getAsset(level.imgPath);
     };
 
-    init(game) {
+    init() {
         let that = this;
         this.level.walls.forEach(function (item) {
             let wall = new Wall(that.game, item.x, item.y, item.width, item.height);
