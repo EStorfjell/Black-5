@@ -107,7 +107,9 @@ class Witch {
     };
 
     draw(ctx) {
-        this.animations[this.action][this.facing].drawFrame(this.game.clockTick, ctx, this.x, this.y, 1);
+        let drawX = this.x - this.game.camera.x;
+        let drawY = this.y - this.game.camera.y;
+        this.animations[this.action][this.facing].drawFrame(this.game.clockTick, ctx, drawX, drawY, 1);
     };
 
     loadAnimations() {

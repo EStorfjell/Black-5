@@ -3,6 +3,7 @@ let gameEngine = new GameEngine();
 const ASSET_MANAGER = new AssetManager();
 
 ASSET_MANAGER.queueDownload("./maps/Map1.png");
+ASSET_MANAGER.queueDownload("./maps/BigMap1.png");
 ASSET_MANAGER.queueDownload("./sprites/hero.png")
 ASSET_MANAGER.queueDownload("./sprites/zombie.png")
 ASSET_MANAGER.queueDownload("./sprites/skeleton_crossbow.png")
@@ -13,6 +14,8 @@ ASSET_MANAGER.downloadAll(function () {
     let canvas = document.getElementById('gameWorld');
     let ctx = canvas.getContext('2d');
     ctx.imageSmoothingEnabled = false;
+    PARAMS.CANVAS_WIDTH = canvas.width;
+    PARAMS.CANVAS_HEIGHT = canvas.height;
 
     gameEngine.init(ctx);
 
