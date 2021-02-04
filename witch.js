@@ -10,6 +10,7 @@ class Witch {
         // character states
         this.action = 0 // 0 = idle, 1 = walking
         this.facing = 0 // 0 = east, 1 = north, 2 = west, 3 = south
+        this.health = 100;
         this.dead = false;
 
         this.walkSpeed = 75; // pixels per second
@@ -138,5 +139,43 @@ class Witch {
         // south
         this.animations[1][3] = new Animator(this.spritesheet, 9, 11, this.width, this.height, 4, 0.15, 19, false, true);
 
+    }
+
+    getX() {
+        return this.x;
+    }
+
+    getY() {
+        return this.y;
+    }
+
+    /**
+     * Causes the witch to take damage with the option of adding knockback.
+     * An easy way to calculate the vector components is
+     * xVectorComp = (witchLocationX - damageDealerLocationX) and
+     * yVectorComp = (witchLocationY - damageDealerLocationY).
+     * @param {Number} damage The damage dealt to the witch
+     * @param {Number} knockback Knockback distance measured in pixels
+     * @param {Number} xVectorComp The x-component of a vector specifying the knockback direction
+     * @param {Number} yVectorComp The y-component of a vector specifying the knockback direction
+     */
+    takeDamage(damage, knockback = 0, xVectorComp = 0, yVectorComp = 0) {
+        this.health -= damage;
+        if (this.health <= 0) {
+            this.removeFromWorld = true;
+        }
+        if (knockback != 0) {
+            // TODO: Allow a knockback to be applied over a period of time rather than all at once
+            // The angle of the knockback measured relative to the x-axis
+            let angle = Math.atan(Math.abs(yVectorComp) / Math.abs(xVectorComp));
+            // The new x-coordinate of the witch
+            let deltaX = knockback * Math.cos(angle);
+            // The new y-coordinate of the witch
+            let deltaY = knockback * Math.sin(angle);
+            if (xVectorComp < 0) deltaX = -deltaX;
+            if (yVectorComp < 0) deltaY = -deltaY;
+            this.x += deltaX;
+            this.y += deltaY;
+        }
     }
 }

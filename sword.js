@@ -1,6 +1,6 @@
 class Sword {
     constructor(game, x, y) {
-        Object.assign(this, {game, x, y});
+        Object.assign(this, { game, x, y });
 
         // sprite sheet
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/sword.png");
@@ -9,6 +9,10 @@ class Sword {
         this.state = 0 // 0 = not equipped, 1 = secondary weapon, 2 = primary weapon, 3 = attacking
         this.facing = 0 // 0 = east, 1 = north, 2 = west, 3 = south
         this.attackDamage = 15;
+        this.width = 44;
+        this.height = 44;
+        this.hiltX = this.x; // Location of the sword's hilt
+        this.hiltY = this.y + this.height; // Location of the sword's hilt
 
         this.updateBB();
 
@@ -79,31 +83,61 @@ class Sword {
     }
 
     updateX(playerX) {
+        // this.x = playerX + playerOffset + swordOffset
         if (this.facing == 0) { // east
             this.x = playerX + 9;
+            this.hiltX = playerX + 9;
         } else if (this.facing == 1) { // north
-            this.x = playerX + 20 - 44;
+            this.x = playerX + 20 - this.width;
+            this.hiltX = playerX + 20;
         } else if (this.facing == 2) { // west
-            this.x = playerX + 13 - 44;
+            this.x = playerX + 13 - this.width;
+            this.hiltX = playerX + 13;
         } else { // south
             this.x = playerX + 4;
+            this.hiltX = playerX + 4;
         }
     }
 
     updateY(playerY) {
+        // this.y = playerY + playerOffset + swordOffset
         if (this.facing == 0) { // east
-            this.y = playerY + 33 - 44;
+            this.y = playerY + 33 - this.height;
+            this.hiltY = playerY + 33;
         } else if (this.facing == 1) { // north
-            this.y = playerY + 32 - 44;
+            this.y = playerY + 32 - this.height;
+            this.hiltY = playerY + 32;
         } else if (this.facing == 2) { // west
-            this.y = playerY + 33 - 44;
+            this.y = playerY + 33 - this.height;
+            this.hiltY = playerY + 32;
         } else { // south
             this.y = playerY + 32;
+            this.hiltY = playerY + 32;
         }
     }
 
     updateState(newState) {
         this.state = newState;
+
+        if (newState == 3) {
+            var that = this;
+            this.game.entities.forEach(function (entity) {
+                if (entity instanceof Zombie || entity instanceof Skeleton || entity instanceof Witch) {
+                    let distance = Math.sqrt((that.hiltX - entity.getX()) * (that.hiltX -
+                        entity.getX()) + (that.hiltY - entity.getY()) * (that.hiltY - entity.getY()));
+
+                    if (that.facing == 0 && that.hiltX <= entity.getX() && distance <= 75) { // east
+                        entity.takeDamage(that.attackDamage, 25, entity.getX() - that.hiltX, entity.getY() - that.hiltY);
+                    } else if (that.facing == 1 && that.hiltY >= entity.getY() && distance <= 75) { // north
+                        entity.takeDamage(that.attackDamage, 25, entity.getX() - that.hiltX, entity.getY() - that.hiltY);
+                    } else if (that.facing == 2 && that.hiltX >= entity.getX() && distance <= 75) { // west
+                        entity.takeDamage(that.attackDamage, 25, entity.getX() - that.hiltX, entity.getY() - that.hiltY);
+                    } else if (that.facing == 3 && that.hiltY <= entity.getY() && distance <= 75) { // south
+                        entity.takeDamage(that.attackDamage, 25, entity.getX() - that.hiltX, entity.getY() - that.hiltY);
+                    }
+                }
+            });
+        }
     }
 
     updateFacing(newFacing) {

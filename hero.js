@@ -78,7 +78,12 @@ class Hero {
         this.sword.updateX(this.x);
         this.sword.updateY(this.y);
         this.sword.updateFacing(this.facing);
-        this.sword.updateState(2);
+        if (this.game.click != null) {
+            this.sword.updateState(3);
+            this.game.click = null;
+        } else {
+            this.sword.updateState(2);
+        }
 
         this.updateBB();
     };
