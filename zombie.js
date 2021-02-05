@@ -1,6 +1,6 @@
 class Zombie {
     constructor(game, hero, x, y) {
-        Object.assign(this, { game, hero, x, y });
+        Object.assign(this, {game, hero, x, y});
 
         // sprite sheet
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/zombie.png");
@@ -8,8 +8,8 @@ class Zombie {
         this.height = 46; // character height
 
         // character states
-        this.action = 0 // 0 = idle, 1 = walking
-        this.facing = 0 // 0 = east, 1 = north, 2 = west, 3 = south
+        this.action = 0; // 0 = idle, 1 = walking
+        this.facing = 0; // 0 = east, 1 = north, 2 = west, 3 = south
         this.health = 100;
         this.attackDamage = 10;
         this.attackRate = 1; // attacks per second
@@ -90,9 +90,15 @@ class Zombie {
         } else if (cardinal[1] < 0 && cardinal[2] < 1) { // SOUTH
             this.facing = 3;
         }
-      
+
         this.x += delX;
         this.y += delY;
+
+        // World borders
+        if (this.x <= 0) this.x = 0;
+        if (this.y <= 0) this.y = 0;
+        if (this.x >= this.game.camera.map.width - this.width) this.x = this.game.camera.map.width - this.width;
+        if (this.y >= this.game.camera.map.height - this.height) this.y = this.game.camera.map.height - this.height;
 
         this.updateBB();
 
@@ -105,8 +111,28 @@ class Zombie {
                     // The zombie will attack the player
                     that.hero.takeDamage(that.attackDamage, 25, heroX - that.x, heroY - that.y);
                 }
+                if (entity instanceof Wall) {
+                    if (delX > 0 && that.lastBB.right <= entity.BB.left) { // collision from left
+                        delX = 0;
+                        that.x = entity.BB.left - that.width;
+                    }
+                    if (delX < 0 && that.lastBB.left >= entity.BB.right) { // collision from right
+                        delX = 0;
+                        that.x = entity.BB.right;
+                    }
+                    if (delY > 0 && that.lastBB.bottom <= entity.BB.top) { // collision from top
+                        delY = 0;
+                        that.y = entity.BB.top - that.height;
+                    }
+                    if (delY < 0 && that.lastBB.top >= entity.BB.bottom) { // collision from bottom
+                        delY = 0;
+                        that.y = entity.BB.bottom;
+                    }
+                }
             }
         });
+
+        this.updateBB();
     };
 
     draw(ctx) {
