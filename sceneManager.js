@@ -28,7 +28,7 @@ class SceneManager {
         this.game.addEntity(this.hero);
     };
 
-    update() {d
+    update() {
         let heroMidX = this.hero.x + (this.hero.width / 2);
         let heroMidY = this.hero.y + (this.hero.height / 2);
         let halfWidth = PARAMS.CANVAS_WIDTH / 2;
