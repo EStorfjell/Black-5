@@ -1,6 +1,6 @@
 class BoundingBox {
     constructor(x, y, width, height) {
-        Object.assign(this, { x, y, width, height });
+        Object.assign(this, {x, y, width, height});
 
         this.left = x;
         this.top = y;
@@ -9,7 +9,6 @@ class BoundingBox {
     };
 
     collide(other) {
-        if (this.right > other.left && this.left < other.right && this.top < other.bottom && this.bottom > other.top) return true;
-        return false;
+        return this.right > other.left && this.left < other.right && this.top < other.bottom && this.bottom > other.top;
     };
 };

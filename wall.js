@@ -9,13 +9,16 @@ class Wall {
     };
 
     draw(ctx) {
-
+        if (PARAMS.DEBUG) {
+            ctx.strokeStyle = "red";
+            let drawX = this.x - this.game.camera.x;
+            let drawY = this.y - this.game.camera.y;
+            ctx.strokeRect(drawX, drawY, this.width, this.height);
+        }
     };
 
     updateBB() {
         this.lastBB = this.BB;
-        let drawX = this.x - this.game.camera.x;
-        let drawY = this.y - this.game.camera.y;
-        this.BB = new BoundingBox(drawX, drawY, this.width, this.height);
+        this.BB = new BoundingBox(this.x,this.y, this.width, this.height);
     };
 }

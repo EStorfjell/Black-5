@@ -99,6 +99,8 @@ class SkeletonArrow {
                     // The arrow will damage the player
                     that.hero.takeDamage(that.attackDamage, 25, that.hero.getX() - that.x, that.hero.getY() - that.y);
                     that.removeFromWorld = true;
+                } if (entity instanceof Wall) {
+                    that.removeFromWorld = true;
                 }
             }
         });
@@ -131,8 +133,6 @@ class SkeletonArrow {
 
     updateBB() {
         this.lastBB = this.BB;
-        let drawX = this.x - this.game.camera.x;
-        let drawY = this.y - this.game.camera.y;
-        this.BB = new BoundingBox(drawX, drawY, this.width, this.height);
+        this.BB = new BoundingBox(this.x, this.y, this.width, this.height);
     }
 }
