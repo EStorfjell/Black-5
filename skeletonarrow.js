@@ -1,12 +1,12 @@
 class SkeletonArrow {
     constructor(game, targetX, targetY, hero, x, y) {
-        Object.assign(this, { game, targetX, targetY, hero, x, y });
+        Object.assign(this, {game, targetX, targetY, hero, x, y});
 
         // sprite sheet
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/skeleton_arrow.png");
 
         // arrow states
-        this.facing = 0 // 0 = east, 1 = north, 2 = west, 3 = south
+        this.facing = 0; // 0 = east, 1 = north, 2 = west, 3 = south
         this.attackDamage = 10;
 
         this.flySpeed = 200; // pixels per second
@@ -99,11 +99,16 @@ class SkeletonArrow {
                     // The arrow will damage the player
                     that.hero.takeDamage(that.attackDamage, 25, that.hero.getX() - that.x, that.hero.getY() - that.y);
                     that.removeFromWorld = true;
-                } if (entity instanceof Wall) {
+                }
+                if (entity instanceof Wall) {
                     that.removeFromWorld = true;
                 }
             }
         });
+
+        // World borders
+        that.removeFromWorld = that.removeFromWorld || this.x + this.width <= 0 || this.y + this.height <= 0
+            || this.x >= this.game.camera.map.width || this.y >= this.game.camera.map.height;
     };
 
     draw(ctx) {

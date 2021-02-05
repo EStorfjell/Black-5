@@ -8,8 +8,8 @@ class Hero {
         this.height = 46; // character height
 
         // character states
-        this.action = 0 // 0 = idle, 1 = walking
-        this.facing = 0 // 0 = east, 1 = north, 2 = west, 3 = south
+        this.action = 0; // 0 = idle, 1 = walking
+        this.facing = 0; // 0 = east, 1 = north, 2 = west, 3 = south
         this.health = 100;
 
         this.walkSpeed = 200; // pixels per second
@@ -69,6 +69,17 @@ class Hero {
             this.action = 0;
         }
 
+        this.x += delX;
+        this.y += delY;
+
+        // World borders
+        if (this.x <= 0) this.x = 0;
+        if (this.y <= 0) this.y = 0;
+        if (this.x >= this.game.camera.map.width - this.width) this.x = this.game.camera.map.width - this.width;
+        if (this.y >= this.game.camera.map.height - this.height) this.y = this.game.camera.map.height - this.height;
+
+        this.updateBB();
+
         // TODO: Implement collision
         // Collision check and handling
         let that = this;
@@ -94,9 +105,6 @@ class Hero {
                 }
             }
         });
-
-        this.x += delX;
-        this.y += delY;
 
         this.updateBB();
     };
