@@ -29,6 +29,8 @@ class SceneManager {
     };
 
     update() {
+        PARAMS.DEBUG = document.getElementById("debug").checked;
+
         let heroMidX = this.hero.x + (this.hero.width / 2);
         let heroMidY = this.hero.y + (this.hero.height / 2);
         let halfWidth = PARAMS.CANVAS_WIDTH / 2;

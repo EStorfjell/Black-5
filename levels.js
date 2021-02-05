@@ -19,7 +19,7 @@ const LEVELS = {
             {x: 416, y: 288, width: 64, height: 32}, {x: 416, y: 320, width: 32, height: 32},
             {x: 544, y: 288, width: 64, height: 32}, {x: 672, y: 288, width: 64, height: 32},
             {x: 416, y: 384, width: 32, height: 64}, {x: 512, y: 448, width: 32, height: 32},
-            {x: 704, y: 384, width: 21, height: 64}, {x: 672, y: 448, width: 64, height: 32},
+            {x: 704, y: 384, width: 32, height: 64}, {x: 672, y: 448, width: 64, height: 32},
             {x: 288, y: 640, width: 128, height: 32}, {x: 352, y: 832, width: 64, height: 32},
             {x: 384, y: 864, width: 32, height: 64}, {x: 512, y: 640, width: 32, height: 224},
             {x: 672, y: 640, width: 32, height: 160}, {x: 576, y: 896, width: 64, height: 32}

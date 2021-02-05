@@ -70,6 +70,31 @@ class Hero {
         }
 
         // TODO: Implement collision
+        // Collision check and handling
+        let that = this;
+        this.game.entities.forEach(function (entity) {
+            if (entity.BB && that.BB.collide(entity.BB)) {
+                if (entity instanceof Wall) {
+                    if (delX > 0 && that.lastBB.right <= entity.BB.left) { // collision from left
+                        delX = 0;
+                        that.x = entity.BB.left - that.width;
+                    }
+                    if (delX < 0 && that.lastBB.left >= entity.BB.right) { // collision from right
+                        delX = 0;
+                        that.x = entity.BB.right;
+                    }
+                    if (delY > 0 && that.lastBB.bottom <= entity.BB.top) { // collision from top
+                        delY = 0;
+                        that.y = entity.BB.top - that.height;
+                    }
+                    if (delY < 0 && that.lastBB.top >= entity.BB.bottom) { // collision from bottom
+                        delY = 0;
+                        that.y = entity.BB.bottom;
+                    }
+                }
+            }
+        });
+
         this.x += delX;
         this.y += delY;
 
@@ -114,9 +139,7 @@ class Hero {
 
     updateBB() {
         this.lastBB = this.BB;
-        let drawX = this.x - this.game.camera.x;
-        let drawY = this.y - this.game.camera.y;
-        this.BB = new BoundingBox(drawX, drawY, this.width, this.height);
+        this.BB = new BoundingBox(this.x, this.y, this.width, this.height);
     }
 
     getX() {
@@ -143,7 +166,7 @@ class Hero {
             console.log("The player died.");
             this.removeFromWorld = true;
         }
-        if (knockback != 0) {
+        if (knockback !== 0) {
             // TODO: Allow a knockback to be applied over a period of time rather than all at once
             // The angle of the knockback measured relative to the x-axis
             let angle = Math.atan(Math.abs(yVectorComp) / Math.abs(xVectorComp));
