@@ -10,10 +10,18 @@ class Crossbow {
         this.facing = 0 // 0 = east, 1 = north, 2 = west, 3 = south
 
         this.attackDamage = 15;
+        this.attackDamageIncrease = 5; // attack damage increase per upgrade
+        this.attackDamageUpgradeLevel = 0;
+
+        this.ammo = 8; // number of arrows
         this.attacking = false; // true if this crossbow is firing
         this.targetX = 0;
         this.targetY = 0;
+
         this.firingRate = 1; // shots per second
+        this.firingRateIncrease = 1; // firing rate increase per upgrade
+        this.firingRateUpgradeLevel = 0;
+
         this.elapsedTime = 0; // elapsed time since last attack
 
         this.widthWithoutArrow = 37;
@@ -29,16 +37,17 @@ class Crossbow {
 
     update() {
         this.elapsedTime += this.game.clockTick;
-        if (this.attacking && this.elapsedTime >= this.firingRate) {
+        if (this.attacking && this.elapsedTime >= this.firingRate && this.ammo > 0) {
             let isOnHeroTeam = this.isOwnedByHero;
-            let arrow = new Arrow(this.game, this.targetX, this.targetY, isOnHeroTeam, this.x, this.y);
+            let arrow = new Arrow(this.game, this.targetX, this.targetY, isOnHeroTeam, this.attackDamage, this.x, this.y);
             this.game.addEntity(arrow);
             this.state = 2;
+            this.ammo--;
             this.attacking = false;
             this.elapsedTime = 0;
         }
 
-        if (this.state == 2 && this.elapsedTime >= this.firingRate) {
+        if (this.state == 2 && this.elapsedTime >= this.firingRate && this.ammo > 0) {
             this.state = 3;
         }
 
@@ -165,6 +174,28 @@ class Crossbow {
 
     updateFacing(newFacing) {
         this.facing = newFacing;
+    }
+
+    upgradeAttackDamage() {
+        this.attackDamage += this.attackDamageIncrease;
+        this.attackDamageUpgradeLevel++;
+    }
+
+    getAttackDamageUpgradeLevel() {
+        return this.attackDamageUpgradeLevel;
+    }
+
+    upgradeFiringRate() {
+        this.firingRate += this.firingRateIncrease;
+        this.firingRateUpgradeLevel++;
+    }
+
+    getFiringRateUpgradeLevel() {
+        return this.firingRateUpgradeLevel;
+    }
+
+    getAmmo() {
+        return this.ammo;
     }
 
     getX() {

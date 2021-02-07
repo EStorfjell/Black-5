@@ -1,13 +1,12 @@
 class Bullet {
-    constructor(game, targetX, targetY, isOnHeroTeam, x, y) {
-        Object.assign(this, { game, targetX, targetY, isOnHeroTeam, x, y });
+    constructor(game, targetX, targetY, isOnHeroTeam, attackDamage, x, y) {
+        Object.assign(this, { game, targetX, targetY, isOnHeroTeam, attackDamage, x, y });
 
         // sprite sheet
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/bullet.png");
 
         // bullet states
         this.facing = 0 // 0 = east, 1 = north, 2 = west, 3 = south
-        this.attackDamage = 10;
 
         this.flySpeed = 200; // pixels per second
 
