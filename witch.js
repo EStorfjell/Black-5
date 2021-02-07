@@ -14,7 +14,9 @@ class Witch {
         this.dead = false;
 
         this.walkSpeed = 75; // pixels per second
-        this.velocity = { x: 0, y: 0 };
+        this.velocity = {x: 0, y: 0};
+
+        this.updateBB();
 
         this.updateBB();
 
@@ -83,7 +85,8 @@ class Witch {
         let delY = this.getNextYValue(walkOrth);
 
         // [xDisplaced, yDisplaced, hV]
-        let cardinal = [this.x - heroX, this.y - heroY, Math.abs(delX / delY)]; // hV > 1: EAST/WEST; hV < 1: NORTH/SOUTH
+        let cardinal = [this.x - heroX, this.y - heroY, Math.abs(delX / delY)]; // hV > 1: EAST/WEST; hV < 1:
+                                                                                // NORTH/SOUTH
         // xDisplaced > 0: NORTH
         if (cardinal[0] < 0 && cardinal[2] > 1) { // EAST
             this.facing = 0;
@@ -99,16 +102,48 @@ class Witch {
             this.action = 0;
         } else { // walk towards player
             this.action = 1;
-            // TODO: Implement collision
-            this.x += delX;
+			this.x += delX;
             this.y += delY;
         }
-        
-        this.updateBB();
+
+        // World borders
+        if (this.x <= 0) this.x = 0;
+        if (this.y <= 0) this.y = 0;
+        if (this.x >= this.game.camera.map.width - this.width) this.x = this.game.camera.map.width - this.width;
+        if (this.y >= this.game.camera.map.height - this.height) this.y = this.game.camera.map.height - this.height;
+
+        // Collision check and handling
+        let that = this;
+        this.game.entities.forEach(function (entity) {
+            if (entity.BB && that.BB.collide(entity.BB)) {
+                if (entity instanceof Wall) {
+                    if (delX > 0 && that.lastBB.right <= entity.BB.left) { // collision from left
+                        delX = 0;
+                        that.x = entity.BB.left - that.width;
+                    }
+                    if (delX < 0 && that.lastBB.left >= entity.BB.right) { // collision from right
+                        delX = 0;
+                        that.x = entity.BB.right;
+                    }
+                    if (delY > 0 && that.lastBB.bottom <= entity.BB.top) { // collision from top
+                        delY = 0;
+                        that.y = entity.BB.top - that.height;
+                    }
+                    if (delY < 0 && that.lastBB.top >= entity.BB.bottom) { // collision from bottom
+                        delY = 0;
+                        that.y = entity.BB.bottom;
+                    }
+                }
+            }
+        });
+		
+		this.updateBB();
     };
 
     draw(ctx) {
-        this.animations[this.action][this.facing].drawFrame(this.game.clockTick, ctx, this.x, this.y, 1);
+        let drawX = this.x - this.game.camera.x;
+        let drawY = this.y - this.game.camera.y;
+        this.animations[this.action][this.facing].drawFrame(this.game.clockTick, ctx, drawX, drawY, 1);
     };
 
     loadAnimations() {
@@ -138,8 +173,7 @@ class Witch {
         this.animations[1][2] = new Animator(this.spritesheet, 10, 77, this.width, this.height, 4, 0.15, 19, false, true);
         // south
         this.animations[1][3] = new Animator(this.spritesheet, 9, 11, this.width, this.height, 4, 0.15, 19, false, true);
-
-    }
+    };
 
     updateBB() {
         this.lastBB = this.BB;

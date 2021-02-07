@@ -1,6 +1,6 @@
 class Skeleton {
     constructor(game, hero, x, y) {
-        Object.assign(this, { game, hero, x, y });
+        Object.assign(this, {game, hero, x, y});
 
         // sprite sheet
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/skeleton_crossbow.png");
@@ -8,8 +8,8 @@ class Skeleton {
         this.height = 46; // character height
 
         // character states
-        this.action = 0 // 0 = idle, 1 = walking
-        this.facing = 0 // 0 = east, 1 = north, 2 = west, 3 = south
+        this.action = 0; // 0 = idle, 1 = walking
+        this.facing = 0; // 0 = east, 1 = north, 2 = west, 3 = south
         this.health = 100;
         this.attackDamage = 10;
         this.firingRate = 1; // shots per second
@@ -79,47 +79,89 @@ class Skeleton {
         let delX = this.getNextXValue(walkOrth);
         let delY = this.getNextYValue(walkOrth);
         // The player is to the right of the skeleton
-        if (delX > 0) this.facing = 0;
-        // The player is to the left of the skeleton
-        else this.facing = 2;
+        if (delX > 0) {
+            this.facing = 0;
+        }// The player is to the left of the skeleton
+        else {
+            this.facing = 2;
+        }
         // The player is above or below the skeleton at over 45 degrees
         if (Math.atan(Math.abs(this.y - this.hero.getY()) / Math.abs(this.x - this.hero.getX())) > Math.PI / 4) {
             // The player is above the skeleton
-            if (this.hero.getY() < this.y) this.facing = 1;
-            // The player is below the skeleton
-            else this.facing = 3;
+            if (this.hero.getY() < this.y) {
+                this.facing = 1;
+            }// The player is below the skeleton
+            else {
+                this.facing = 3;
+            }
         }
 
         this.x += delX;
         this.y += delY;
 
+        // World borders
+        if (this.x <= 0) this.x = 0;
+        if (this.y <= 0) this.y = 0;
+        if (this.x >= this.game.camera.map.width - this.width) this.x = this.game.camera.map.width - this.width;
+        if (this.y >= this.game.camera.map.height - this.height) this.y = this.game.camera.map.height - this.height;
+
         this.updateBB();
 
         this.elapsedTime += this.game.clockTick;
-        if (distance <= 150 && this.elapsedTime >= this.firingRate) {
+        if (distance <= 300 && this.elapsedTime >= this.firingRate) {
+			console.log("skeleton attempted to fire. distance: "+ distance);
             if (this.facing == 0) {
                 // The skeleton is facing east
-                let arrow = new Arrow(this.game, this.hero.getX(), this.hero.getY(), false, this.x + 22, this.y + 23);
+                let arrow = new Arrow(this.game, this.hero.getX(), this.hero.getY(), false, this.attackDamage, this.x + 22, this.y + 23);
                 this.game.addEntity(arrow);
-            } else if (this.facing == 1) {
+            } else if (this.facing === 1) {
                 // The skeleton is facing north
-                let arrow = new Arrow(this.game, this.hero.getX(), this.hero.getY(), false, this.x + 10, this.y);
+                let arrow = new Arrow(this.game, this.hero.getX(), this.hero.getY(), false, this.attackDamage, this.x + 10, this.y);
                 this.game.addEntity(arrow);
-            } else if (this.facing == 2) {
+            } else if (this.facing === 2) {
                 // The skeleton is facing west
-                let arrow = new Arrow(this.game, this.hero.getX(), this.hero.getY(), false, this.x, this.y + 23);
+                let arrow = new Arrow(this.game, this.hero.getX(), this.hero.getY(), false, this.attackDamage, this.x, this.y + 23);
                 this.game.addEntity(arrow);
-            } else if (this.facing == 3) {
+            } else if (this.facing === 3) {
                 // The skeleton is facing south
-                let arrow = new Arrow(this.game, this.hero.getX(), this.hero.getY(), false, this.x + 8, this.y + 39);
+                let arrow = new Arrow(this.game, this.hero.getX(), this.hero.getY(), false, this.attackDamage, this.x + 8, this.y + 39);
                 this.game.addEntity(arrow);
             }
             this.elapsedTime = 0;
         }
+
+        // Collision check and handling
+        let that = this;
+        this.game.entities.forEach(function (entity) {
+            if (entity.BB && that.BB.collide(entity.BB)) {
+                if (entity instanceof Wall) {
+                    if (delX > 0 && that.lastBB.right <= entity.BB.left) { // collision from left
+                        delX = 0;
+                        that.x = entity.BB.left - that.width;
+                    }
+                    if (delX < 0 && that.lastBB.left >= entity.BB.right) { // collision from right
+                        delX = 0;
+                        that.x = entity.BB.right;
+                    }
+                    if (delY > 0 && that.lastBB.bottom <= entity.BB.top) { // collision from top
+                        delY = 0;
+                        that.y = entity.BB.top - that.height;
+                    }
+                    if (delY < 0 && that.lastBB.top >= entity.BB.bottom) { // collision from bottom
+                        delY = 0;
+                        that.y = entity.BB.bottom;
+                    }
+                }
+            }
+        });
+
+        this.updateBB();
     };
 
     draw(ctx) {
-        this.animations[this.action][this.facing].drawFrame(this.game.clockTick, ctx, this.x, this.y, 1);
+        let drawX = this.x - this.game.camera.x;
+        let drawY = this.y - this.game.camera.y;
+        this.animations[this.action][this.facing].drawFrame(this.game.clockTick, ctx, drawX, drawY, 1);
     };
 
     loadAnimations() {

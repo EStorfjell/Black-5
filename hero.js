@@ -8,8 +8,8 @@ class Hero {
         this.height = 46; // character height
 
         // character states
-        this.action = 0 // 0 = idle, 1 = walking
-        this.facing = 0 // 0 = east, 1 = north, 2 = west, 3 = south
+        this.action = 0; // 0 = idle, 1 = walking
+        this.facing = 0; // 0 = east, 1 = north, 2 = west, 3 = south
         this.health = 100;
 
         this.primaryWeapon = new Pistol(game, true, this.x, this.y);
@@ -81,7 +81,6 @@ class Hero {
             this.action = 0;
         }
 
-        // TODO: Implement collision
         this.x += delX;
         this.y += delY;
 
@@ -111,33 +110,66 @@ class Hero {
             let currentWeapon;
             if (this.meleeEquipped) currentWeapon = this.sword;
             else currentWeapon = this.primaryWeapon;
-            currentWeapon.attack(this.game.click.x, this.game.click.y);
+            currentWeapon.attack(this.game.click.x + this.game.camera.x, this.game.click.y + this.game.camera.y);
             this.game.click = null;
         }
+		
+        // World borders
+        if (this.x <= 0) this.x = 0;
+        if (this.y <= 0) this.y = 0;
+        if (this.x >= this.game.camera.map.width - this.width) this.x = this.game.camera.map.width - this.width;
+        if (this.y >= this.game.camera.map.height - this.height) this.y = this.game.camera.map.height - this.height;
 
         this.updateBB();
+
+        // Collision check and handling
+        let that = this;
+        this.game.entities.forEach(function (entity) {
+            if (entity.BB && that.BB.collide(entity.BB)) {
+                if (entity instanceof Wall) {
+                    if (delX > 0 && that.lastBB.right <= entity.BB.left) { // collision from left
+                        delX = 0;
+                        that.x = entity.BB.left - that.width;
+                    }
+                    if (delX < 0 && that.lastBB.left >= entity.BB.right) { // collision from right
+                        delX = 0;
+                        that.x = entity.BB.right;
+                    }
+                    if (delY > 0 && that.lastBB.bottom <= entity.BB.top) { // collision from top
+                        delY = 0;
+                        that.y = entity.BB.top - that.height;
+                    }
+                    if (delY < 0 && that.lastBB.top >= entity.BB.bottom) { // collision from bottom
+                        delY = 0;
+                        that.y = entity.BB.bottom;
+                    }
+                }
+            }
+        });
     };
 
     draw(ctx) {
-        let currentWeaponX;
-        let currentWeaponY;
+        let currentWeaponDrawX;
+        let currentWeaponDrawY;
         let currentWeaponAnimation;
         if (this.meleeEquipped) {
-            currentWeaponX = this.sword.getX();
-            currentWeaponY = this.sword.getY();
+            currentWeaponDrawX = this.sword.getX() - this.game.camera.x;
+            currentWeaponDrawY = this.sword.getY() - this.game.camera.y;
             currentWeaponAnimation = this.sword.getAnimation();
         } else {
-            currentWeaponX = this.primaryWeapon.getX();
-            currentWeaponY = this.primaryWeapon.getY();
+            currentWeaponDrawX = this.primaryWeapon.getX() - this.game.camera.x;
+            currentWeaponDrawY = this.primaryWeapon.getY() - this.game.camera.y;
             currentWeaponAnimation = this.primaryWeapon.getAnimation();
         }
 
+        let heroDrawX = this.x - this.game.camera.x;
+		let heroDrawY = this.y - this.game.camera.y;
         if (this.facing == 1) {
-            currentWeaponAnimation.drawFrame(this.game.clockTick, ctx, currentWeaponX, currentWeaponY, 1);
-            this.animations[this.action][this.facing].drawFrame(this.game.clockTick, ctx, this.x, this.y, 1);
+            currentWeaponAnimation.drawFrame(this.game.clockTick, ctx, currentWeaponDrawX, currentWeaponDrawY, 1);
+            this.animations[this.action][this.facing].drawFrame(this.game.clockTick, ctx, heroDrawX, heroDrawY, 1);
         } else {
-            this.animations[this.action][this.facing].drawFrame(this.game.clockTick, ctx, this.x, this.y, 1);
-            currentWeaponAnimation.drawFrame(this.game.clockTick, ctx, currentWeaponX, currentWeaponY, 1);
+            this.animations[this.action][this.facing].drawFrame(this.game.clockTick, ctx, heroDrawX, heroDrawY, 1);
+            currentWeaponAnimation.drawFrame(this.game.clockTick, ctx, currentWeaponDrawX, currentWeaponDrawY, 1);
         }
     };
 
@@ -200,7 +232,7 @@ class Hero {
             console.log("The player died.");
             this.removeFromWorld = true;
         }
-        if (knockback != 0) {
+        if (knockback !== 0) {
             // TODO: Allow a knockback to be applied over a period of time rather than all at once
             // The angle of the knockback measured relative to the x-axis
             let angle = Math.atan(Math.abs(yVectorComp) / Math.abs(xVectorComp));

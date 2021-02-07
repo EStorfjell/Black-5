@@ -3,7 +3,7 @@ class Arrow {
         Object.assign(this, { game, targetX, targetY, isOnHeroTeam, attackDamage, x, y });
 
         // sprite sheet
-        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/skeleton_arrow.png");
+        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/arrow.png");
 
         // arrow states
         this.facing = 0 // 0 = east, 1 = north, 2 = west, 3 = south
@@ -101,13 +101,21 @@ class Arrow {
                     // The arrow will damage the enemy
                     entity.takeDamage(that.attackDamage, 25, entity.getX() - that.x, entity.getY() - that.y);
                     that.removeFromWorld = true;
+                } else if (entity instanceof Wall) {
+                    that.removeFromWorld = true;
                 }
             }
         });
+
+        // World borders
+        that.removeFromWorld = that.removeFromWorld || this.x + this.width <= 0 || this.y + this.height <= 0
+            || this.x >= this.game.camera.map.width || this.y >= this.game.camera.map.height;
     };
 
     draw(ctx) {
-        this.animations[0][this.facing].drawFrame(this.game.clockTick, ctx, this.x, this.y, 1);
+        let drawX = this.x - this.game.camera.x;
+        let drawY = this.y - this.game.camera.y;
+        this.animations[0][this.facing].drawFrame(this.game.clockTick, ctx, drawX, drawY, 1);
     };
 
     loadAnimations() {

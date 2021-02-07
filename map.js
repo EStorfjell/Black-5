@@ -2,6 +2,8 @@ class Map {
     constructor(game, level) {
         Object.assign(this, {game, level});
         this.image = ASSET_MANAGER.getAsset(level.imgPath);
+        this.width = this.image.naturalWidth;
+        this.height = this.image.naturalHeight;
     };
 
     init() {
@@ -17,6 +19,6 @@ class Map {
     };
 
     draw(ctx) {
-        ctx.drawImage(this.image, 0, 0, 640, 480);
+        ctx.drawImage(this.image, -(this.game.camera.x), -(this.game.camera.y), this.width, this.height);
     };
 }
