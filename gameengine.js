@@ -14,6 +14,7 @@ class GameEngine {
         this.right = false;
         this.up = false;
         this.down = false;
+        this.switchWeapon = false;
 
         this.surfaceWidth = null;
         this.surfaceHeight = null;
@@ -89,6 +90,9 @@ class GameEngine {
                 case "KeyS":
                     // console.log("down");
                     that.down = true;
+                    break;
+                case "KeyQ":
+                    that.switchWeapon = true;
                     break;
             }
         }, false);

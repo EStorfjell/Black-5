@@ -1,6 +1,6 @@
 class Hero {
-    constructor(game, sword, crossbow, x, y) {
-        Object.assign(this, { game, sword, crossbow, x, y });
+    constructor(game, x, y) {
+        Object.assign(this, { game, x, y });
 
         // sprite sheet
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/hero.png");
@@ -12,12 +12,13 @@ class Hero {
         this.facing = 0 // 0 = east, 1 = north, 2 = west, 3 = south
         this.health = 100;
 
-        //this.sword = new Sword(game, this.x, this.y);
-        //this.crossbow = new Crossbow(game, true, this.x, this.y);
-
-        this.primaryWeapon = this.crossbow;
-        this.crossbow.setPrimaryWeapon();
-        this.secondaryWeapon = this.sword;
+        this.primaryWeapon = new Sword(game, this.x, this.y);
+        this.primaryWeapon.setPrimaryWeapon();
+        this.secondaryWeapon = new Crossbow(game, true, this.x, this.y);
+        this.secondaryWeapon.setSecondaryWeapon();
+        
+        this.game.addEntity(this.primaryWeapon);
+        this.game.addEntity(this.secondaryWeapon);
 
         this.walkSpeed = 200; // pixels per second
 
@@ -80,6 +81,14 @@ class Hero {
         this.x += delX;
         this.y += delY;
 
+        if (this.game.switchWeapon) {
+            let temp = this.secondaryWeapon;
+            this.secondaryWeapon = this.primaryWeapon;
+            this.secondaryWeapon.setSecondaryWeapon();
+            this.primaryWeapon = temp;
+            this.primaryWeapon.setPrimaryWeapon();
+            this.game.switchWeapon = false;
+        }
         this.primaryWeapon.updateX(this.x);
         this.primaryWeapon.updateY(this.y);
         this.primaryWeapon.updateFacing(this.facing);
