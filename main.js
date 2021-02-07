@@ -10,6 +10,8 @@ ASSET_MANAGER.queueDownload("./sprites/skeleton_arrow.png")
 ASSET_MANAGER.queueDownload("./sprites/witch.png")
 ASSET_MANAGER.queueDownload("./sprites/sword.png")
 ASSET_MANAGER.queueDownload("./sprites/crossbow.png")
+ASSET_MANAGER.queueDownload("./sprites/pistol.png")
+ASSET_MANAGER.queueDownload("./sprites/bullet.png")
 
 ASSET_MANAGER.downloadAll(function () {
     let canvas = document.getElementById('gameWorld');
