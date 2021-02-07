@@ -1,6 +1,6 @@
-class SkeletonArrow {
-    constructor(game, targetX, targetY, hero, x, y) {
-        Object.assign(this, { game, targetX, targetY, hero, x, y });
+class Arrow {
+    constructor(game, targetX, targetY, isOnHeroTeam, x, y) {
+        Object.assign(this, { game, targetX, targetY, isOnHeroTeam, x, y });
 
         // sprite sheet
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/skeleton_arrow.png");
@@ -94,10 +94,13 @@ class SkeletonArrow {
         var that = this;
         this.game.entities.forEach(function (entity) {
             if (entity.BB && that.BB.collide(entity.BB)) {
-                if (entity instanceof Hero) {
-                    that.action = 0;
+                if (!that.isOnHeroTeam && entity instanceof Hero) {
                     // The arrow will damage the player
-                    that.hero.takeDamage(that.attackDamage, 25, that.hero.getX() - that.x, that.hero.getY() - that.y);
+                    entity.takeDamage(that.attackDamage, 25, entity.getX() - that.x, entity.getY() - that.y);
+                    that.removeFromWorld = true;
+                } else if (that.isOnHeroTeam && (entity instanceof Skeleton || entity instanceof Zombie || entity instanceof Witch)) {
+                    // The arrow will damage the enemy
+                    entity.takeDamage(that.attackDamage, 25, entity.getX() - that.x, entity.getY() - that.y);
                     that.removeFromWorld = true;
                 }
             }

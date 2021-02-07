@@ -8,7 +8,9 @@ class Sword {
         // weapon states
         this.state = 0 // 0 = not equipped, 1 = secondary weapon, 2 = primary weapon, 3 = attacking
         this.facing = 0 // 0 = east, 1 = north, 2 = west, 3 = south
+
         this.attackDamage = 15;
+
         this.width = 44;
         this.height = 44;
         this.hiltX = this.x; // Location of the sword's hilt
@@ -25,7 +27,7 @@ class Sword {
     };
 
     draw(ctx) {
-        this.animations[this.action][this.facing].drawFrame(this.game.clockTick, ctx, this.x, this.y, 1);
+        //this.animations[this.action][this.facing].drawFrame(this.game.clockTick, ctx, this.x, this.y, 1);
     };
 
     getAnimation() {
@@ -116,28 +118,39 @@ class Sword {
         }
     }
 
-    updateState(newState) {
-        this.state = newState;
+    attack(targetX, targetY) {
+        this.state = 3;
+        this.attacking = true;
 
-        if (newState == 3) {
-            var that = this;
-            this.game.entities.forEach(function (entity) {
-                if (entity instanceof Zombie || entity instanceof Skeleton || entity instanceof Witch) {
-                    let distance = Math.sqrt((that.hiltX - entity.getX()) * (that.hiltX -
-                        entity.getX()) + (that.hiltY - entity.getY()) * (that.hiltY - entity.getY()));
+        var that = this;
+        this.game.entities.forEach(function (entity) {
+            if (entity instanceof Zombie || entity instanceof Skeleton || entity instanceof Witch) {
+                let distance = Math.sqrt((that.hiltX - entity.getX()) * (that.hiltX -
+                    entity.getX()) + (that.hiltY - entity.getY()) * (that.hiltY - entity.getY()));
 
-                    if (that.facing == 0 && that.hiltX <= entity.getX() && distance <= 75) { // east
-                        entity.takeDamage(that.attackDamage, 25, entity.getX() - that.hiltX, entity.getY() - that.hiltY);
-                    } else if (that.facing == 1 && that.hiltY >= entity.getY() && distance <= 75) { // north
-                        entity.takeDamage(that.attackDamage, 25, entity.getX() - that.hiltX, entity.getY() - that.hiltY);
-                    } else if (that.facing == 2 && that.hiltX >= entity.getX() && distance <= 75) { // west
-                        entity.takeDamage(that.attackDamage, 25, entity.getX() - that.hiltX, entity.getY() - that.hiltY);
-                    } else if (that.facing == 3 && that.hiltY <= entity.getY() && distance <= 75) { // south
-                        entity.takeDamage(that.attackDamage, 25, entity.getX() - that.hiltX, entity.getY() - that.hiltY);
-                    }
+                if (that.facing == 0 && that.hiltX <= entity.getX() && distance <= 75) { // east
+                    entity.takeDamage(that.attackDamage, 25, entity.getX() - that.hiltX, entity.getY() - that.hiltY);
+                } else if (that.facing == 1 && that.hiltY >= entity.getY() && distance <= 75) { // north
+                    entity.takeDamage(that.attackDamage, 25, entity.getX() - that.hiltX, entity.getY() - that.hiltY);
+                } else if (that.facing == 2 && that.hiltX >= entity.getX() && distance <= 75) { // west
+                    entity.takeDamage(that.attackDamage, 25, entity.getX() - that.hiltX, entity.getY() - that.hiltY);
+                } else if (that.facing == 3 && that.hiltY <= entity.getY() && distance <= 75) { // south
+                    entity.takeDamage(that.attackDamage, 25, entity.getX() - that.hiltX, entity.getY() - that.hiltY);
                 }
-            });
-        }
+            }
+        });
+    }
+
+    setNotEquipped() {
+        this.state = 0;
+    }
+
+    setSecondaryWeapon() {
+        this.state = 1;
+    }
+
+    setPrimaryWeapon() {
+        this.state = 2;
     }
 
     updateFacing(newFacing) {

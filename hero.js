@@ -1,6 +1,6 @@
 class Hero {
-    constructor(game, x, y) {
-        Object.assign(this, { game, x, y });
+    constructor(game, sword, crossbow, x, y) {
+        Object.assign(this, { game, sword, crossbow, x, y });
 
         // sprite sheet
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/hero.png");
@@ -12,7 +12,12 @@ class Hero {
         this.facing = 0 // 0 = east, 1 = north, 2 = west, 3 = south
         this.health = 100;
 
-        this.sword = new Sword(game, this.x, this.y);
+        //this.sword = new Sword(game, this.x, this.y);
+        //this.crossbow = new Crossbow(game, true, this.x, this.y);
+
+        this.primaryWeapon = this.crossbow;
+        this.crossbow.setPrimaryWeapon();
+        this.secondaryWeapon = this.sword;
 
         this.walkSpeed = 200; // pixels per second
 
@@ -75,28 +80,26 @@ class Hero {
         this.x += delX;
         this.y += delY;
 
-        this.sword.updateX(this.x);
-        this.sword.updateY(this.y);
-        this.sword.updateFacing(this.facing);
+        this.primaryWeapon.updateX(this.x);
+        this.primaryWeapon.updateY(this.y);
+        this.primaryWeapon.updateFacing(this.facing);
         if (this.game.click != null) {
-            this.sword.updateState(3);
+            this.primaryWeapon.attack(this.game.click.x, this.game.click.y);
             this.game.click = null;
-        } else {
-            this.sword.updateState(2);
         }
 
         this.updateBB();
     };
 
     draw(ctx) {
-        let swordX = this.sword.getX();
-        let swordY = this.sword.getY();
+        let primaryWeaponX = this.primaryWeapon.getX();
+        let primaryWeaponY = this.primaryWeapon.getY();
         if (this.facing == 1) {
-            this.sword.getAnimation().drawFrame(this.game.clockTick, ctx, swordX, swordY, 1);
+            this.primaryWeapon.getAnimation().drawFrame(this.game.clockTick, ctx, primaryWeaponX, primaryWeaponY, 1);
             this.animations[this.action][this.facing].drawFrame(this.game.clockTick, ctx, this.x, this.y, 1);
         } else {
             this.animations[this.action][this.facing].drawFrame(this.game.clockTick, ctx, this.x, this.y, 1);
-            this.sword.getAnimation().drawFrame(this.game.clockTick, ctx, swordX, swordY, 1);
+            this.primaryWeapon.getAnimation().drawFrame(this.game.clockTick, ctx, primaryWeaponX, primaryWeaponY, 1);
         }
     };
 

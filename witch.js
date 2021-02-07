@@ -16,6 +16,8 @@ class Witch {
         this.walkSpeed = 75; // pixels per second
         this.velocity = { x: 0, y: 0 };
 
+        this.updateBB();
+
         this.animations = [];
         this.loadAnimations();
     };
@@ -58,8 +60,6 @@ class Witch {
         // This value is negative if the hero is above (from the player's perspective)
         // the witch
         if (heroY < this.y) walkY = -walkY;
-
-        
         return walkY;
     }
 
@@ -103,8 +103,8 @@ class Witch {
             this.x += delX;
             this.y += delY;
         }
-
         
+        this.updateBB();
     };
 
     draw(ctx) {
@@ -139,6 +139,11 @@ class Witch {
         // south
         this.animations[1][3] = new Animator(this.spritesheet, 9, 11, this.width, this.height, 4, 0.15, 19, false, true);
 
+    }
+
+    updateBB() {
+        this.lastBB = this.BB;
+        this.BB = new BoundingBox(this.x, this.y, this.width, this.height);
     }
 
     getX() {
