@@ -15,6 +15,9 @@ class GameEngine {
         this.up = false;
         this.down = false;
 
+        this.switchToSecondary = false;
+        this.switchToMelee = false;
+
         this.surfaceWidth = null;
         this.surfaceHeight = null;
     };
@@ -89,6 +92,12 @@ class GameEngine {
                 case "KeyS":
                     // console.log("down");
                     that.down = true;
+                    break;
+                case "KeyQ":
+                    that.switchToSecondary = true;
+                    break;
+                case "KeyE":
+                    that.switchToMelee = true;
                     break;
             }
         }, false);

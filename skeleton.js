@@ -71,7 +71,7 @@ class Skeleton {
         // The hero's current y-coordinate
         let heroY = this.hero.getY();
 
-        let distance = Math.sqrt((this.x - heroX) ^ 2 + (this.y - heroY) ^ 2);
+        let distance = Math.sqrt((this.x - heroX) * (this.x - heroX) + (this.y - heroY) * (this.y - heroY));
 
         this.action = 1;
         // The total distance this skeleton will walk this tick
@@ -108,22 +108,23 @@ class Skeleton {
         this.updateBB();
 
         this.elapsedTime += this.game.clockTick;
-        if (distance <= 25 && this.elapsedTime >= this.firingRate) {
-            if (this.facing === 0) {
+        if (distance <= 300 && this.elapsedTime >= this.firingRate) {
+			console.log("skeleton attempted to fire. distance: "+ distance);
+            if (this.facing == 0) {
                 // The skeleton is facing east
-                let arrow = new SkeletonArrow(this.game, this.hero.getX(), this.hero.getY(), this.hero, this.x + 22, this.y + 23);
+                let arrow = new Arrow(this.game, this.hero.getX(), this.hero.getY(), false, this.attackDamage, this.x + 22, this.y + 23);
                 this.game.addEntity(arrow);
             } else if (this.facing === 1) {
                 // The skeleton is facing north
-                let arrow = new SkeletonArrow(this.game, this.hero.getX(), this.hero.getY(), this.hero, this.x + 10, this.y);
+                let arrow = new Arrow(this.game, this.hero.getX(), this.hero.getY(), false, this.attackDamage, this.x + 10, this.y);
                 this.game.addEntity(arrow);
             } else if (this.facing === 2) {
                 // The skeleton is facing west
-                let arrow = new SkeletonArrow(this.game, this.hero.getX(), this.hero.getY(), this.hero, this.x, this.y + 23);
+                let arrow = new Arrow(this.game, this.hero.getX(), this.hero.getY(), false, this.attackDamage, this.x, this.y + 23);
                 this.game.addEntity(arrow);
             } else if (this.facing === 3) {
                 // The skeleton is facing south
-                let arrow = new SkeletonArrow(this.game, this.hero.getX(), this.hero.getY(), this.hero, this.x + 8, this.y + 39);
+                let arrow = new Arrow(this.game, this.hero.getX(), this.hero.getY(), false, this.attackDamage, this.x + 8, this.y + 39);
                 this.game.addEntity(arrow);
             }
             this.elapsedTime = 0;
@@ -200,5 +201,43 @@ class Skeleton {
     updateBB() {
         this.lastBB = this.BB;
         this.BB = new BoundingBox(this.x, this.y, this.width, this.height);
+    }
+
+    getX() {
+        return this.x;
+    }
+
+    getY() {
+        return this.y;
+    }
+
+    /**
+     * Causes the skeleton to take damage with the option of adding knockback.
+     * An easy way to calculate the vector components is
+     * xVectorComp = (skeletonLocationX - damageDealerLocationX) and
+     * yVectorComp = (skeletonLocationY - damageDealerLocationY).
+     * @param {Number} damage The damage dealt to the skeleton
+     * @param {Number} knockback Knockback distance measured in pixels
+     * @param {Number} xVectorComp The x-component of a vector specifying the knockback direction
+     * @param {Number} yVectorComp The y-component of a vector specifying the knockback direction
+     */
+    takeDamage(damage, knockback = 0, xVectorComp = 0, yVectorComp = 0) {
+        this.health -= damage;
+        if (this.health <= 0) {
+            this.removeFromWorld = true;
+        }
+        if (knockback != 0) {
+            // TODO: Allow a knockback to be applied over a period of time rather than all at once
+            // The angle of the knockback measured relative to the x-axis
+            let angle = Math.atan(Math.abs(yVectorComp) / Math.abs(xVectorComp));
+            // The new x-coordinate of the skeleton
+            let deltaX = knockback * Math.cos(angle);
+            // The new y-coordinate of the skeleton
+            let deltaY = knockback * Math.sin(angle);
+            if (xVectorComp < 0) deltaX = -deltaX;
+            if (yVectorComp < 0) deltaY = -deltaY;
+            this.x += deltaX;
+            this.y += deltaY;
+        }
     }
 }
