@@ -15,10 +15,14 @@ class Hero {
         this.primaryWeapon = new Pistol(game, true, this.x, this.y);
         this.primaryWeapon.setPrimaryWeapon();
         this.secondaryWeapon = new Crossbow(game, true, this.x, this.y);
-        this.secondaryWeapon.setSecondaryWeapon();
+        this.secondaryWeapon.setPrimaryWeapon();
+        this.sword = new Sword(game, this.x, this.y);
+        this.sword.setPrimaryWeapon();
+        this.meleeEquipped = false;
 
         this.game.addEntity(this.primaryWeapon);
         this.game.addEntity(this.secondaryWeapon);
+        this.game.addEntity(this.sword);
 
         this.walkSpeed = 200; // pixels per second
 
@@ -81,19 +85,33 @@ class Hero {
         this.x += delX;
         this.y += delY;
 
-        if (this.game.switchWeapon) {
+        if (this.game.switchToSecondary) {
+            this.meleeEquipped = false;
             let temp = this.secondaryWeapon;
             this.secondaryWeapon = this.primaryWeapon;
-            this.secondaryWeapon.setSecondaryWeapon();
             this.primaryWeapon = temp;
-            this.primaryWeapon.setPrimaryWeapon();
-            this.game.switchWeapon = false;
+            this.game.switchToSecondary = false;
         }
+        if (this.game.switchToMelee) {
+            this.meleeEquipped = true;
+            this.game.switchToMelee = false;
+        }
+
         this.primaryWeapon.updateX(this.x);
         this.primaryWeapon.updateY(this.y);
         this.primaryWeapon.updateFacing(this.facing);
+        this.secondaryWeapon.updateX(this.x);
+        this.secondaryWeapon.updateY(this.y);
+        this.secondaryWeapon.updateFacing(this.facing);
+        this.sword.updateX(this.x);
+        this.sword.updateY(this.y);
+        this.sword.updateFacing(this.facing);
+
         if (this.game.click != null) {
-            this.primaryWeapon.attack(this.game.click.x, this.game.click.y);
+            let currentWeapon;
+            if (this.meleeEquipped) currentWeapon = this.sword;
+            else currentWeapon = this.primaryWeapon;
+            currentWeapon.attack(this.game.click.x, this.game.click.y);
             this.game.click = null;
         }
 
@@ -101,14 +119,25 @@ class Hero {
     };
 
     draw(ctx) {
-        let primaryWeaponX = this.primaryWeapon.getX();
-        let primaryWeaponY = this.primaryWeapon.getY();
+        let currentWeaponX;
+        let currentWeaponY;
+        let currentWeaponAnimation;
+        if (this.meleeEquipped) {
+            currentWeaponX = this.sword.getX();
+            currentWeaponY = this.sword.getY();
+            currentWeaponAnimation = this.sword.getAnimation();
+        } else {
+            currentWeaponX = this.primaryWeapon.getX();
+            currentWeaponY = this.primaryWeapon.getY();
+            currentWeaponAnimation = this.primaryWeapon.getAnimation();
+        }
+
         if (this.facing == 1) {
-            this.primaryWeapon.getAnimation().drawFrame(this.game.clockTick, ctx, primaryWeaponX, primaryWeaponY, 1);
+            currentWeaponAnimation.drawFrame(this.game.clockTick, ctx, currentWeaponX, currentWeaponY, 1);
             this.animations[this.action][this.facing].drawFrame(this.game.clockTick, ctx, this.x, this.y, 1);
         } else {
             this.animations[this.action][this.facing].drawFrame(this.game.clockTick, ctx, this.x, this.y, 1);
-            this.primaryWeapon.getAnimation().drawFrame(this.game.clockTick, ctx, primaryWeaponX, primaryWeaponY, 1);
+            currentWeaponAnimation.drawFrame(this.game.clockTick, ctx, currentWeaponX, currentWeaponY, 1);
         }
     };
 
