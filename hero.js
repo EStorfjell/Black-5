@@ -1,6 +1,6 @@
 class Hero {
     constructor(game, x, y) {
-        Object.assign(this, { game, x, y });
+        Object.assign(this, {game, x, y});
 
         // sprite sheet
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/hero.png");
@@ -108,12 +108,15 @@ class Hero {
 
         if (this.game.click != null) {
             let currentWeapon;
-            if (this.meleeEquipped) currentWeapon = this.sword;
-            else currentWeapon = this.primaryWeapon;
+            if (this.meleeEquipped) {
+                currentWeapon = this.sword;
+            } else {
+                currentWeapon = this.primaryWeapon;
+            }
             currentWeapon.attack(this.game.click.x + this.game.camera.x, this.game.click.y + this.game.camera.y);
             this.game.click = null;
         }
-		
+
         // World borders
         if (this.x <= 0) this.x = 0;
         if (this.y <= 0) this.y = 0;
@@ -146,6 +149,8 @@ class Hero {
                 }
             }
         });
+
+        this.updateBB();
     };
 
     draw(ctx) {
@@ -163,7 +168,7 @@ class Hero {
         }
 
         let heroDrawX = this.x - this.game.camera.x;
-		let heroDrawY = this.y - this.game.camera.y;
+        let heroDrawY = this.y - this.game.camera.y;
         if (this.facing == 1) {
             currentWeaponAnimation.drawFrame(this.game.clockTick, ctx, currentWeaponDrawX, currentWeaponDrawY, 1);
             this.animations[this.action][this.facing].drawFrame(this.game.clockTick, ctx, heroDrawX, heroDrawY, 1);
