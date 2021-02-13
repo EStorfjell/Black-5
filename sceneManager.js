@@ -34,12 +34,12 @@ class SceneManager {
         this.game.addEntity(this.map);
         this.map.init();
 
-        let boss = new Dragon(this.game, 400, 400);
-        this.game.addEntity(boss);
-
         this.hero.x = LEVELS.LEVEL_ONE.startX;
         this.hero.y = LEVELS.LEVEL_ONE.startY;
         this.game.addEntity(this.hero);
+
+        let boss = new Dragon(this.game, this.hero, 400, 400);
+        this.game.addEntity(boss);
     };
 
     update() {

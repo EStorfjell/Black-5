@@ -1,20 +1,23 @@
 class Dragon {
-    constructor(game, x, y) {
-        Object.assign(this, {game, x, y});
+    constructor(game, hero, x, y) {
+        Object.assign(this, {game, hero, x, y});
 
         // sprite sheet
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/dragon.png");
-        this.spriteWidth = 189; // character width
-        this.spriteHeight = 131; // character height
+        this.width = 189; // character width
+        this.height = 131; // character height
 
         this.heading = 0; // radians counterclockwise from East
+        this.velocity = {x: 0, y: 0};
 
         // character states
         this.action = 0; // 0 = flying
         this.facing = 0; // 0 = east, 1 = north, 2 = west, 3 = south
-        this.flyAnimSpeed = 0.5; // seconds per frame
+        this.flyAnimSpeed = 0.15; // seconds per frame
 
-        this.walkSpeed = 75; // pixels per second
+        this.maxSpeed = 100; // pixels per second
+        this.acceleration = 50; // pixels per second per second
+        this.turnSpeed = Math.PI / 3; // radians turned per second
 
         this.updateBB();
 
@@ -23,8 +26,37 @@ class Dragon {
     };
 
     update() {
-        // TODO: Behavior
+        let turnTickMax = this.turnSpeed * this.game.clockTick;
+        let accTickMax = this.acceleration * this.game.clockTick;
+        let flyTickMax = this.maxSpeed * this.game.clockTick;
 
+        // TODO: Behavior
+        let relationToPlayer = this.relationToTarget(this.hero);
+
+        // TODO: Finish turning
+        if (relationToPlayer.direction > this.heading && relationToPlayer.direction <= this.heading + Math.PI) {
+            this.heading = Math.min(relationToPlayer.direction, this.heading + turnTickMax);
+        } else if (relationToPlayer.direction < this.heading && relationToPlayer.direction > this.heading - Math.PI) {
+            this.heading = Math.max(relationToPlayer.direction, this.heading - turnTickMax);
+        }
+
+        // TODO: Velocity-based movement
+        if (relationToPlayer.distance > 200) {
+            this.x += flyTickMax * Math.cos(this.heading);
+            this.y -= flyTickMax * Math.sin(this.heading);
+        }
+
+        // Move based on velocity
+        this.x += this.velocity.x * this.game.clockTick;
+        this.y += this.velocity.y * this.game.clockTick;
+
+        // Remap heading to [0, 2pi)
+        while (this.heading >= 2 * Math.PI) {
+            this.heading -= 2 * Math.PI;
+        }
+        while (this.heading < 0) {
+            this.heading += 2 * Math.PI;
+        }
         // Choose sprite direction
         if (this.heading <= Math.PI / 4 || this.heading >= 7 * Math.PI / 4) {
             this.facing = 0;
@@ -39,20 +71,46 @@ class Dragon {
         // World borders
         if (this.x <= 0) this.x = 0;
         if (this.y <= 0) this.y = 0;
-        if (this.x >= this.game.camera.map.width - this.spriteWidth) this.x = this.game.camera.map.width - this.spriteWidth;
-        if (this.y >= this.game.camera.map.height - this.spriteHeight) this.y = this.game.camera.map.height - this.spriteHeight;
+        if (this.x >= this.game.camera.map.width - this.width) this.x = this.game.camera.map.width - this.width;
+        if (this.y >= this.game.camera.map.height - this.height) this.y = this.game.camera.map.height - this.height;
+
+        this.updateBB();
+
+        // TODO: Collisions
 
         this.updateBB();
     };
 
     draw(ctx) {
+        // TODO: Change animation system so wing state is preserved across "facing" changes
         let drawX = this.x - this.game.camera.x;
         let drawY = this.y - this.game.camera.y;
         this.animations[this.action][this.facing].drawFrame(this.game.clockTick, ctx, drawX, drawY, 1);
+
+        if (PARAMS.DEBUG) {
+            ctx.strokeStyle = "teal";
+            ctx.lineWidth = 1;
+            let drawXBB = this.BB.left - this.game.camera.x;
+            let drawYBB = this.BB.top - this.game.camera.y;
+            ctx.strokeRect(drawXBB, drawYBB, this.BB.width, this.BB.height);
+
+            ctx.strokeStyle = "yellow";
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            let centerX = drawX + (this.width / 2);
+            let centerY = drawY + (this.height / 2);
+            ctx.moveTo(centerX, centerY);
+            let endX = centerX + 100 * Math.cos(this.heading);
+            let endY = centerY - 100 * Math.sin(this.heading);
+            ctx.lineTo(endX, endY);
+            ctx.stroke();
+        }
     };
 
     updateBB() {
-
+        // TODO: Make bounding box change shape to match dragon's sprite
+        this.lastBB = this.BB;
+        this.BB = new BoundingBox(this.x, this.y, this.width, this.height);
     };
 
     loadAnimations() {
@@ -65,12 +123,41 @@ class Dragon {
 
         // flying
         // east
-        this.animations[0][0] = new Animator(this.spritesheet, 10, 151, this.spriteWidth, this.spriteHeight, 4, this.flyAnimSpeed, 10, false, true);
+        this.animations[0][0] = new Animator(this.spritesheet, 10, 151, this.width, this.height, 4, this.flyAnimSpeed, 10, false, true);
         // north
-        this.animations[0][1] = new Animator(this.spritesheet, 10, 10, this.spriteWidth, this.spriteHeight, 4, this.flyAnimSpeed, 10, false, true);
+        this.animations[0][1] = new Animator(this.spritesheet, 10, 10, this.width, this.height, 4, this.flyAnimSpeed, 10, false, true);
         // west
-        this.animations[0][2] = new Animator(this.spritesheet, 10, 433, this.spriteWidth, this.spriteHeight, 4, this.flyAnimSpeed, 10, false, true);
+        this.animations[0][2] = new Animator(this.spritesheet, 10, 433, this.width, this.height, 4, this.flyAnimSpeed, 10, false, true);
         // south
-        this.animations[0][3] = new Animator(this.spritesheet, 10, 292, this.spriteWidth, this.spriteHeight, 4, this.flyAnimSpeed, 10, false, true);
+        this.animations[0][3] = new Animator(this.spritesheet, 10, 292, this.width, this.height, 4, this.flyAnimSpeed, 10, false, true);
+    };
+
+    relationToTarget(target) {
+        // Determine where the target is relative to dragon
+        let relation = {distance: 0, direction: 0};
+        let centerX = this.x + (this.width / 2);
+        let centerY = this.y + (this.height / 2);
+        let targetCenterX = target.x + (target.width / 2);
+        let targetCenterY = target.y + (target.height / 2);
+        let xDiff = targetCenterX - centerX;
+        let yDiff = targetCenterY - centerY;
+        if (xDiff > 0) {
+            relation.direction = Math.atan(-(yDiff) / xDiff);
+        } else if (xDiff < 0) {
+            relation.direction = Math.PI - Math.atan(yDiff / xDiff);
+        } else if (yDiff < 0) {
+            relation.direction = Math.PI / 2;
+        } else {
+            relation.direction = 3 * Math.PI / 2;
+        }
+        // Remap direction to [0, 2pi)
+        while (relation.direction >= 2 * Math.PI) {
+            relation.direction -= 2 * Math.PI;
+        }
+        while (relation.direction < 0) {
+            relation.direction += 2 * Math.PI;
+        }
+        relation.distance = Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2));
+        return relation;
     }
 }
