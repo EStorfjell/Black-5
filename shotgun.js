@@ -51,8 +51,29 @@ class Shotgun {
                 bulletX = this.x + 7;
                 bulletY = this.y + 35;
             }
-            let bullet = new Bullet(this.game, this.targetX, this.targetY, isOnHeroTeam, this.attackDamage, bulletX, bulletY);
-            this.game.addEntity(bullet);
+
+            // 15 degrees
+            let angle = 0.2617994;
+            // Sets the origin to the shotgun's position
+            let newTargetX = this.targetX - this.x;
+            let newTargetY = this.targetY - this.y;
+            // Finds the new rotated coordinates relative to the shotgun
+            let rotatedTargetX1 = newTargetX * Math.cos(angle) - newTargetY * Math.sin(angle);
+            let rotatedTargetY1 = newTargetX * Math.sin(angle) + newTargetY * Math.cos(angle);
+            let rotatedTargetX2 = newTargetX * Math.cos(-angle) - newTargetY * Math.sin(-angle);
+            let rotatedTargetY2 = newTargetX * Math.sin(-angle) + newTargetY * Math.cos(-angle);
+            // Sets the origin back to the map's origin
+            rotatedTargetX1 += this.x;
+            rotatedTargetY1 += this.y;
+            rotatedTargetX2 += this.x;
+            rotatedTargetY2 += this.y;
+            let bullet1 = new Bullet(this.game, rotatedTargetX1, rotatedTargetY1, isOnHeroTeam, this.attackDamage, bulletX, bulletY);
+            let bullet2 = new Bullet(this.game, this.targetX, this.targetY, isOnHeroTeam, this.attackDamage, bulletX, bulletY);
+            let bullet3 = new Bullet(this.game, rotatedTargetX2, rotatedTargetY2, isOnHeroTeam, this.attackDamage, bulletX, bulletY);
+            this.game.addEntity(bullet1);
+            this.game.addEntity(bullet2);
+            this.game.addEntity(bullet3);
+
             this.state = 3;
             this.ammo--;
             this.attacking = false;
