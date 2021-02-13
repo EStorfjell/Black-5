@@ -8,7 +8,8 @@ class SceneManager {
         this.hero = new Hero(game, 50, 50);
         this.map = null;
 
-        this.loadLevelOne();
+        // this.loadLevelOne();
+        this.loadLevelFive();
     };
 
     loadLevelOne() {
@@ -22,6 +23,19 @@ class SceneManager {
         this.game.addEntity(skeleton);
         let witch = new Witch(this.game, this.hero, 400, 400);
         this.game.addEntity(witch);
+
+        this.hero.x = LEVELS.LEVEL_ONE.startX;
+        this.hero.y = LEVELS.LEVEL_ONE.startY;
+        this.game.addEntity(this.hero);
+    };
+
+    loadLevelFive() {
+        this.map = new Map(this.game, LEVELS.LEVEL_ONE);
+        this.game.addEntity(this.map);
+        this.map.init();
+
+        let boss = new Dragon(this.game, 400, 400);
+        this.game.addEntity(boss);
 
         this.hero.x = LEVELS.LEVEL_ONE.startX;
         this.hero.y = LEVELS.LEVEL_ONE.startY;
