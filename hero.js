@@ -12,7 +12,7 @@ class Hero {
         this.facing = 0; // 0 = east, 1 = north, 2 = west, 3 = south
         this.health = 100;
 
-        this.primaryWeapon = new Pistol(game, true, this.x, this.y);
+        this.primaryWeapon = new Shotgun(game, true, this.x, this.y);
         this.primaryWeapon.setPrimaryWeapon();
         this.secondaryWeapon = new Crossbow(game, true, this.x, this.y);
         this.secondaryWeapon.setPrimaryWeapon();
