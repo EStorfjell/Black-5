@@ -16,12 +16,15 @@ class Hero {
         this.primaryWeapon.setPrimaryWeapon();
         this.secondaryWeapon = new Crossbow(game, true, this.x, this.y);
         this.secondaryWeapon.setPrimaryWeapon();
+        this.tertiaryWeapon = new Shotgun(game, true, this.x, this.y);
+        this.tertiaryWeapon.setPrimaryWeapon();
         this.sword = new Sword(game, this.x, this.y);
         this.sword.setPrimaryWeapon();
         this.meleeEquipped = false;
 
         this.game.addEntity(this.primaryWeapon);
         this.game.addEntity(this.secondaryWeapon);
+        this.game.addEntity(this.tertiaryWeapon);
         this.game.addEntity(this.sword);
 
         this.walkSpeed = 200; // pixels per second
@@ -86,9 +89,10 @@ class Hero {
 
         if (this.game.switchToSecondary) {
             this.meleeEquipped = false;
-            let temp = this.secondaryWeapon;
-            this.secondaryWeapon = this.primaryWeapon;
-            this.primaryWeapon = temp;
+            let temp = this.primaryWeapon;
+            this.primaryWeapon = this.secondaryWeapon;
+            this.secondaryWeapon = this.tertiaryWeapon;
+            this.tertiaryWeapon = temp;
             this.game.switchToSecondary = false;
         }
         if (this.game.switchToMelee) {
@@ -102,6 +106,9 @@ class Hero {
         this.secondaryWeapon.updateX(this.x);
         this.secondaryWeapon.updateY(this.y);
         this.secondaryWeapon.updateFacing(this.facing);
+        this.tertiaryWeapon.updateX(this.x);
+        this.tertiaryWeapon.updateY(this.y);
+        this.tertiaryWeapon.updateFacing(this.facing);
         this.sword.updateX(this.x);
         this.sword.updateY(this.y);
         this.sword.updateFacing(this.facing);
