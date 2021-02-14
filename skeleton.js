@@ -17,6 +17,7 @@ class Skeleton {
         this.dead = false;
 
         this.walkSpeed = 75; // pixels per second
+        this.velocity = {x: 0, y: 0};
 
         this.updateBB();
 
@@ -109,7 +110,6 @@ class Skeleton {
 
         this.elapsedTime += this.game.clockTick;
         if (distance <= 300 && this.elapsedTime >= this.firingRate) {
-			console.log("skeleton attempted to fire. distance: "+ distance);
             if (this.facing == 0) {
                 // The skeleton is facing east
                 let arrow = new Arrow(this.game, this.hero.getX(), this.hero.getY(), false, this.attackDamage, this.x + 22, this.y + 23);

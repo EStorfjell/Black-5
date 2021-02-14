@@ -17,6 +17,7 @@ class Zombie {
         this.dead = false;
 
         this.walkSpeed = 75; // pixels per second
+        this.velocity = {x: 0, y: 0};
 
         this.updateBB();
 

@@ -16,10 +16,10 @@ class SceneManager {
         this.game.addEntity(this.map);
         this.map.init();
 
-        let zombie = new Zombie(this.game, this.hero, 400, 100);
-        this.game.addEntity(zombie);
-        let skeleton = new Skeleton(this.game, this.hero, 100, 200);
-        this.game.addEntity(skeleton);
+        //let zombie = new Zombie(this.game, this.hero, 400, 100);
+        //this.game.addEntity(zombie);
+        //let skeleton = new Skeleton(this.game, this.hero, 100, 200);
+        //this.game.addEntity(skeleton);
         let witch = new Witch(this.game, this.hero, 400, 400);
         this.game.addEntity(witch);
 
