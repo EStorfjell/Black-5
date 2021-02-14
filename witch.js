@@ -72,7 +72,6 @@ class Witch {
             let deltaY = (heroY - this.y) / heroDistance;
             this.velocity.x += deltaX * this.accelerationToPlayer / (heroDistance * heroDistance);
             this.velocity.y += deltaY * this.accelerationToPlayer / (heroDistance * heroDistance);
-            this.testSpeed();
         }
 
         // World borders
@@ -114,6 +113,8 @@ class Witch {
             }
         });
 		
+        this.testSpeed();
+
 		this.updateBB();
     };
 
