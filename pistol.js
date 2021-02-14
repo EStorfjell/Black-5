@@ -14,7 +14,7 @@ class Pistol {
         this.attackDamageIncrease = 5; // attack damage increase per upgrade
         this.attackDamageUpgradeLevel = 0;
 
-        this.ammo = 8; // number of bullets
+        this.ammo = 200; // number of bullets
         this.attacking = false; // true if this pistol is firing
         this.targetX = 0;
         this.targetY = 0;
