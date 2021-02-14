@@ -7,13 +7,17 @@ class SceneManager {
 
         this.hero = new Hero(game, 50, 50);
         this.map = null;
-        this.wave = 1;
-        this.round = 1;
+        this.totalWaves = 4;
+        this.totalRounds = 4;
+        this.wave = 1; // current wave
+        this.round = 1; // current round
 
         this.loadRound(1, 1);
     };
 
     loadRound(wave, round) {
+        console.log("wave: " + wave + ", round: " + round);
+
         this.map = new Map(this.game, LEVELS.LEVEL_ONE);
         this.game.addEntity(this.map);
         this.map.init();
@@ -32,6 +36,8 @@ class SceneManager {
         let witchCount = LEVELS.LEVEL_ONE.waves[wave][round].witches;
 
         let count = zombieCount + skeletonCount + witchCount;
+        this.game.setEnemyCount(count);
+
         while (count > 0) {
             // Chooses a random spawn point
             let spawnPoint = randomInt(spawnPoints.length);
@@ -41,7 +47,7 @@ class SceneManager {
                 let enemy = new Zombie(this.game, this.hero, 
                     LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].x, LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].y);
                     zombieCount--;
-                    count --;
+                    count--;
                     this.game.addEntity(enemy);
             } else if (enemyNumber == 1 && skeletonCount > 0) {
                 let enemy = new Skeleton(this.game, this.hero, 
@@ -82,7 +88,26 @@ class SceneManager {
         } else if (heroMidY - this.y > halfHeight) {
             this.y = Math.min(this.map.height - PARAMS.CANVAS_HEIGHT, heroMidY - halfHeight);
         }
+
+        if (this.game.getEnemyCount() == 0) {
+            if (this.round == this.totalRounds && this.wave < this.totalWaves) {
+                this.wave++;
+                this.round = 1;
+                this.clearEntityArray();
+                this.loadRound(this.wave, this.round);
+            } else if (this.round < this.totalRounds && this.wave < this.totalWaves) {
+                this.round++;
+                this.clearEntityArray();
+                this.loadRound(this.wave, this.round);
+            } else {
+                // TODO: Add a level ending
+            }
+        }
     };
+
+    clearEntityArray() {
+        this.game.entities = [];
+    }
 
     draw(ctx) {
 

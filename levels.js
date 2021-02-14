@@ -45,22 +45,6 @@ const LEVELS = {
                 { zombies: 6, skeletons: 5, witches: 4 }, { zombies: 7, skeletons: 6, witches: 5 },
                 { zombies: 8, skeletons: 7, witches: 6 }, { zombies: 9, skeletons: 8, witches: 7 }
             ]
-        ],
-        wave1: [
-            { zombies: 3, skeletons: 2, witches: 1 }, { zombies: 4, skeletons: 3, witches: 2 },
-            { zombies: 5, skeletons: 4, witches: 3 }, { zombies: 6, skeletons: 5, witches: 4 }
-        ],
-        wave2: [
-            { zombies: 4, skeletons: 3, witches: 2 }, { zombies: 5, skeletons: 4, witches: 3 },
-            { zombies: 6, skeletons: 5, witches: 4 }, { zombies: 7, skeletons: 6, witches: 5 }
-        ],
-        wave3: [
-            { zombies: 5, skeletons: 4, witches: 3 }, { zombies: 6, skeletons: 5, witches: 4 },
-            { zombies: 7, skeletons: 6, witches: 5 }, { zombies: 8, skeletons: 7, witches: 6 }
-        ],
-        wave4: [
-            { zombies: 6, skeletons: 5, witches: 4 }, { zombies: 7, skeletons: 6, witches: 5 },
-            { zombies: 8, skeletons: 7, witches: 6 }, { zombies: 9, skeletons: 8, witches: 7 }
         ]
     }
 };
