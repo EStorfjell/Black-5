@@ -242,7 +242,6 @@ class Hero {
         this.health -= damage;
         if (this.health <= 0) {
             console.log("The player died.");
-            this.removeFromWorld = true;
         }
         if (knockback !== 0) {
             // TODO: Allow a knockback to be applied over a period of time rather than all at once
