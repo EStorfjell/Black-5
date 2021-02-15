@@ -14,7 +14,7 @@ class Pistol {
         this.attackDamageIncrease = 5; // attack damage increase per upgrade
         this.attackDamageUpgradeLevel = 0;
 
-        this.ammo = 200; // number of bullets
+        this.ammo = 8; // number of bullets
         this.attacking = false; // true if this pistol is firing
         this.targetX = 0;
         this.targetY = 0;
@@ -168,7 +168,7 @@ class Pistol {
             pistolOffset = -15;
         } else if (this.facing == 1) { // north
             playerOffset = 30;
-            if (this.state == 4) pistolOffset = -35; // firing
+            if (this.state == 2) pistolOffset = -35; // firing
             else pistolOffset = -26 // not firing
         } else if (this.facing == 2) { // west
             playerOffset = 28;

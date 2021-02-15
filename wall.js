@@ -1,6 +1,6 @@
 class Wall {
-    constructor(game, x, y, width, height, centerX, centerY) {
-        Object.assign(this, {game, x, y, width, height, centerX, centerY});
+    constructor(game, x, y, width, height) {
+        Object.assign(this, {game, x, y, width, height});
         this.updateBB();
     };
 
