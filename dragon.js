@@ -14,10 +14,14 @@ class Dragon {
         this.action = 0; // 0 = flying
         this.facing = 0; // 0 = east, 1 = north, 2 = west, 3 = south
         this.flyAnimSpeed = 0.15; // seconds per frame
+        this.breathLoc = [{x: 155, y: 95}, {x: 95, y: 5}, {x: 34, y: 95}, {x: 95, y: 107}]; // mouth locations
 
         this.maxSpeed = 100; // pixels per second
         this.acceleration = 50; // pixels per second per second
         this.turnSpeed = Math.PI / 3; // radians turned per second
+
+        this.coolDown = 2;
+        this.timer = 0;
 
         this.updateBB();
 
@@ -37,6 +41,10 @@ class Dragon {
         if (relationToPlayer.direction > this.heading && relationToPlayer.direction <= this.heading + Math.PI) {
             this.heading = Math.min(relationToPlayer.direction, this.heading + turnTickMax);
         } else if (relationToPlayer.direction < this.heading && relationToPlayer.direction > this.heading - Math.PI) {
+            this.heading = Math.max(relationToPlayer.direction, this.heading - turnTickMax);
+        } else if (relationToPlayer.direction + 2 * Math.PI > this.heading && relationToPlayer.direction + 2 * Math.PI <= this.heading + Math.PI) {
+            this.heading = Math.min(relationToPlayer.direction, this.heading + turnTickMax);
+        } else if (relationToPlayer.direction - 2 * Math.PI < this.heading && relationToPlayer.direction - 2 * Math.PI > this.heading - Math.PI) {
             this.heading = Math.max(relationToPlayer.direction, this.heading - turnTickMax);
         }
 
@@ -68,6 +76,15 @@ class Dragon {
             this.facing = 3;
         }
 
+        this.timer += this.game.clockTick;
+        if (this.timer >= this.coolDown) {
+            this.timer = 0;
+            let fireX = this.x + this.breathLoc[this.facing].x - 10;
+            let fireY = this.y + this.breathLoc[this.facing].y - 10;
+            let fire = new Fireball(this.game, fireX, fireY, this.hero.x, this.hero.y);
+            this.game.addEntity(fire);
+        }
+
         // World borders
         if (this.x <= 0) this.x = 0;
         if (this.y <= 0) this.y = 0;
@@ -88,12 +105,6 @@ class Dragon {
         this.animations[this.action][this.facing].drawFrame(this.game.clockTick, ctx, drawX, drawY, 1);
 
         if (PARAMS.DEBUG) {
-            ctx.strokeStyle = "teal";
-            ctx.lineWidth = 1;
-            let drawXBB = this.BB.left - this.game.camera.x;
-            let drawYBB = this.BB.top - this.game.camera.y;
-            ctx.strokeRect(drawXBB, drawYBB, this.BB.width, this.BB.height);
-
             ctx.strokeStyle = "yellow";
             ctx.lineWidth = 3;
             ctx.beginPath();

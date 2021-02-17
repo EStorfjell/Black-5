@@ -14,6 +14,7 @@ ASSET_MANAGER.queueDownload("./sprites/crossbow.png");
 ASSET_MANAGER.queueDownload("./sprites/pistol.png");
 ASSET_MANAGER.queueDownload("./sprites/bullet.png");
 ASSET_MANAGER.queueDownload("./sprites/dragon.png");
+ASSET_MANAGER.queueDownload("./sprites/fireball.png");
 
 ASSET_MANAGER.downloadAll(function () {
     let canvas = document.getElementById('gameWorld');
