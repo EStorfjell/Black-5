@@ -101,6 +101,7 @@ class SceneManager {
                 this.loadRound(this.wave, this.round);
             } else {
                 // TODO: Add a level ending
+                console.log("Level complete");
             }
         }
     };
