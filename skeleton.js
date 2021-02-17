@@ -24,6 +24,7 @@ class Skeleton {
         this.velocity = { x: 0, y: 0 };
         this.accelerationToPlayer = 1000000;
         this.accelerationFromWall = 70000;
+        this.accelerationFromEnemy = 20000;
 
         this.updateBB();
 
@@ -124,6 +125,15 @@ class Skeleton {
                 let wallDeltaY = (entity.centerY - that.y) / wallDistance;
                 that.velocity.x -= wallDeltaX * that.accelerationFromWall / (wallDistance * wallDistance);
                 that.velocity.y -= wallDeltaY * that.accelerationFromWall / (wallDistance * wallDistance);
+            } else if (entity instanceof Zombie || entity instanceof Skeleton || entity instanceof Witch) {
+                let enemyDistance = Math.sqrt((that.x - entity.getX()) * (that.x - entity.getX()) +
+                    (that.y - entity.getY()) * (that.y - entity.getY()));
+                if (enemyDistance > 0) {
+                    let enemyDeltaX = (entity.getX() - that.x) / enemyDistance;
+                    let enemyDeltaY = (entity.getY() - that.y) / enemyDistance;
+                    that.velocity.x -= enemyDeltaX * that.accelerationFromEnemy / (enemyDistance * enemyDistance);
+                    that.velocity.y -= enemyDeltaY * that.accelerationFromEnemy / (enemyDistance * enemyDistance);
+                }
             }
         });
 
