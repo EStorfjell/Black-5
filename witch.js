@@ -14,15 +14,15 @@ class Witch {
         this.attack = 0;
         this.attackDistance = 200;
         this.elapsedTime = 0;
-        this.firingRate = 5000;
+        this.firingRate = 1;
 
         this.health = 100;
         this.dead = false;
 
         this.walkSpeed = 75; // pixels per second
         this.velocity = {x: 0, y: 0};
-
-        this.updateBB();
+        this.accelerationToPlayer = 1000000;
+        this.accelerationFromWall = 70000;
 
         this.updateBB();
 
@@ -30,65 +30,26 @@ class Witch {
         this.loadAnimations();
     };
 
-    // Gets the next x-value to move toward the player
-    getNextXValue(walkOrth) {
-        // The hero's current x-coordinate
-        let heroX = this.hero.getX();
-        // The hero's current y-coordinate
-        let heroY = this.hero.getY();
-        // The distance between the hero and this witch in the x-direction
-        let deltaX = Math.abs(this.x - heroX);
-        // The distance between the hero and this witch in the y-direction
-        let deltaY = Math.abs(this.y - heroY);
-        // The angle of a right triangle in which the witch is on one
-        // end, and the hero is on the other
-        let angle = Math.atan(deltaY / deltaX);
-        // The distance in the x-direction the witch will walk this tick
-        let walkX = walkOrth * Math.cos(angle);
-        // This value is negative if the hero is to the left of the witch
-        if (heroX < this.x) walkX = -walkX;
-        return walkX;
-    }
-
-    // Gets the next y-value to move toward the player
-    getNextYValue(walkOrth) {
-        // The hero's current x-coordinate
-        let heroX = this.hero.getX();
-        // The hero's current y-coordinate
-        let heroY = this.hero.getY();
-        // The distance between the hero and this witch in the x-direction
-        let deltaX = Math.abs(this.x - heroX);
-        // The distance between the hero and this witch in the y-direction
-        let deltaY = Math.abs(this.y - heroY);
-        // The angle of a right triangle in which the witch is on one
-        // end, and the hero is on the other
-        let angle = Math.atan(deltaY / deltaX);
-        // The distance in the y-direction the witch will walk this tick
-        let walkY = walkOrth * Math.sin(angle);
-        // This value is negative if the hero is above (from the player's perspective)
-        // the witch
-        if (heroY < this.y) walkY = -walkY;
-        return walkY;
-    }
-
-    turnDirection() {
-
-    }
+    testSpeed() {
+        var speed = Math.sqrt(this.velocity.x * this.velocity.x + this.velocity.y * this.velocity.y);
+        if (speed > this.walkSpeed) {
+            var ratio = this.walkSpeed / speed;
+            this.velocity.x *= ratio;
+            this.velocity.y *= ratio;
+        }
+    };
 
     update() {
         this.action = 1;
-        
-        // The total distance this witch will walk this tick
-        let walkOrth = this.walkSpeed * this.game.clockTick;
 
-        //hero coordinates
+        // hero coordinates
         let heroX = this.hero.getX();
         let heroY = this.hero.getY();
         // distance equation for 2 points
-        let distance = Math.sqrt(Math.pow(Math.abs(heroX - this.x), 2) + Math.pow(Math.abs(heroY - this.y), 2));
+        let heroDistance = Math.sqrt(Math.pow(Math.abs(heroX - this.x), 2) + Math.pow(Math.abs(heroY - this.y), 2));
 
-        let delX = this.getNextXValue(walkOrth);
-        let delY = this.getNextYValue(walkOrth);
+        let delX = this.velocity.x * this.game.clockTick;
+        let delY = this.velocity.y * this.game.clockTick;
 
         // [xDisplaced, yDisplaced, hV]
         let cardinal = [this.x - heroX, this.y - heroY, Math.abs(delX / delY)]; // hV > 1: EAST/WEST; hV < 1:
@@ -104,21 +65,23 @@ class Witch {
             this.facing = 3;
         }
 
-       
-        if (distance < this.attackDistance) { // If closer than 100 px, stop moving
-            this.action = 0;
-            console.log("witch attempted to fire. distance: "+ distance);
-            let fireBall = new FireBall(this.game, this.hero.getX(), this.hero.getY(), false, this.attackDamage, this.x + 22, this.y + 23);
-            this.game.addEntity(fireBall);
-            this.elapsedTime += this.game.clockTick;
+        this.elapsedTime += this.game.clockTick;
+        if (heroDistance <= this.attackDistance) { // if hero is less than attackDistance away, stop and attack
+			this.action = 0;
             if (this.elapsedTime >= this.firingRate) {
+                let fireBall = new FireBall(this.game, this.hero.getX(), this.hero.getY(), false, this.attackDamage, this.x - 10, this.y + 30);
+                this.game.addEntity(fireBall);
                 this.elapsedTime = 0;
             }
         } else { // walk towards player
             this.action = 1;
-            this.elapsedTime = 0;
-			this.x += delX;
+            this.x += delX;
             this.y += delY;
+
+            let deltaX = (heroX - this.x) / heroDistance;
+            let deltaY = (heroY - this.y) / heroDistance;
+            this.velocity.x += deltaX * this.accelerationToPlayer / (heroDistance * heroDistance);
+            this.velocity.y += deltaY * this.accelerationToPlayer / (heroDistance * heroDistance);
         }
 
         // World borders
@@ -126,29 +89,6 @@ class Witch {
         if (this.y <= 0) this.y = 0;
         if (this.x >= this.game.camera.map.width - this.width) this.x = this.game.camera.map.width - this.width;
         if (this.y >= this.game.camera.map.height - this.height) this.y = this.game.camera.map.height - this.height;
-
-        
-        if (distance <= 300 && this.elapsedTime >= this.firingRate) {
-			
-            if (this.facing == 0) {
-                // The witch is facing east
-                
-                
-            } else if (this.facing === 1) {
-                // The witch is facing north
-                let fireBall = new FireBall(this.game, this.hero.getX(), this.hero.getY(), false, this.attackDamage, this.x + 10, this.y);
-                this.game.addEntity(fireBall);
-            } else if (this.facing === 2) {
-                // The witch is facing west
-                let fireBall = new FireBall(this.game, this.hero.getX(), this.hero.getY(), false, this.attackDamage, this.x, this.y + 23);
-                this.game.addEntity(fireBall);
-            } else if (this.facing === 3) {
-                // The witch is facing south
-                let fireBall = new FireBall(this.game, this.hero.getX(), this.hero.getY(), false, this.attackDamage, this.x + 8, this.y + 39);
-                this.game.addEntity(fireBall);
-            }
-            this.elapsedTime = 0;
-        }
 
         // Collision check and handling
         let that = this;
@@ -173,8 +113,18 @@ class Witch {
                     }
                 }
             }
+            if (entity instanceof Wall) {
+                let wallDistance = Math.sqrt((that.x - entity.centerX) * (that.x - entity.centerX) + 
+                (that.y - entity.centerY) * (that.y - entity.centerY));
+                let deltaX = (entity.centerX - that.x) / wallDistance;
+                let deltaY = (entity.centerY - that.y) / wallDistance;
+                that.velocity.x -= deltaX * that.accelerationFromWall / (wallDistance * wallDistance);
+                that.velocity.y -= deltaY * that.accelerationFromWall / (wallDistance * wallDistance);
+            }
         });
 		
+        this.testSpeed();
+
 		this.updateBB();
     };
 

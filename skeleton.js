@@ -17,6 +17,9 @@ class Skeleton {
         this.dead = false;
 
         this.walkSpeed = 75; // pixels per second
+        this.velocity = {x: 0, y: 0};
+        this.accelerationToPlayer = 1000000;
+        this.accelerationFromWall = 70000;
 
         this.updateBB();
 
@@ -24,60 +27,25 @@ class Skeleton {
         this.loadAnimations();
     };
 
-    // Gets the next x-value to move toward the player
-    getNextXValue(walkOrth) {
-        // The hero's current x-coordinate
-        let heroX = this.hero.getX();
-        // The hero's current y-coordinate
-        let heroY = this.hero.getY();
-        // The distance between the hero and this skeleton in the x-direction
-        let deltaX = Math.abs(this.x - heroX);
-        // The distance between the hero and this skeleton in the y-direction
-        let deltaY = Math.abs(this.y - heroY);
-        // The angle of a right triangle in which the skeleton is on one
-        // end, and the hero is on the other
-        let angle = Math.atan(deltaY / deltaX);
-        // The distance in the x-direction the skeleton will walk this tick
-        let walkX = walkOrth * Math.cos(angle);
-        // This value is negative if the hero is to the left of the skeleton
-        if (heroX < this.x) walkX = -walkX;
-        return walkX;
-    }
-
-    // Gets the next y-value to move toward the player
-    getNextYValue(walkOrth) {
-        // The hero's current x-coordinate
-        let heroX = this.hero.getX();
-        // The hero's current y-coordinate
-        let heroY = this.hero.getY();
-        // The distance between the hero and this skeleton in the x-direction
-        let deltaX = Math.abs(this.x - heroX);
-        // The distance between the hero and this skeleton in the y-direction
-        let deltaY = Math.abs(this.y - heroY);
-        // The angle of a right triangle in which the skeleton is on one
-        // end, and the hero is on the other
-        let angle = Math.atan(deltaY / deltaX);
-        // The distance in the y-direction the skeleton will walk this tick
-        let walkY = walkOrth * Math.sin(angle);
-        // This value is negative if the hero is above (from the player's perspective)
-        // the skeleton
-        if (heroY < this.y) walkY = -walkY;
-        return walkY;
-    }
+    testSpeed() {
+        var speed = Math.sqrt(this.velocity.x * this.velocity.x + this.velocity.y * this.velocity.y);
+        if (speed > this.walkSpeed) {
+            var ratio = this.walkSpeed / speed;
+            this.velocity.x *= ratio;
+            this.velocity.y *= ratio;
+        }
+    };
 
     update() {
         // The hero's current x-coordinate
         let heroX = this.hero.getX();
         // The hero's current y-coordinate
         let heroY = this.hero.getY();
-
-        let distance = Math.sqrt((this.x - heroX) * (this.x - heroX) + (this.y - heroY) * (this.y - heroY));
+        let heroDistance = Math.sqrt((this.x - heroX) * (this.x - heroX) + (this.y - heroY) * (this.y - heroY));
 
         this.action = 1;
-        // The total distance this skeleton will walk this tick
-        let walkOrth = this.walkSpeed * this.game.clockTick;
-        let delX = this.getNextXValue(walkOrth);
-        let delY = this.getNextYValue(walkOrth);
+        let delX = this.velocity.x * this.game.clockTick;
+        let delY = this.velocity.y * this.game.clockTick;
         // The player is to the right of the skeleton
         if (delX > 0) {
             this.facing = 0;
@@ -99,6 +67,11 @@ class Skeleton {
         this.x += delX;
         this.y += delY;
 
+        let deltaX = (heroX - this.x) / heroDistance;
+        let deltaY = (heroY - this.y) / heroDistance;
+        this.velocity.x += deltaX * this.accelerationToPlayer / (heroDistance * heroDistance);
+        this.velocity.y += deltaY * this.accelerationToPlayer / (heroDistance * heroDistance);
+
         // World borders
         if (this.x <= 0) this.x = 0;
         if (this.y <= 0) this.y = 0;
@@ -108,11 +81,10 @@ class Skeleton {
         this.updateBB();
 
         this.elapsedTime += this.game.clockTick;
-        if (distance <= 300 && this.elapsedTime >= this.firingRate) {
-			console.log("skeleton attempted to fire. distance: "+ distance);
+        if (heroDistance <= 300 && this.elapsedTime >= this.firingRate) {
             if (this.facing == 0) {
                 // The skeleton is facing east
-                let  = new Arrow(this.game, this.hero.getX(), this.hero.getY(), false, this.attackDamage, this.x + 22, this.y + 23);
+                let arrow = new Arrow(this.game, this.hero.getX(), this.hero.getY(), false, this.attackDamage, this.x + 22, this.y + 23);
                 this.game.addEntity(arrow);
             } else if (this.facing === 1) {
                 // The skeleton is facing north
@@ -153,7 +125,17 @@ class Skeleton {
                     }
                 }
             }
+            if (entity instanceof Wall) {
+                let wallDistance = Math.sqrt((that.x - entity.centerX) * (that.x - entity.centerX) + 
+                (that.y - entity.centerY) * (that.y - entity.centerY));
+                let deltaX = (entity.centerX - that.x) / wallDistance;
+                let deltaY = (entity.centerY - that.y) / wallDistance;
+                that.velocity.x -= deltaX * that.accelerationFromWall / (wallDistance * wallDistance);
+                that.velocity.y -= deltaY * that.accelerationFromWall / (wallDistance * wallDistance);
+            }
         });
+
+        this.testSpeed();
 
         this.updateBB();
     };

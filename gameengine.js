@@ -20,6 +20,8 @@ class GameEngine {
 
         this.surfaceWidth = null;
         this.surfaceHeight = null;
+
+        this.enemyCount = 0;
     };
 
     init(ctx) {
@@ -128,6 +130,14 @@ class GameEngine {
         this.entities.push(entity);
     };
 
+    setEnemyCount(value) {
+        this.enemyCount = value;
+    };
+
+    getEnemyCount() {
+        return this.enemyCount;
+    };
+
     draw() {
         this.ctx.clearRect(0, 0, this.surfaceWidth, this.surfaceHeight);
         for (let i = 0; i < this.entities.length; i++) {
@@ -153,6 +163,10 @@ class GameEngine {
 
         for (i = this.entities.length - 1; i >= 0; --i) {
             if (this.entities[i].removeFromWorld) {
+                if (this.entities[i] instanceof Zombie || 
+                    this.entities[i] instanceof Skeleton || this.entities[i] instanceof Witch) {
+                    this.enemyCount--;
+                }
                 this.entities.splice(i, 1);
             }
         }
