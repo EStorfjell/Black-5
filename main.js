@@ -13,6 +13,16 @@ ASSET_MANAGER.queueDownload("./sprites/sword.png");
 ASSET_MANAGER.queueDownload("./sprites/crossbow.png");
 ASSET_MANAGER.queueDownload("./sprites/pistol.png");
 ASSET_MANAGER.queueDownload("./sprites/bullet.png");
+ASSET_MANAGER.queueDownload("./sprites/hero.png")
+ASSET_MANAGER.queueDownload("./sprites/zombie.png")
+ASSET_MANAGER.queueDownload("./sprites/skeleton.png")
+ASSET_MANAGER.queueDownload("./sprites/arrow.png")
+ASSET_MANAGER.queueDownload("./sprites/witch.png")
+ASSET_MANAGER.queueDownload("./sprites/sword.png")
+ASSET_MANAGER.queueDownload("./sprites/crossbow.png")
+ASSET_MANAGER.queueDownload("./sprites/pistol.png")
+ASSET_MANAGER.queueDownload("./sprites/bullet.png")
+ASSET_MANAGER.queueDownload("./sprites/shotgun.png")
 ASSET_MANAGER.queueDownload("./sprites/dragon.png");
 ASSET_MANAGER.queueDownload("./sprites/fireball.png");
 
