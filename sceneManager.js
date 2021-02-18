@@ -44,19 +44,19 @@ class SceneManager {
             // Chooses a random enemy to spawn
             let enemyNumber = randomInt(3);
             if (enemyNumber == 0 && zombieCount > 0) {
-                let enemy = new Zombie(this.game, this.hero,
+                let enemy = new Zombie(this.game, this.hero, wave, round,
                     LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].x, LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].y);
                 zombieCount--;
                 count--;
                 this.game.addEntity(enemy);
             } else if (enemyNumber == 1 && skeletonCount > 0) {
-                let enemy = new Skeleton(this.game, this.hero,
+                let enemy = new Skeleton(this.game, this.hero, wave, round,
                     LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].x, LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].y);
                 skeletonCount--;
                 count--;
                 this.game.addEntity(enemy);
             } else if (enemyNumber == 2 && witchCount > 0) {
-                let enemy = new Witch(this.game, this.hero,
+                let enemy = new Witch(this.game, this.hero, wave, round,
                     LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].x, LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].y);
                 witchCount--;
                 count--;

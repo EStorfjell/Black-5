@@ -1,6 +1,6 @@
 class Witch {
-    constructor(game, hero, x, y) {
-        Object.assign(this, { game, hero, x, y });
+    constructor(game, hero, wave, round, x, y) {
+        Object.assign(this, { game, hero, wave, round, x, y });
 
         // sprite sheet
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/witch.png");
@@ -13,7 +13,7 @@ class Witch {
         this.health = 100;
         this.dead = false;
 
-        this.walkSpeed = 50; // pixels per second
+        this.walkSpeed = 50 + 2 * this.wave; // pixels per second
         this.velocity = { x: 0, y: 0 };
         this.accelerationToPlayer = 1000000;
         this.accelerationFromWall = 70000;
