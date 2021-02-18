@@ -81,7 +81,7 @@ class Dragon {
             this.timer = 0;
             let fireX = this.x + this.breathLoc[this.facing].x - 10;
             let fireY = this.y + this.breathLoc[this.facing].y - 10;
-            let fire = new Fireball(this.game, fireX, fireY, this.hero.x, this.hero.y);
+            let fire = new DragonFireball(this.game, fireX, fireY, this.hero.x, this.hero.y);
             this.game.addEntity(fire);
         }
 

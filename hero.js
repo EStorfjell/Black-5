@@ -12,6 +12,9 @@ class Hero {
         this.facing = 0; // 0 = east, 1 = north, 2 = west, 3 = south
         this.health = 100;
 
+        this.armor = 0;
+        this.exp = new Experience();
+		
         this.damageCooldown = 3; // Cooldown before the hero can take more damage
         this.elapsedTime = 0; // Elapsed time since the hero last took damage
 
@@ -245,7 +248,12 @@ class Hero {
      */
     takeDamage(damage, knockback = 0, xVectorComp = 0, yVectorComp = 0) {
         if (this.elapsedTime >= this.damageCooldown) {
-            this.health -= damage;
+            if (this.armor > 0) {
+                this.armor -= damage;
+            } else {
+                this.armor = 0;
+                this.health -= damage;
+            }
             if (this.health <= 0) {
                 console.log("The player died.");
             }
@@ -264,5 +272,9 @@ class Hero {
             }
             this.elapsedTime = 0;
         }
+    }
+
+    pickupArmor() {
+        this.armor += 50;
     }
 }

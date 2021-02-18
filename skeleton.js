@@ -218,6 +218,7 @@ class Skeleton {
         this.health -= damage;
         if (this.health <= 0) {
             this.removeFromWorld = true;
+            this.hero.exp.skeletonKill();
         }
         if (knockback != 0) {
             // TODO: Allow a knockback to be applied over a period of time rather than all at once
