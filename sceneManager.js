@@ -37,6 +37,8 @@ class SceneManager {
 
         let count = zombieCount + skeletonCount + witchCount;
         this.game.setEnemyCount(count);
+        let healthPack = new HealthPack(this.game, 50, 50);
+        this.game.addEntity(healthPack);
 
         while (count > 0) {
             // Chooses a random spawn point
@@ -44,23 +46,23 @@ class SceneManager {
             // Chooses a random enemy to spawn
             let enemyNumber = randomInt(3);
             if (enemyNumber == 0 && zombieCount > 0) {
-                let enemy = new Zombie(this.game, this.hero,
+                let enemy = new Zombie(this.game, this.hero, 
                     LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].x, LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].y);
-                zombieCount--;
-                count--;
-                this.game.addEntity(enemy);
+                    zombieCount--;
+                    count--;
+                    this.game.addEntity(enemy);
             } else if (enemyNumber == 1 && skeletonCount > 0) {
-                let enemy = new Skeleton(this.game, this.hero,
+                let enemy = new Skeleton(this.game, this.hero, 
                     LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].x, LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].y);
-                skeletonCount--;
-                count--;
-                this.game.addEntity(enemy);
+                    skeletonCount--;
+                    count--;
+                    this.game.addEntity(enemy);
             } else if (enemyNumber == 2 && witchCount > 0) {
-                let enemy = new Witch(this.game, this.hero,
+                let enemy = new Witch(this.game, this.hero, 
                     LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].x, LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].y);
-                witchCount--;
-                count--;
-                this.game.addEntity(enemy);
+                    witchCount--;
+                    count--;
+                    this.game.addEntity(enemy);
             }
         }
 
@@ -110,6 +112,17 @@ class SceneManager {
     }
 
     draw(ctx) {
+        ctx.font = '30px "Press Start 2P"';
+        ctx.fillStyle = "White";
+        ctx.fillText("Health: " + this.hero.health, 10, 30);
+        ctx.fillText("Exp: " + this.hero.exp.getExp(), 10, 60);
 
+        ctx.fillText("Wave: " + this.wave, this.game.surfaceWidth - 115, 30);
+        ctx.fillText("Round: " + this.round, this.game.surfaceWidth - 128, 60);
+
+        ctx.fillText("Remaining Enemies: ", this.game.surfaceWidth / 2 - 160, this.game.surfaceHeight - 10);
+        ctx.fillStyle = "Red";
+        ctx.fillText("" + this.game.getEnemyCount(), this.game.surfaceWidth / 2 + 95, this.game.surfaceHeight - 10);
     };
+
 }
