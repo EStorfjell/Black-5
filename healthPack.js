@@ -1,9 +1,7 @@
 class HealthPack {
     constructor(game, x, y) {
-        Object.assign(this, { game, targetX, targetY, isOnHeroTeam, attackDamage, x, y });
+        Object.assign(this, { game, x, y });
 
-        this.x = x;
-        this.y = y;
         // sprite sheet
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/healthPack.png");
         this.width = 210;
@@ -13,6 +11,8 @@ class HealthPack {
 
         this.animations = [];
         this.loadAnimations();
+      
+        this.updateBB();
 
     };
 
@@ -31,14 +31,20 @@ class HealthPack {
                 }
             }
         });
-        this.clockTick = this.timer.tick();
+        this.clockTick = this.game.timer.tick();
+        this.updateBB();
     };
 
     draw(ctx) {
-        this.animations.drawFrame(this.game.clockTick, ctx, this.x, this.y, 1);
+        this.animations.drawFrame(this.game.clockTick, ctx, this.x, this.y, 0.15);
     };
 
     loadAnimations() {
-        this.animations = new Animator(this.spritesheet, 46, 24, this.width, this.height, 2, 0.15, 18, false, true);
+        this.animations = new Animator(this.spritesheet, 60, 23, this.width, this.height, 2, 0.15, 60, false, true);
     }
+
+    updateBB() {
+        this.lastBB = this.BB;
+        this.BB = new BoundingBox(this.x,this.y, this.width, this.height);
+    };
 }

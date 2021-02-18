@@ -42,9 +42,7 @@ class Crossbow {
             let arrow = new Arrow(this.game, this.targetX, this.targetY, isOnHeroTeam, this.attackDamage, this.x, this.y);
             this.game.addEntity(arrow);
             this.state = 2;
-            if (isOnHeroTeam) {
-                this.ammo--;
-            }
+            this.ammo--;
             this.attacking = false;
             this.elapsedTime = 0;
         }
