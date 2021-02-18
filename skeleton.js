@@ -1,9 +1,9 @@
 class Skeleton {
     constructor(game, hero, x, y) {
-        Object.assign(this, { game, hero, x, y });
+        Object.assign(this, {game, hero, x, y});
 
         // sprite sheet
-        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/skeleton.png");
+        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/skeleton_crossbow.png");
         this.width = 25; // character width
         this.height = 46; // character height
 
@@ -16,15 +16,10 @@ class Skeleton {
         this.elapsedTime = 0; // The time since the skeleton last shot
         this.dead = false;
 
-        this.crossbow = new Crossbow(this.game, false, this.x, this.y);
-        this.crossbow.setPrimaryWeapon();
-        this.game.addEntity(this.crossbow);
-
         this.walkSpeed = 75; // pixels per second
-        this.velocity = { x: 0, y: 0 };
+        this.velocity = {x: 0, y: 0};
         this.accelerationToPlayer = 1000000;
         this.accelerationFromWall = 70000;
-        this.accelerationFromEnemy = 20000;
 
         this.updateBB();
 
@@ -51,20 +46,20 @@ class Skeleton {
         this.action = 1;
         let delX = this.velocity.x * this.game.clockTick;
         let delY = this.velocity.y * this.game.clockTick;
+        // The player is to the right of the skeleton
         if (delX > 0) {
-            // The player is to the right of the skeleton
             this.facing = 0;
-        } else {
-            // The player is to the left of the skeleton
+        }// The player is to the left of the skeleton
+        else {
             this.facing = 2;
         }
         // The player is above or below the skeleton at over 45 degrees
         if (Math.atan(Math.abs(this.y - this.hero.getY()) / Math.abs(this.x - this.hero.getX())) > Math.PI / 4) {
+            // The player is above the skeleton
             if (this.hero.getY() < this.y) {
-                // The player is above the skeleton
                 this.facing = 1;
-            } else {
-                // The player is below the skeleton
+            }// The player is below the skeleton
+            else {
                 this.facing = 3;
             }
         }
@@ -72,14 +67,10 @@ class Skeleton {
         this.x += delX;
         this.y += delY;
 
-        this.crossbow.updateX(this.x);
-        this.crossbow.updateY(this.y);
-        this.crossbow.updateFacing(this.facing);
-
-        let heroDeltaX = (heroX - this.x) / heroDistance;
-        let heroDeltaY = (heroY - this.y) / heroDistance;
-        this.velocity.x += heroDeltaX * this.accelerationToPlayer / (heroDistance * heroDistance);
-        this.velocity.y += heroDeltaY * this.accelerationToPlayer / (heroDistance * heroDistance);
+        let deltaX = (heroX - this.x) / heroDistance;
+        let deltaY = (heroY - this.y) / heroDistance;
+        this.velocity.x += deltaX * this.accelerationToPlayer / (heroDistance * heroDistance);
+        this.velocity.y += deltaY * this.accelerationToPlayer / (heroDistance * heroDistance);
 
         // World borders
         if (this.x <= 0) this.x = 0;
@@ -91,7 +82,23 @@ class Skeleton {
 
         this.elapsedTime += this.game.clockTick;
         if (heroDistance <= 300 && this.elapsedTime >= this.firingRate) {
-            this.crossbow.attack(this.hero.getX(), this.hero.getY());
+            if (this.facing == 0) {
+                // The skeleton is facing east
+                let arrow = new Arrow(this.game, this.hero.getX(), this.hero.getY(), false, this.attackDamage, this.x + 22, this.y + 23);
+                this.game.addEntity(arrow);
+            } else if (this.facing === 1) {
+                // The skeleton is facing north
+                let arrow = new Arrow(this.game, this.hero.getX(), this.hero.getY(), false, this.attackDamage, this.x + 10, this.y);
+                this.game.addEntity(arrow);
+            } else if (this.facing === 2) {
+                // The skeleton is facing west
+                let arrow = new Arrow(this.game, this.hero.getX(), this.hero.getY(), false, this.attackDamage, this.x, this.y + 23);
+                this.game.addEntity(arrow);
+            } else if (this.facing === 3) {
+                // The skeleton is facing south
+                let arrow = new Arrow(this.game, this.hero.getX(), this.hero.getY(), false, this.attackDamage, this.x + 8, this.y + 39);
+                this.game.addEntity(arrow);
+            }
             this.elapsedTime = 0;
         }
 
@@ -119,21 +126,12 @@ class Skeleton {
                 }
             }
             if (entity instanceof Wall) {
-                let wallDistance = Math.sqrt((that.x - entity.centerX) * (that.x - entity.centerX) +
-                    (that.y - entity.centerY) * (that.y - entity.centerY));
-                let wallDeltaX = (entity.centerX - that.x) / wallDistance;
-                let wallDeltaY = (entity.centerY - that.y) / wallDistance;
-                that.velocity.x -= wallDeltaX * that.accelerationFromWall / (wallDistance * wallDistance);
-                that.velocity.y -= wallDeltaY * that.accelerationFromWall / (wallDistance * wallDistance);
-            } else if (entity instanceof Zombie || entity instanceof Skeleton || entity instanceof Witch) {
-                let enemyDistance = Math.sqrt((that.x - entity.getX()) * (that.x - entity.getX()) +
-                    (that.y - entity.getY()) * (that.y - entity.getY()));
-                if (enemyDistance > 0) {
-                    let enemyDeltaX = (entity.getX() - that.x) / enemyDistance;
-                    let enemyDeltaY = (entity.getY() - that.y) / enemyDistance;
-                    that.velocity.x -= enemyDeltaX * that.accelerationFromEnemy / (enemyDistance * enemyDistance);
-                    that.velocity.y -= enemyDeltaY * that.accelerationFromEnemy / (enemyDistance * enemyDistance);
-                }
+                let wallDistance = Math.sqrt((that.x - entity.centerX) * (that.x - entity.centerX) + 
+                (that.y - entity.centerY) * (that.y - entity.centerY));
+                let deltaX = (entity.centerX - that.x) / wallDistance;
+                let deltaY = (entity.centerY - that.y) / wallDistance;
+                that.velocity.x -= deltaX * that.accelerationFromWall / (wallDistance * wallDistance);
+                that.velocity.y -= deltaY * that.accelerationFromWall / (wallDistance * wallDistance);
             }
         });
 
@@ -143,22 +141,9 @@ class Skeleton {
     };
 
     draw(ctx) {
-        let skeletonDrawX = this.x - this.game.camera.x;
-        let skeletonDrawY = this.y - this.game.camera.y;
-        let crossbowDrawX = this.crossbow.getX() - this.game.camera.x;
-        let crossbowDrawY = this.crossbow.getY() - this.game.camera.y;
-        let crossbowAnimation = this.crossbow.getAnimation();
-        if (this.facing == 1) {
-            crossbowAnimation.drawFrame(this.game.clockTick, ctx, crossbowDrawX,
-                crossbowDrawY, 1);
-            this.animations[this.action][this.facing].drawFrame(this.game.clockTick,
-                ctx, skeletonDrawX, skeletonDrawY, 1);
-        } else {
-            this.animations[this.action][this.facing].drawFrame(this.game.clockTick,
-                ctx, skeletonDrawX, skeletonDrawY, 1);
-            crossbowAnimation.drawFrame(this.game.clockTick, ctx, crossbowDrawX,
-                crossbowDrawY, 1);
-        }
+        let drawX = this.x - this.game.camera.x;
+        let drawY = this.y - this.game.camera.y;
+        this.animations[this.action][this.facing].drawFrame(this.game.clockTick, ctx, drawX, drawY, 1);
     };
 
     loadAnimations() {
@@ -171,23 +156,27 @@ class Skeleton {
 
         // idle
         // east
-        this.animations[0][0] = new Animator(this.spritesheet, 13, 146, this.width, this.height, 1, 0.15, 23, false, true);
+        this.animations[0][0] = new AdvancedAnimator(this.spritesheet, [73], [204], [56], [44], 0.15, false, true);
         // north
-        this.animations[0][1] = new Animator(this.spritesheet, 11, 210, this.width, this.height, 1, 0.15, 23, false, true);
+        this.animations[0][1] = new AdvancedAnimator(this.spritesheet, [99], [316], [21], [45], 0.15, false, true);
         // west
-        this.animations[0][2] = new Animator(this.spritesheet, 10, 82, this.width, this.height, 1, 0.15, 23, false, true);
+        this.animations[0][2] = new AdvancedAnimator(this.spritesheet, [37], [140], [56], [44], 0.15, false, true);
         // south
-        this.animations[0][3] = new Animator(this.spritesheet, 11, 18, this.width, this.height, 1, 0.15, 23, false, true);
+        this.animations[0][3] = new AdvancedAnimator(this.spritesheet, [98], [28], [26], [73], 0.15, false, true);
 
         // walking
         // east
-        this.animations[1][0] = new Animator(this.spritesheet, 13, 146, this.width, this.height, 4, 0.15, 23, false, true);
+        this.animations[1][0] = new AdvancedAnimator(this.spritesheet, [73, 141, 209, 277],
+            [204, 205, 204, 205], [56, 55, 56, 57], [44, 44, 44, 44], 0.15, false, true);
         // north
-        this.animations[1][1] = new Animator(this.spritesheet, 11, 210, this.width, this.height, 4, 0.15, 23, false, true);
+        this.animations[1][1] = new AdvancedAnimator(this.spritesheet, [99, 147, 195, 243], [316, 317, 316, 317],
+            [21, 21, 21, 21], [45, 45, 45, 45], 0.15, false, true);
         // west
-        this.animations[1][2] = new Animator(this.spritesheet, 10, 82, this.width, this.height, 4, 0.15, 23, false, true);
+        this.animations[1][2] = new AdvancedAnimator(this.spritesheet, [37, 105, 173, 241], [140, 141, 140, 141],
+            [56, 56, 56, 56], [44, 44, 44, 44], 0.15, false, true);
         // south
-        this.animations[1][3] = new Animator(this.spritesheet, 11, 18, this.width, this.height, 4, 0.15, 23, false, true);
+        this.animations[1][3] = new AdvancedAnimator(this.spritesheet, [98, 146, 194, 242], [28, 29, 28, 29],
+            [26, 26, 26, 26], [73, 73, 73, 73], 0.15, false, true);
 
     }
 
@@ -218,6 +207,7 @@ class Skeleton {
         this.health -= damage;
         if (this.health <= 0) {
             this.removeFromWorld = true;
+            this.hero.exp.skeletonKill();
         }
         if (knockback != 0) {
             // TODO: Allow a knockback to be applied over a period of time rather than all at once

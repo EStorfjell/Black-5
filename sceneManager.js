@@ -20,8 +20,10 @@ class SceneManager {
 
         this.map = new Map(this.game, LEVELS.LEVEL_ONE);
         this.game.addEntity(this.map);
+        let healthPack = new HealthPack(this.game, 50, 50);
+        this.game.addEntity(healthPack);
         this.map.init();
-
+        
         /*let zombie = new Zombie(this.game, this.hero, 400, 100);
         this.game.addEntity(zombie);
         let skeleton = new Skeleton(this.game, this.hero, 100, 200);
@@ -44,23 +46,23 @@ class SceneManager {
             // Chooses a random enemy to spawn
             let enemyNumber = randomInt(3);
             if (enemyNumber == 0 && zombieCount > 0) {
-                let enemy = new Zombie(this.game, this.hero,
+                let enemy = new Zombie(this.game, this.hero, 
                     LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].x, LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].y);
-                zombieCount--;
-                count--;
-                this.game.addEntity(enemy);
+                    zombieCount--;
+                    count--;
+                    this.game.addEntity(enemy);
             } else if (enemyNumber == 1 && skeletonCount > 0) {
-                let enemy = new Skeleton(this.game, this.hero,
+                let enemy = new Skeleton(this.game, this.hero, 
                     LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].x, LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].y);
-                skeletonCount--;
-                count--;
-                this.game.addEntity(enemy);
+                    skeletonCount--;
+                    count--;
+                    this.game.addEntity(enemy);
             } else if (enemyNumber == 2 && witchCount > 0) {
-                let enemy = new Witch(this.game, this.hero,
+                let enemy = new Witch(this.game, this.hero, 
                     LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].x, LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].y);
-                witchCount--;
-                count--;
-                this.game.addEntity(enemy);
+                    witchCount--;
+                    count--;
+                    this.game.addEntity(enemy);
             }
         }
 
@@ -110,6 +112,42 @@ class SceneManager {
     }
 
     draw(ctx) {
+        let pxSize = 30;
+        ctx.font = '30px "Press Start 2P"';
+        ctx.fillStyle = "White";
+        ctx.fillText("Health: ", 10, pxSize);
+        ctx.fillStyle = "Red";
+        ctx.fillText(this.hero.health, 105, pxSize);
 
+        ctx.fillStyle = "White";
+        ctx.fillText("Armor: ", 10, pxSize * 2);
+        ctx.fillStyle = "Purple";
+        ctx.fillText(this.hero.armor, 105, pxSize * 2);
+
+
+        if (this.game.click != null) {
+            if (!this.hero.meleeEquipped) {
+                ctx.fillStyle = "White";
+                ctx.fillText("Ammo: ", 10, pxSize * 3);
+                ctx.fillStyle = "Gray";
+                ctx.fillText(this.hero.primaryWeapon.ammo, 105, pxSize * 3);
+            }
+            this.game.click = null;
+        }
+
+        
+        ctx.fillStyle = "White";
+        ctx.fillText("Exp: ", this.game.surfaceWidth / 2 - 50, this.game.surfaceHeight - 45);
+        ctx.fillStyle = "Cyan";
+        ctx.fillText(this.hero.exp.getExp(), this.game.surfaceWidth / 2 + 12, this.game.surfaceHeight - 45);
+        ctx.fillStyle = "White";
+
+        ctx.fillText("Wave: " + this.wave, this.game.surfaceWidth - 115, 30);
+        ctx.fillText("Round: " + this.round, this.game.surfaceWidth - 128, 60);
+
+        ctx.fillText("Remaining Enemies: ", this.game.surfaceWidth / 2 - 160, this.game.surfaceHeight - 10);
+        ctx.fillStyle = "Black";
+        ctx.fillText("" + this.game.getEnemyCount(), this.game.surfaceWidth / 2 + 95, this.game.surfaceHeight - 10);
     };
+
 }

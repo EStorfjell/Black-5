@@ -12,6 +12,9 @@ class Hero {
         this.facing = 0; // 0 = east, 1 = north, 2 = west, 3 = south
         this.health = 100;
 
+        this.armor = 0;
+        this.exp = new Experience();
+
         this.primaryWeapon = new Pistol(game, true, this.x, this.y);
         this.primaryWeapon.setPrimaryWeapon();
         this.secondaryWeapon = new Crossbow(game, true, this.x, this.y);
@@ -239,7 +242,13 @@ class Hero {
      * @param {Number} yVectorComp The y-component of a vector specifying the knockback direction
      */
     takeDamage(damage, knockback = 0, xVectorComp = 0, yVectorComp = 0) {
-        this.health -= damage;
+        if (this.armor > 0) {
+            this.armor -= damage;
+        } else {
+            this.armor = 0;
+            this.health -= damage;
+        }
+
         if (this.health <= 0) {
             console.log("The player died.");
         }
@@ -256,5 +265,9 @@ class Hero {
             this.x += deltaX;
             this.y += deltaY;
         }
+    }
+
+    pickupArmor() {
+        this.armor += 50;
     }
 }
