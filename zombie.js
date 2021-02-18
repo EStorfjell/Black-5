@@ -1,6 +1,6 @@
 class Zombie {
-    constructor(game, hero, x, y) {
-        Object.assign(this, {game, hero, x, y});
+    constructor(game, hero, wave, round, x, y) {
+        Object.assign(this, { game, hero, wave, round, x, y });
 
         // sprite sheet
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/zombie.png");
@@ -11,13 +11,13 @@ class Zombie {
         this.action = 0; // 0 = idle, 1 = walking
         this.facing = 0; // 0 = east, 1 = north, 2 = west, 3 = south
         this.health = 100;
-        this.attackDamage = 10;
-        this.attackRate = 1; // attacks per second
+        this.attackDamage = 10 + 2 * this.wave;
+        this.attackCooldown = 2 - 0.05 * this.wave; // The minimum number of seconds between attacks
         this.elapsedTime = 0; // The time since the zombie last attacked
         this.dead = false;
 
-        this.walkSpeed = 75; // pixels per second
-        this.velocity = {x: 0, y: 0};
+        this.walkSpeed = 75 + 5 * this.wave; // pixels per second
+        this.velocity = { x: 0, y: 0 };
         this.accelerationToPlayer = 1000000;
         this.accelerationFromWall = 70000;
 
@@ -78,12 +78,14 @@ class Zombie {
 
         // Collision check and handling
         var that = this;
+        this.elapsedTime += this.game.clockTick;
         this.game.entities.forEach(function (entity) {
             if (entity.BB && that.BB.collide(entity.BB)) {
-                if (entity instanceof Hero) {
+                if (entity instanceof Hero && that.elapsedTime >= that.attackCooldown) {
                     that.action = 0;
                     // The zombie will attack the player
                     that.hero.takeDamage(that.attackDamage, 25, heroX - that.x, heroY - that.y);
+                    that.elapsedTime = 0;
                 }
                 if (entity instanceof Wall) {
                     if (delX > 0 && that.lastBB.right <= entity.BB.left) { // collision from left

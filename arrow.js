@@ -97,7 +97,7 @@ class Arrow {
                     // The arrow will damage the player
                     entity.takeDamage(that.attackDamage, 25, entity.getX() - that.x, entity.getY() - that.y);
                     that.removeFromWorld = true;
-                } else if (that.isOnHeroTeam && (entity instanceof Skeleton || entity instanceof Zombie || entity instanceof Witch)) {
+                } else if (that.isOnHeroTeam && (entity instanceof Skeleton || entity instanceof Zombie || entity instanceof Witch || entity instanceof Dragon)) {
                     // The arrow will damage the enemy
                     entity.takeDamage(that.attackDamage, 25, entity.getX() - that.x, entity.getY() - that.y);
                     that.removeFromWorld = true;

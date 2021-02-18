@@ -11,6 +11,7 @@ class HealthPack {
 
         this.animations = [];
         this.loadAnimations();
+      
         this.updateBB();
 
     };

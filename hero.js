@@ -1,6 +1,6 @@
 class Hero {
     constructor(game, x, y) {
-        Object.assign(this, {game, x, y});
+        Object.assign(this, { game, x, y });
 
         // sprite sheet
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/hero.png");
@@ -14,6 +14,9 @@ class Hero {
 
         this.armor = 0;
         this.exp = new Experience();
+		
+        this.damageCooldown = 3; // Cooldown before the hero can take more damage
+        this.elapsedTime = 0; // Elapsed time since the hero last took damage
 
         this.primaryWeapon = new Pistol(game, true, this.x, this.y);
         this.primaryWeapon.setPrimaryWeapon();
@@ -161,6 +164,8 @@ class Hero {
         });
 
         this.updateBB();
+
+        this.elapsedTime += this.game.clockTick;
     };
 
     draw(ctx) {
@@ -242,28 +247,30 @@ class Hero {
      * @param {Number} yVectorComp The y-component of a vector specifying the knockback direction
      */
     takeDamage(damage, knockback = 0, xVectorComp = 0, yVectorComp = 0) {
-        if (this.armor > 0) {
-            this.armor -= damage;
-        } else {
-            this.armor = 0;
-            this.health -= damage;
-        }
-
-        if (this.health <= 0) {
-            console.log("The player died.");
-        }
-        if (knockback !== 0) {
-            // TODO: Allow a knockback to be applied over a period of time rather than all at once
-            // The angle of the knockback measured relative to the x-axis
-            let angle = Math.atan(Math.abs(yVectorComp) / Math.abs(xVectorComp));
-            // The new x-coordinate of the hero
-            let deltaX = knockback * Math.cos(angle);
-            // The new y-coordinate of the hero
-            let deltaY = knockback * Math.sin(angle);
-            if (xVectorComp < 0) deltaX = -deltaX;
-            if (yVectorComp < 0) deltaY = -deltaY;
-            this.x += deltaX;
-            this.y += deltaY;
+        if (this.elapsedTime >= this.damageCooldown) {
+            if (this.armor > 0) {
+                this.armor -= damage;
+            } else {
+                this.armor = 0;
+                this.health -= damage;
+            }
+            if (this.health <= 0) {
+                console.log("The player died.");
+            }
+            if (knockback !== 0) {
+                // TODO: Allow a knockback to be applied over a period of time rather than all at once
+                // The angle of the knockback measured relative to the x-axis
+                let angle = Math.atan(Math.abs(yVectorComp) / Math.abs(xVectorComp));
+                // The new x-coordinate of the hero
+                let deltaX = knockback * Math.cos(angle);
+                // The new y-coordinate of the hero
+                let deltaY = knockback * Math.sin(angle);
+                if (xVectorComp < 0) deltaX = -deltaX;
+                if (yVectorComp < 0) deltaY = -deltaY;
+                this.x += deltaX;
+                this.y += deltaY;
+            }
+            this.elapsedTime = 0;
         }
     }
 

@@ -1,6 +1,6 @@
 class Witch {
-    constructor(game, hero, x, y) {
-        Object.assign(this, {game, hero, x, y});
+    constructor(game, hero, wave, round, x, y) {
+        Object.assign(this, { game, hero, wave, round, x, y });
 
         // sprite sheet
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/witch.png");
@@ -20,8 +20,8 @@ class Witch {
         this.health = 100;
         this.dead = false;
 
-        this.walkSpeed = 75; // pixels per second
-        this.velocity = {x: 0, y: 0};
+        this.walkSpeed = 50 + 2 * this.wave; // pixels per second
+        this.velocity = { x: 0, y: 0 };
         this.accelerationToPlayer = 1000000;
         this.accelerationFromWall = 70000;
 
@@ -70,7 +70,7 @@ class Witch {
         if (heroDistance <= this.attackDistance) { // if hero is less than attackDistance away, stop and attack
 			this.action = 0;
             if (this.elapsedTime >= this.firingRate) {
-                let fireBall = new FireBall(this.game, this.hero.getX(), this.hero.getY(), false, this.attackDamage, this.x - 10, this.y + 30);
+                let fireBall = new WitchFireball(this.game, this.hero.getX(), this.hero.getY(), false, this.attackDamage, this.x - 10, this.y + 30);
                 this.game.addEntity(fireBall);
                 this.elapsedTime = 0;
             }

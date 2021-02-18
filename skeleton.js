@@ -1,6 +1,6 @@
 class Skeleton {
-    constructor(game, hero, x, y) {
-        Object.assign(this, {game, hero, x, y});
+    constructor(game, hero, wave, round, x, y) {
+        Object.assign(this, { game, hero, wave, round, x, y });
 
         // sprite sheet
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/skeleton_crossbow.png");
@@ -11,13 +11,17 @@ class Skeleton {
         this.action = 0; // 0 = idle, 1 = walking
         this.facing = 0; // 0 = east, 1 = north, 2 = west, 3 = south
         this.health = 100;
-        this.attackDamage = 10;
-        this.firingRate = 1; // shots per second
+        this.attackDamage = 10 + 2 * this.wave;
+        this.firingCooldown = 1 - 0.05 * this.wave; // The minimum number of seconds between shots
         this.elapsedTime = 0; // The time since the skeleton last shot
         this.dead = false;
 
-        this.walkSpeed = 75; // pixels per second
-        this.velocity = {x: 0, y: 0};
+        this.crossbow = new Crossbow(this.game, false, this.x, this.y);
+        this.crossbow.setPrimaryWeapon();
+        this.game.addEntity(this.crossbow);
+
+        this.walkSpeed = 50 + 2 * this.wave; // pixels per second
+        this.velocity = { x: 0, y: 0 };
         this.accelerationToPlayer = 1000000;
         this.accelerationFromWall = 70000;
 
@@ -81,24 +85,8 @@ class Skeleton {
         this.updateBB();
 
         this.elapsedTime += this.game.clockTick;
-        if (heroDistance <= 300 && this.elapsedTime >= this.firingRate) {
-            if (this.facing == 0) {
-                // The skeleton is facing east
-                let arrow = new Arrow(this.game, this.hero.getX(), this.hero.getY(), false, this.attackDamage, this.x + 22, this.y + 23);
-                this.game.addEntity(arrow);
-            } else if (this.facing === 1) {
-                // The skeleton is facing north
-                let arrow = new Arrow(this.game, this.hero.getX(), this.hero.getY(), false, this.attackDamage, this.x + 10, this.y);
-                this.game.addEntity(arrow);
-            } else if (this.facing === 2) {
-                // The skeleton is facing west
-                let arrow = new Arrow(this.game, this.hero.getX(), this.hero.getY(), false, this.attackDamage, this.x, this.y + 23);
-                this.game.addEntity(arrow);
-            } else if (this.facing === 3) {
-                // The skeleton is facing south
-                let arrow = new Arrow(this.game, this.hero.getX(), this.hero.getY(), false, this.attackDamage, this.x + 8, this.y + 39);
-                this.game.addEntity(arrow);
-            }
+        if (heroDistance <= 300 && this.elapsedTime >= this.firingCooldown) {
+            this.crossbow.attack(this.hero.getX(), this.hero.getY());
             this.elapsedTime = 0;
         }
 
