@@ -1,6 +1,6 @@
 class Hero {
     constructor(game, x, y) {
-        Object.assign(this, {game, x, y});
+        Object.assign(this, { game, x, y });
 
         // sprite sheet
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/hero.png");
@@ -12,16 +12,25 @@ class Hero {
         this.facing = 0; // 0 = east, 1 = north, 2 = west, 3 = south
         this.health = 100;
 
+        this.armor = 0;
+        this.exp = new Experience();
+		
+        this.damageCooldown = 3; // Cooldown before the hero can take more damage
+        this.elapsedTime = 0; // Elapsed time since the hero last took damage
+
         this.primaryWeapon = new Pistol(game, true, this.x, this.y);
         this.primaryWeapon.setPrimaryWeapon();
         this.secondaryWeapon = new Crossbow(game, true, this.x, this.y);
         this.secondaryWeapon.setPrimaryWeapon();
+        this.tertiaryWeapon = new Shotgun(game, true, this.x, this.y);
+        this.tertiaryWeapon.setPrimaryWeapon();
         this.sword = new Sword(game, this.x, this.y);
         this.sword.setPrimaryWeapon();
         this.meleeEquipped = false;
 
         this.game.addEntity(this.primaryWeapon);
         this.game.addEntity(this.secondaryWeapon);
+        this.game.addEntity(this.tertiaryWeapon);
         this.game.addEntity(this.sword);
 
         this.walkSpeed = 200; // pixels per second
@@ -86,9 +95,10 @@ class Hero {
 
         if (this.game.switchToSecondary) {
             this.meleeEquipped = false;
-            let temp = this.secondaryWeapon;
-            this.secondaryWeapon = this.primaryWeapon;
-            this.primaryWeapon = temp;
+            let temp = this.primaryWeapon;
+            this.primaryWeapon = this.secondaryWeapon;
+            this.secondaryWeapon = this.tertiaryWeapon;
+            this.tertiaryWeapon = temp;
             this.game.switchToSecondary = false;
         }
         if (this.game.switchToMelee) {
@@ -102,6 +112,9 @@ class Hero {
         this.secondaryWeapon.updateX(this.x);
         this.secondaryWeapon.updateY(this.y);
         this.secondaryWeapon.updateFacing(this.facing);
+        this.tertiaryWeapon.updateX(this.x);
+        this.tertiaryWeapon.updateY(this.y);
+        this.tertiaryWeapon.updateFacing(this.facing);
         this.sword.updateX(this.x);
         this.sword.updateY(this.y);
         this.sword.updateFacing(this.facing);
@@ -151,6 +164,8 @@ class Hero {
         });
 
         this.updateBB();
+
+        this.elapsedTime += this.game.clockTick;
     };
 
     draw(ctx) {
@@ -232,23 +247,34 @@ class Hero {
      * @param {Number} yVectorComp The y-component of a vector specifying the knockback direction
      */
     takeDamage(damage, knockback = 0, xVectorComp = 0, yVectorComp = 0) {
-        this.health -= damage;
-        if (this.health <= 0) {
-            console.log("The player died.");
-            this.removeFromWorld = true;
+        if (this.elapsedTime >= this.damageCooldown) {
+            if (this.armor > 0) {
+                this.armor -= damage;
+            } else {
+                this.armor = 0;
+                this.health -= damage;
+            }
+            if (this.health <= 0) {
+                console.log("The player died.");
+            }
+            if (knockback !== 0) {
+                // TODO: Allow a knockback to be applied over a period of time rather than all at once
+                // The angle of the knockback measured relative to the x-axis
+                let angle = Math.atan(Math.abs(yVectorComp) / Math.abs(xVectorComp));
+                // The new x-coordinate of the hero
+                let deltaX = knockback * Math.cos(angle);
+                // The new y-coordinate of the hero
+                let deltaY = knockback * Math.sin(angle);
+                if (xVectorComp < 0) deltaX = -deltaX;
+                if (yVectorComp < 0) deltaY = -deltaY;
+                this.x += deltaX;
+                this.y += deltaY;
+            }
+            this.elapsedTime = 0;
         }
-        if (knockback !== 0) {
-            // TODO: Allow a knockback to be applied over a period of time rather than all at once
-            // The angle of the knockback measured relative to the x-axis
-            let angle = Math.atan(Math.abs(yVectorComp) / Math.abs(xVectorComp));
-            // The new x-coordinate of the hero
-            let deltaX = knockback * Math.cos(angle);
-            // The new y-coordinate of the hero
-            let deltaY = knockback * Math.sin(angle);
-            if (xVectorComp < 0) deltaX = -deltaX;
-            if (yVectorComp < 0) deltaY = -deltaY;
-            this.x += deltaX;
-            this.y += deltaY;
-        }
+    }
+
+    pickupArmor() {
+        this.armor += 50;
     }
 }

@@ -1,6 +1,6 @@
 class Witch {
-    constructor(game, hero, x, y) {
-        Object.assign(this, {game, hero, x, y});
+    constructor(game, hero, wave, round, x, y) {
+        Object.assign(this, { game, hero, wave, round, x, y });
 
         // sprite sheet
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/witch.png");
@@ -8,15 +8,22 @@ class Witch {
         this.height = 64; // character height
 
         // character states
-        this.action = 0 // 0 = idle, 1 = walking
-        this.facing = 0 // 0 = east, 1 = north, 2 = west, 3 = south
+        this.action = 0; // 0 = idle, 1 = walking
+        this.facing = 0; // 0 = east, 1 = north, 2 = west, 3 = south
+        
+        this.attack = 0;
+        this.attackDistance = 200;
+        this.elapsedTime = 0;
+        this.firingRate = 1;
+
         this.health = 100;
         this.dead = false;
 
-        this.walkSpeed = 75; // pixels per second
-        this.velocity = {x: 0, y: 0};
-
-        this.updateBB();
+        this.walkSpeed = 50 + 2 * this.wave; // pixels per second
+        this.velocity = { x: 0, y: 0 };
+        this.accelerationToPlayer = 1000000;
+        this.accelerationFromWall = 70000;
+        this.accelerationFromEnemy = 20000;
 
         this.updateBB();
 
@@ -24,69 +31,30 @@ class Witch {
         this.loadAnimations();
     };
 
-    // Gets the next x-value to move toward the player
-    getNextXValue(walkOrth) {
-        // The hero's current x-coordinate
-        let heroX = this.hero.getX();
-        // The hero's current y-coordinate
-        let heroY = this.hero.getY();
-        // The distance between the hero and this witch in the x-direction
-        let deltaX = Math.abs(this.x - heroX);
-        // The distance between the hero and this witch in the y-direction
-        let deltaY = Math.abs(this.y - heroY);
-        // The angle of a right triangle in which the witch is on one
-        // end, and the hero is on the other
-        let angle = Math.atan(deltaY / deltaX);
-        // The distance in the x-direction the witch will walk this tick
-        let walkX = walkOrth * Math.cos(angle);
-        // This value is negative if the hero is to the left of the witch
-        if (heroX < this.x) walkX = -walkX;
-        return walkX;
-    }
-
-    // Gets the next y-value to move toward the player
-    getNextYValue(walkOrth) {
-        // The hero's current x-coordinate
-        let heroX = this.hero.getX();
-        // The hero's current y-coordinate
-        let heroY = this.hero.getY();
-        // The distance between the hero and this witch in the x-direction
-        let deltaX = Math.abs(this.x - heroX);
-        // The distance between the hero and this witch in the y-direction
-        let deltaY = Math.abs(this.y - heroY);
-        // The angle of a right triangle in which the witch is on one
-        // end, and the hero is on the other
-        let angle = Math.atan(deltaY / deltaX);
-        // The distance in the y-direction the witch will walk this tick
-        let walkY = walkOrth * Math.sin(angle);
-        // This value is negative if the hero is above (from the player's perspective)
-        // the witch
-        if (heroY < this.y) walkY = -walkY;
-        return walkY;
-    }
-
-    turnDirection() {
-
-    }
+    testSpeed() {
+        var speed = Math.sqrt(this.velocity.x * this.velocity.x + this.velocity.y * this.velocity.y);
+        if (speed > this.walkSpeed) {
+            var ratio = this.walkSpeed / speed;
+            this.velocity.x *= ratio;
+            this.velocity.y *= ratio;
+        }
+    };
 
     update() {
         this.action = 1;
-        this.attackDistance = 100;
-        // The total distance this witch will walk this tick
-        let walkOrth = this.walkSpeed * this.game.clockTick;
 
-        //hero coordinates
+        // hero coordinates
         let heroX = this.hero.getX();
         let heroY = this.hero.getY();
         // distance equation for 2 points
-        let distance = Math.sqrt(Math.pow(Math.abs(heroX - this.x), 2) + Math.pow(Math.abs(heroY - this.y), 2));
+        let heroDistance = Math.sqrt(Math.pow(Math.abs(heroX - this.x), 2) + Math.pow(Math.abs(heroY - this.y), 2));
 
-        let delX = this.getNextXValue(walkOrth);
-        let delY = this.getNextYValue(walkOrth);
+        let delX = this.velocity.x * this.game.clockTick;
+        let delY = this.velocity.y * this.game.clockTick;
 
         // [xDisplaced, yDisplaced, hV]
         let cardinal = [this.x - heroX, this.y - heroY, Math.abs(delX / delY)]; // hV > 1: EAST/WEST; hV < 1:
-                                                                                // NORTH/SOUTH
+        // NORTH/SOUTH
         // xDisplaced > 0: NORTH
         if (cardinal[0] < 0 && cardinal[2] > 1) { // EAST
             this.facing = 0;
@@ -98,12 +66,23 @@ class Witch {
             this.facing = 3;
         }
 
-        if (distance < this.attackDistance) { // If closer than 100 px, stop moving
-            this.action = 0;
+        this.elapsedTime += this.game.clockTick;
+        if (heroDistance <= this.attackDistance) { // if hero is less than attackDistance away, stop and attack
+			this.action = 0;
+            if (this.elapsedTime >= this.firingRate) {
+                let fireBall = new WitchFireball(this.game, this.hero.getX(), this.hero.getY(), false, this.attackDamage, this.x - 10, this.y + 30);
+                this.game.addEntity(fireBall);
+                this.elapsedTime = 0;
+            }
         } else { // walk towards player
             this.action = 1;
-			this.x += delX;
+            this.x += delX;
             this.y += delY;
+
+            let heroDeltaX = (heroX - this.x) / heroDistance;
+            let heroDeltaY = (heroY - this.y) / heroDistance;
+            this.velocity.x += heroDeltaX * this.accelerationToPlayer / (heroDistance * heroDistance);
+            this.velocity.y += heroDeltaY * this.accelerationToPlayer / (heroDistance * heroDistance);
         }
 
         // World borders
@@ -135,9 +114,28 @@ class Witch {
                     }
                 }
             }
+            if (entity instanceof Wall) {
+                let wallDistance = Math.sqrt((that.x - entity.centerX) * (that.x - entity.centerX) +
+                    (that.y - entity.centerY) * (that.y - entity.centerY));
+                let wallDeltaX = (entity.centerX - that.x) / wallDistance;
+                let wallDeltaY = (entity.centerY - that.y) / wallDistance;
+                that.velocity.x -= wallDeltaX * that.accelerationFromWall / (wallDistance * wallDistance);
+                that.velocity.y -= wallDeltaY * that.accelerationFromWall / (wallDistance * wallDistance);
+            } else if (entity instanceof Zombie || entity instanceof Skeleton || entity instanceof Witch) {
+                let enemyDistance = Math.sqrt((that.x - entity.getX()) * (that.x - entity.getX()) +
+                    (that.y - entity.getY()) * (that.y - entity.getY()));
+                if (enemyDistance > 0) {
+                    let enemyDeltaX = (entity.getX() - that.x) / enemyDistance;
+                    let enemyDeltaY = (entity.getY() - that.y) / enemyDistance;
+                    that.velocity.x -= enemyDeltaX * that.accelerationFromEnemy / (enemyDistance * enemyDistance);
+                    that.velocity.y -= enemyDeltaY * that.accelerationFromEnemy / (enemyDistance * enemyDistance);
+                }
+            }
         });
-		
-		this.updateBB();
+
+        this.testSpeed();
+
+        this.updateBB();
     };
 
     draw(ctx) {
@@ -202,6 +200,7 @@ class Witch {
         this.health -= damage;
         if (this.health <= 0) {
             this.removeFromWorld = true;
+            this.hero.exp.witchKill();
         }
         if (knockback != 0) {
             // TODO: Allow a knockback to be applied over a period of time rather than all at once
