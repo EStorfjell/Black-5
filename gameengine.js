@@ -164,7 +164,8 @@ class GameEngine {
         for (i = this.entities.length - 1; i >= 0; --i) {
             if (this.entities[i].removeFromWorld) {
                 if (this.entities[i] instanceof Zombie ||
-                    this.entities[i] instanceof Skeleton || this.entities[i] instanceof Witch) {
+                    this.entities[i] instanceof Skeleton || this.entities[i] instanceof Witch ||
+					this.entities[i] instanceof Dragon) {
                     this.enemyCount--;
                 }
                 this.entities.splice(i, 1);

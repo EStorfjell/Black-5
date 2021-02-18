@@ -1,9 +1,9 @@
-class Fireball {
+class DragonFireball {
     constructor(game, x, y, toX, toY) {
         Object.assign(this, {game, x, y, toX, toY});
 
         // sprite sheet
-        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/fireball.png");
+        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/dragonfireball.png");
         this.width = 20;
         this.height = 20;
 

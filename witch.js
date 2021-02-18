@@ -1,6 +1,6 @@
 class Witch {
-    constructor(game, hero, x, y) {
-        Object.assign(this, { game, hero, x, y });
+    constructor(game, hero, wave, round, x, y) {
+        Object.assign(this, { game, hero, wave, round, x, y });
 
         // sprite sheet
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/witch.png");
@@ -8,12 +8,18 @@ class Witch {
         this.height = 64; // character height
 
         // character states
-        this.action = 0 // 0 = idle, 1 = walking
-        this.facing = 0 // 0 = east, 1 = north, 2 = west, 3 = south
+        this.action = 0; // 0 = idle, 1 = walking
+        this.facing = 0; // 0 = east, 1 = north, 2 = west, 3 = south
+        
+        this.attack = 0;
+        this.attackDistance = 200;
+        this.elapsedTime = 0;
+        this.firingRate = 1;
+
         this.health = 100;
         this.dead = false;
 
-        this.walkSpeed = 50; // pixels per second
+        this.walkSpeed = 50 + 2 * this.wave; // pixels per second
         this.velocity = { x: 0, y: 0 };
         this.accelerationToPlayer = 1000000;
         this.accelerationFromWall = 70000;
@@ -36,8 +42,6 @@ class Witch {
 
     update() {
         this.action = 1;
-        this.attackDistance = 100;
-        // The total distance this witch will walk this tick
 
         // hero coordinates
         let heroX = this.hero.getX();
@@ -62,8 +66,14 @@ class Witch {
             this.facing = 3;
         }
 
-        if (heroDistance < this.attackDistance) { // If closer than 100 px, stop moving
-            this.action = 0;
+        this.elapsedTime += this.game.clockTick;
+        if (heroDistance <= this.attackDistance) { // if hero is less than attackDistance away, stop and attack
+			this.action = 0;
+            if (this.elapsedTime >= this.firingRate) {
+                let fireBall = new WitchFireball(this.game, this.hero.getX(), this.hero.getY(), false, this.attackDamage, this.x - 10, this.y + 30);
+                this.game.addEntity(fireBall);
+                this.elapsedTime = 0;
+            }
         } else { // walk towards player
             this.action = 1;
             this.x += delX;
@@ -190,6 +200,7 @@ class Witch {
         this.health -= damage;
         if (this.health <= 0) {
             this.removeFromWorld = true;
+            this.hero.exp.witchKill();
         }
         if (knockback != 0) {
             // TODO: Allow a knockback to be applied over a period of time rather than all at once
