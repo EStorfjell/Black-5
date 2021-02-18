@@ -28,11 +28,6 @@ class Hero {
         this.sword.setPrimaryWeapon();
         this.meleeEquipped = false;
 
-        this.game.addEntity(this.primaryWeapon);
-        this.game.addEntity(this.secondaryWeapon);
-        this.game.addEntity(this.tertiaryWeapon);
-        this.game.addEntity(this.sword);
-
         this.walkSpeed = 200; // pixels per second
 
         this.updateBB();
@@ -40,6 +35,13 @@ class Hero {
         this.animations = [];
         this.loadAnimations();
     };
+
+    initializeWeapons() {
+        this.game.addEntity(this.primaryWeapon);
+        this.game.addEntity(this.secondaryWeapon);
+        this.game.addEntity(this.tertiaryWeapon);
+        this.game.addEntity(this.sword);
+    }
 
     update() {
         let walkOrth = this.walkSpeed * this.game.clockTick;

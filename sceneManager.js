@@ -7,8 +7,6 @@ class SceneManager {
 
         this.hero = new Hero(game, 50, 50);
         this.map = null;
-        this.totalWaves = 4;
-        this.totalRounds = 4;
         this.wave = 5; // current wave
         this.round = 1; // current round
 
@@ -69,6 +67,7 @@ class SceneManager {
         this.hero.x = LEVELS.LEVEL_ONE.startX;
         this.hero.y = LEVELS.LEVEL_ONE.startY;
         this.game.addEntity(this.hero);
+        this.hero.initializeWeapons();
     };
 
     update() {
@@ -92,12 +91,12 @@ class SceneManager {
         }
 
         if (this.game.getEnemyCount() == 0) {
-            if (this.round == this.totalRounds && this.wave < this.totalWaves) {
+            if (this.round == LEVELS.LEVEL_ONE.waves[this.wave - 1].length && this.wave < LEVELS.LEVEL_ONE.waves.length) {
                 this.wave++;
                 this.round = 1;
                 this.clearEntityArray();
                 this.loadRound(this.wave, this.round);
-            } else if (this.round < this.totalRounds && this.wave < this.totalWaves) {
+            } else if (this.round < LEVELS.LEVEL_ONE.waves[this.wave - 1].length && LEVELS.LEVEL_ONE.waves.length) {
                 this.round++;
                 this.clearEntityArray();
                 this.loadRound(this.wave, this.round);
