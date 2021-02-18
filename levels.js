@@ -27,39 +27,47 @@ const LEVELS = {
         startX: 672,
         startY: 512,
         spawnPoints: [
-            { x: 0, y: 0 }, { x: 0, y: 800 }, { x: 990, y: 0 }, { x: 990, y: 800 }
+            { x: 0, y: 0 }, { x: 0, y: 800 }, { x: 800, y: 0 }, { x: 800, y: 800 }
         ],
         waves: [
             [
-                { zombies: 3, skeletons: 2, witches: 1 }, { zombies: 4, skeletons: 3, witches: 2 },
-                { zombies: 5, skeletons: 4, witches: 3 }
+                { zombies: 3, skeletons: 2, witches: 1, dragons: 0 },
+				{ zombies: 4, skeletons: 3, witches: 2, dragons: 0 },
+                { zombies: 5, skeletons: 4, witches: 3, dragons: 0 }
             ],
             [
-                { zombies: 4, skeletons: 3, witches: 2 }, { zombies: 5, skeletons: 4, witches: 3 },
-                { zombies: 6, skeletons: 5, witches: 4 }
+                { zombies: 4, skeletons: 3, witches: 2, dragons: 0 },
+				{ zombies: 5, skeletons: 4, witches: 3, dragons: 0 },
+                { zombies: 6, skeletons: 5, witches: 4, dragons: 0 }
             ],
             [
-                { zombies: 5, skeletons: 4, witches: 3 }, { zombies: 6, skeletons: 5, witches: 4 },
-                { zombies: 7, skeletons: 6, witches: 5 }
+                { zombies: 5, skeletons: 4, witches: 3, dragons: 0 },
+				{ zombies: 6, skeletons: 5, witches: 4, dragons: 0 },
+                { zombies: 7, skeletons: 6, witches: 5, dragons: 0 }
             ], [
-                { zombies: 6, skeletons: 5, witches: 4 }, { zombies: 7, skeletons: 6, witches: 5 },
-                { zombies: 8, skeletons: 7, witches: 6 }
+                { zombies: 6, skeletons: 5, witches: 4, dragons: 0 },
+				{ zombies: 7, skeletons: 6, witches: 5, dragons: 0 },
+                { zombies: 8, skeletons: 7, witches: 6, dragons: 0 }
             ], [
-                { zombies: 2, skeletons: 2, witches: 1 }
+                { zombies: 2, skeletons: 2, witches: 1, dragons: 1 }
             ], [
-                { zombies: 2, skeletons: 2, witches: 2 }, { zombies: 3, skeletons: 3, witches: 3 },
-                { zombies: 3, skeletons: 3, witches: 4 }
+                { zombies: 2, skeletons: 2, witches: 2, dragons: 0 },
+				{ zombies: 3, skeletons: 3, witches: 3, dragons: 0 },
+                { zombies: 3, skeletons: 3, witches: 4, dragons: 0 }
             ], [
-                { zombies: 2, skeletons: 2, witches: 2 }, { zombies: 3, skeletons: 3, witches: 4 },
-                { zombies: 3, skeletons: 3, witches: 5 }
+                { zombies: 2, skeletons: 2, witches: 2, dragons: 0 },
+				{ zombies: 3, skeletons: 3, witches: 4, dragons: 0 },
+                { zombies: 3, skeletons: 3, witches: 5, dragons: 0 }
             ], [
-                { zombies: 3, skeletons: 3, witches: 3 }, { zombies: 3, skeletons: 3, witches: 5 },
-                { zombies: 3, skeletons: 3, witches: 6 }
+                { zombies: 3, skeletons: 3, witches: 3, dragons: 0 },
+				{ zombies: 3, skeletons: 3, witches: 5, dragons: 0 },
+                { zombies: 3, skeletons: 3, witches: 6, dragons: 0 }
             ], [
-                { zombies: 3, skeletons: 3, witches: 3 }, { zombies: 4, skeletons: 4, witches: 4 },
-                { zombies: 4, skeletons: 4, witches: 4 }
+                { zombies: 3, skeletons: 3, witches: 3, dragons: 0 },
+				{ zombies: 4, skeletons: 4, witches: 4, dragons: 0 },
+                { zombies: 4, skeletons: 4, witches: 4, dragons: 0 }
             ], [
-                { zombies: 3, skeletons: 3, witches: 2 }
+                { zombies: 3, skeletons: 3, witches: 2, dragons: 1 }
             ]
         ]
     }
