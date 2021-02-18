@@ -1,12 +1,12 @@
 class Bullet {
     constructor(game, targetX, targetY, isOnHeroTeam, attackDamage, x, y) {
-        Object.assign(this, { game, targetX, targetY, isOnHeroTeam, attackDamage, x, y });
+        Object.assign(this, {game, targetX, targetY, isOnHeroTeam, attackDamage, x, y});
 
         // sprite sheet
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/bullet.png");
 
         // bullet states
-        this.facing = 0 // 0 = east, 1 = north, 2 = west, 3 = south
+        this.facing = 0; // 0 = east, 1 = north, 2 = west, 3 = south
 
         this.flySpeed = 200; // pixels per second
 
@@ -97,7 +97,7 @@ class Bullet {
                     // The bullet will damage the player
                     entity.takeDamage(that.attackDamage, 25, entity.getX() - that.x, entity.getY() - that.y);
                     that.removeFromWorld = true;
-                } else if (that.isOnHeroTeam && (entity instanceof Skeleton || entity instanceof Zombie || entity instanceof Witch)) {
+                } else if (that.isOnHeroTeam && (entity instanceof Skeleton || entity instanceof Zombie || entity instanceof Witch || entity instanceof Dragon)) {
                     // The bullet will damage the enemy
                     entity.takeDamage(that.attackDamage, 25, entity.getX() - that.x, entity.getY() - that.y);
                     that.removeFromWorld = true;
@@ -106,15 +106,15 @@ class Bullet {
                 }
             }
         });
-		
-		// World borders
+
+        // World borders
         that.removeFromWorld = that.removeFromWorld || this.x + this.width <= 0 || this.y + this.height <= 0
             || this.x >= this.game.camera.map.width || this.y >= this.game.camera.map.height;
     };
 
     draw(ctx) {
-		let drawX = this.x - this.game.camera.x;
-		let drawY = this.y - this.game.camera.y;
+        let drawX = this.x - this.game.camera.x;
+        let drawY = this.y - this.game.camera.y;
         this.animations[0][this.facing].drawFrame(this.game.clockTick, ctx, drawX, drawY, 1);
     };
 
