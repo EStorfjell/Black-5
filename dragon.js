@@ -7,6 +7,8 @@ class Dragon {
         this.width = 189; // character width
         this.height = 131; // character height
 
+        this.health = 300;
+
         this.heading = 0; // radians counterclockwise from East
         this.velocity = {x: 0, y: 0};
 
@@ -79,8 +81,8 @@ class Dragon {
         this.timer += this.game.clockTick;
         if (this.timer >= this.coolDown) {
             this.timer = 0;
-            let fireX = this.x + this.breathLoc[this.facing].x - 10;
-            let fireY = this.y + this.breathLoc[this.facing].y - 10;
+            let fireX = this.x + this.breathLoc[this.facing].x;
+            let fireY = this.y + this.breathLoc[this.facing].y;
             let fire = new DragonFireball(this.game, fireX, fireY, this.hero.x, this.hero.y);
             this.game.addEntity(fire);
         }
@@ -170,5 +172,34 @@ class Dragon {
         }
         relation.distance = Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2));
         return relation;
-    }
+    };
+
+    takeDamage(damage, knockback = 0, xVectorComp = 0, yVectorComp = 0) {
+        this.health -= damage;
+        if (this.health <= 0) {
+            console.log("The dragon died.");
+            this.removeFromWorld = true;
+        }
+        if (knockback !== 0) {
+            // TODO: Allow a knockback to be applied over a period of time rather than all at once
+            // The angle of the knockback measured relative to the x-axis
+            let angle = Math.atan(Math.abs(yVectorComp) / Math.abs(xVectorComp));
+            // The new x-coordinate of the hero
+            let deltaX = knockback * Math.cos(angle);
+            // The new y-coordinate of the hero
+            let deltaY = knockback * Math.sin(angle);
+            if (xVectorComp < 0) deltaX = -deltaX;
+            if (yVectorComp < 0) deltaY = -deltaY;
+            this.x += deltaX;
+            this.y += deltaY;
+        }
+    };
+
+    getX() {
+        return this.x;
+    };
+
+    getY() {
+        return this.y;
+    };
 }

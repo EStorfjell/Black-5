@@ -7,7 +7,10 @@ class DragonFireball {
         this.width = 20;
         this.height = 20;
 
+        this.animator = new Animator(this.spritesheet, 0, 0, this.width, this.height, 1, 1, 0, false, true);
+
         this.flySpeed = 300; // pixels per second
+        this.attackDamage = 25;
 
         this.xSpeed = 0;
         this.ySpeed = 0;
@@ -36,7 +39,13 @@ class DragonFireball {
         // Collision check and handling
         var that = this;
         this.game.entities.forEach(function (entity) {
-
+            if (entity.BB && that.BB.collide(entity.BB)) {
+                if (entity instanceof Hero) {
+                    // The arrow will damage the player
+                    entity.takeDamage(that.attackDamage, 25, entity.getX() - that.x, entity.getY() - that.y);
+                    that.removeFromWorld = true;
+                }
+            }
         });
 
         // World borders
@@ -47,7 +56,7 @@ class DragonFireball {
     draw(ctx) {
         let drawX = this.x - this.game.camera.x;
         let drawY = this.y - this.game.camera.y;
-        ctx.drawImage(this.spritesheet, drawX, drawY, this.width * 2, this.height * 2);
+        this.animator.drawFrame(this.game.clockTick, ctx, drawX, drawY, 1);
     };
 
     updateBB() {
