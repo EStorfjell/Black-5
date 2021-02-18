@@ -1,21 +1,21 @@
-class Pistol {
+class Shotgun {
     constructor(game, isOwnedByHero, x, y) {
         Object.assign(this, { game, isOwnedByHero, x, y });
 
         // sprite sheet
-        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/pistol.png");
+        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/shotgun.png");
 
         // weapon states
         this.state = 0 // 0 = not equipped, 1 = secondary weapon, 
-        // 2 = primary weapon uncocked, 3 = primary weapon cocked, 4 = primary weapon firing
+        // 2 = primary weapon not firing, 3 = primary weapon firing
         this.facing = 0 // 0 = east, 1 = north, 2 = west, 3 = south
 
-        this.attackDamage = 30;
+        this.attackDamage = 15;
         this.attackDamageIncrease = 5; // attack damage increase per upgrade
         this.attackDamageUpgradeLevel = 0;
 
         this.ammo = 200; // number of bullets
-        this.attacking = false; // true if this pistol is firing
+        this.attacking = false; // true if this shotgun is firing
         this.targetX = 0;
         this.targetY = 0;
 
@@ -51,20 +51,37 @@ class Pistol {
                 bulletX = this.x + 7;
                 bulletY = this.y + 35;
             }
-            let bullet = new Bullet(this.game, this.targetX, this.targetY, isOnHeroTeam, this.attackDamage, bulletX, bulletY);
-            this.game.addEntity(bullet);
-            this.state = 4;
+
+            // 15 degrees
+            let angle = 0.2617994;
+            // Sets the origin to the shotgun's position
+            let newTargetX = this.targetX - this.x;
+            let newTargetY = this.targetY - this.y;
+            // Finds the new rotated coordinates relative to the shotgun
+            let rotatedTargetX1 = newTargetX * Math.cos(angle) - newTargetY * Math.sin(angle);
+            let rotatedTargetY1 = newTargetX * Math.sin(angle) + newTargetY * Math.cos(angle);
+            let rotatedTargetX2 = newTargetX * Math.cos(-angle) - newTargetY * Math.sin(-angle);
+            let rotatedTargetY2 = newTargetX * Math.sin(-angle) + newTargetY * Math.cos(-angle);
+            // Sets the origin back to the map's origin
+            rotatedTargetX1 += this.x;
+            rotatedTargetY1 += this.y;
+            rotatedTargetX2 += this.x;
+            rotatedTargetY2 += this.y;
+            let bullet1 = new Bullet(this.game, rotatedTargetX1, rotatedTargetY1, isOnHeroTeam, this.attackDamage, bulletX, bulletY);
+            let bullet2 = new Bullet(this.game, this.targetX, this.targetY, isOnHeroTeam, this.attackDamage, bulletX, bulletY);
+            let bullet3 = new Bullet(this.game, rotatedTargetX2, rotatedTargetY2, isOnHeroTeam, this.attackDamage, bulletX, bulletY);
+            this.game.addEntity(bullet1);
+            this.game.addEntity(bullet2);
+            this.game.addEntity(bullet3);
+
+            this.state = 3;
             this.ammo--;
             this.attacking = false;
             this.elapsedTime = 0;
         }
 
-        if (!this.attacking && this.state == 4) {
+        if (!this.attacking && this.state == 3) {
             this.state = 2;
-        }
-
-        if (this.state == 2 && this.elapsedTime >= this.firingRate) {
-            this.state = 3;
         }
 
         this.updateBB();
@@ -102,35 +119,25 @@ class Pistol {
         // south
         this.animations[1][3] = null;
 
-        // primary weapon uncocked
+        // primary weapon not firing
         // east
-        this.animations[2][0] = new Animator(this.spritesheet, 198, 64, 36, 21, 1, 0.15, 0, false, true);
+        this.animations[2][0] = new Animator(this.spritesheet, 9, 56, 43, 16, 1, 0.15, 0, false, true);
         // north
-        this.animations[2][1] = new Animator(this.spritesheet, 207, 155, 21, 36, 1, 0.15, 0, false, true);
+        this.animations[2][1] = new Animator(this.spritesheet, 22, 142, 16, 43, 1, 0.15, 0, false, true);
         // west
-        this.animations[2][2] = new Animator(this.spritesheet, 201, 16, 36, 21, 1, 0.15, 0, false, true);
+        this.animations[2][2] = new Animator(this.spritesheet, 8, 19, 43, 16, 1, 0.15, 0, false, true);
         // south
-        this.animations[2][3] = new Animator(this.spritesheet, 200, 100, 21, 36, 1, 0.15, 0, false, true);
-
-        // primary weapon cocked
-        // east
-        this.animations[3][0] = new Animator(this.spritesheet, 7, 61, 36, 22, 1, 0.15, 0, false, true);
-        // north
-        this.animations[3][1] = new Animator(this.spritesheet, 12, 154, 22, 36, 1, 0.15, 0, false, true);
-        // west
-        this.animations[3][2] = new Animator(this.spritesheet, 8, 15, 36, 22, 1, 0.15, 0, false, true);
-        // south
-        this.animations[3][3] = new Animator(this.spritesheet, 12, 103, 22, 36, 1, 0.15, 0, false, true);
+        this.animations[2][3] = new Animator(this.spritesheet, 22, 87, 16, 43, 1, 0.15, 0, false, true);
 
         // primary weapon firing
         // east
-        this.animations[4][0] = new Animator(this.spritesheet, 96, 62, 48, 21, 1, 0.15, 0, false, true);
+        this.animations[3][0] = new Animator(this.spritesheet, 95, 55, 55, 17, 1, 0.15, 0, false, true);
         // north
-        this.animations[4][1] = new Animator(this.spritesheet, 108, 152, 21, 48, 1, 0.15, 0, false, true);
+        this.animations[3][1] = new Animator(this.spritesheet, 112, 146, 17, 55, 1, 0.15, 0, false, true);
         // west
-        this.animations[4][2] = new Animator(this.spritesheet, 93, 16, 48, 21, 1, 0.15, 0, false, true);
+        this.animations[3][2] = new Animator(this.spritesheet, 93, 18, 55, 17, 1, 0.15, 0, false, true);
         // south
-        this.animations[4][3] = new Animator(this.spritesheet, 101, 97, 21, 48, 1, 0.15, 0, false, true);
+        this.animations[3][3] = new Animator(this.spritesheet, 112, 86, 17, 55, 1, 0.15, 0, false, true);
     }
 
     updateBB() {
@@ -139,45 +146,45 @@ class Pistol {
     }
 
     updateX(ownerX) {
-        // this.x = ownerX + ownerOffset + pistolOffset
+        // this.x = ownerX + ownerOffset + shotgunOffset
         let playerOffset;
-        let pistolOffset;
+        let shotgunOffset;
         if (this.facing == 0) { // east
             playerOffset = 10;
-            pistolOffset = 0;
+            shotgunOffset = 0;
         } else if (this.facing == 1) { // north
             playerOffset = 13;
-            pistolOffset = -15;
+            shotgunOffset = -11;
         } else if (this.facing == 2) { // west
             playerOffset = 13;
-            if (this.state == 4) pistolOffset = -47; // firing
-            else pistolOffset = -35; // not firing
+            if (this.state == 3) shotgunOffset = -46; // firing
+            else shotgunOffset = -34; // not firing
         } else { // south
             playerOffset = 5;
-            pistolOffset = -15;
+            shotgunOffset = -11;
         }
-        this.x = ownerX + playerOffset + pistolOffset;
+        this.x = ownerX + playerOffset + shotgunOffset;
     }
 
     updateY(ownerY) {
-        // this.y = ownerY + ownerOffset + pistolOffset
+        // this.y = ownerY + ownerOffset + shotgunOffset
         let playerOffset;
-        let pistolOffset;
+        let shotgunOffset;
         if (this.facing == 0) { // east
             playerOffset = 28;
-            pistolOffset = -15;
+            shotgunOffset = -10;
         } else if (this.facing == 1) { // north
             playerOffset = 30;
-            if (this.state == 4) pistolOffset = -35; // firing
-            else pistolOffset = -26 // not firing
+            if (this.state == 3) shotgunOffset = -46; // firing
+            else shotgunOffset = -34 // not firing
         } else if (this.facing == 2) { // west
             playerOffset = 28;
-            pistolOffset = -15;
+            shotgunOffset = -11;
         } else { // south
             playerOffset = 31;
-            pistolOffset = -10;
+            shotgunOffset = -8;
         }
-        this.y = ownerY + playerOffset + pistolOffset;
+        this.y = ownerY + playerOffset + shotgunOffset;
     }
 
     attack(targetX, targetY) {
