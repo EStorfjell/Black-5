@@ -9,7 +9,7 @@ class Crossbow {
         this.state = 0 // 0 = not equipped, 1 = secondary weapon, 2 = primary weapon without arrow, 3 = primary weapon with arrow
         this.facing = 0 // 0 = east, 1 = north, 2 = west, 3 = south
 
-        this.attackDamage = 15;
+        this.attackDamage = 25;
         this.attackDamageIncrease = 5; // attack damage increase per upgrade
         this.attackDamageUpgradeLevel = 0;
 
@@ -42,7 +42,9 @@ class Crossbow {
             let arrow = new Arrow(this.game, this.targetX, this.targetY, isOnHeroTeam, this.attackDamage, this.x, this.y);
             this.game.addEntity(arrow);
             this.state = 2;
-            this.ammo--;
+            if (isOnHeroTeam) {
+                this.ammo--;
+            }
             this.attacking = false;
             this.elapsedTime = 0;
         }

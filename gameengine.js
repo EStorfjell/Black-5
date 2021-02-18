@@ -47,7 +47,7 @@ class GameEngine {
             let x = e.clientX - that.ctx.canvas.getBoundingClientRect().left;
             let y = e.clientY - that.ctx.canvas.getBoundingClientRect().top;
 
-            return {x: x, y: y};
+            return { x: x, y: y };
         };
 
         this.ctx.canvas.addEventListener("mousemove", function (e) {
@@ -163,8 +163,9 @@ class GameEngine {
 
         for (i = this.entities.length - 1; i >= 0; --i) {
             if (this.entities[i].removeFromWorld) {
-                if (this.entities[i] instanceof Zombie || 
-                    this.entities[i] instanceof Skeleton || this.entities[i] instanceof Witch) {
+                if (this.entities[i] instanceof Zombie ||
+                    this.entities[i] instanceof Skeleton || this.entities[i] instanceof Witch ||
+					this.entities[i] instanceof Dragon) {
                     this.enemyCount--;
                 }
                 this.entities.splice(i, 1);

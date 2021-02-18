@@ -10,7 +10,7 @@ class Pistol {
         // 2 = primary weapon uncocked, 3 = primary weapon cocked, 4 = primary weapon firing
         this.facing = 0 // 0 = east, 1 = north, 2 = west, 3 = south
 
-        this.attackDamage = 15;
+        this.attackDamage = 30;
         this.attackDamageIncrease = 5; // attack damage increase per upgrade
         this.attackDamageUpgradeLevel = 0;
 

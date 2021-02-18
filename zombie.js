@@ -1,6 +1,6 @@
 class Zombie {
-    constructor(game, hero, x, y) {
-        Object.assign(this, {game, hero, x, y});
+    constructor(game, hero, wave, round, x, y) {
+        Object.assign(this, { game, hero, wave, round, x, y });
 
         // sprite sheet
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/zombie.png");
@@ -11,15 +11,16 @@ class Zombie {
         this.action = 0; // 0 = idle, 1 = walking
         this.facing = 0; // 0 = east, 1 = north, 2 = west, 3 = south
         this.health = 100;
-        this.attackDamage = 10;
-        this.attackRate = 1; // attacks per second
+        this.attackDamage = 10 + 2 * this.wave;
+        this.attackCooldown = 2 - 0.05 * this.wave; // The minimum number of seconds between attacks
         this.elapsedTime = 0; // The time since the zombie last attacked
         this.dead = false;
 
-        this.walkSpeed = 75; // pixels per second
-        this.velocity = {x: 0, y: 0};
+        this.walkSpeed = 75 + 5 * this.wave; // pixels per second
+        this.velocity = { x: 0, y: 0 };
         this.accelerationToPlayer = 1000000;
         this.accelerationFromWall = 70000;
+        this.accelerationFromEnemy = 20000;
 
         this.updateBB();
 
@@ -63,10 +64,10 @@ class Zombie {
         this.x += delX;
         this.y += delY;
 
-        let deltaX = (heroX - this.x) / heroDistance;
-        let deltaY = (heroY - this.y) / heroDistance;
-        this.velocity.x += deltaX * this.accelerationToPlayer / (heroDistance * heroDistance);
-        this.velocity.y += deltaY * this.accelerationToPlayer / (heroDistance * heroDistance);
+        let heroDeltaX = (heroX - this.x) / heroDistance;
+        let heroDeltaY = (heroY - this.y) / heroDistance;
+        this.velocity.x += heroDeltaX * this.accelerationToPlayer / (heroDistance * heroDistance);
+        this.velocity.y += heroDeltaY * this.accelerationToPlayer / (heroDistance * heroDistance);
 
         // World borders
         if (this.x <= 0) this.x = 0;
@@ -78,12 +79,14 @@ class Zombie {
 
         // Collision check and handling
         var that = this;
+        this.elapsedTime += this.game.clockTick;
         this.game.entities.forEach(function (entity) {
             if (entity.BB && that.BB.collide(entity.BB)) {
-                if (entity instanceof Hero) {
+                if (entity instanceof Hero && that.elapsedTime >= that.attackCooldown) {
                     that.action = 0;
                     // The zombie will attack the player
                     that.hero.takeDamage(that.attackDamage, 25, heroX - that.x, heroY - that.y);
+                    that.elapsedTime = 0;
                 }
                 if (entity instanceof Wall) {
                     if (delX > 0 && that.lastBB.right <= entity.BB.left) { // collision from left
@@ -105,12 +108,21 @@ class Zombie {
                 }
             }
             if (entity instanceof Wall) {
-                let wallDistance = Math.sqrt((that.x - entity.centerX) * (that.x - entity.centerX) + 
-                (that.y - entity.centerY) * (that.y - entity.centerY));
-                let deltaX = (entity.centerX - that.x) / wallDistance;
-                let deltaY = (entity.centerY - that.y) / wallDistance;
-                that.velocity.x -= deltaX * that.accelerationFromWall / (wallDistance * wallDistance);
-                that.velocity.y -= deltaY * that.accelerationFromWall / (wallDistance * wallDistance);
+                let wallDistance = Math.sqrt((that.x - entity.centerX) * (that.x - entity.centerX) +
+                    (that.y - entity.centerY) * (that.y - entity.centerY));
+                let wallDeltaX = (entity.centerX - that.x) / wallDistance;
+                let wallDeltaY = (entity.centerY - that.y) / wallDistance;
+                that.velocity.x -= wallDeltaX * that.accelerationFromWall / (wallDistance * wallDistance);
+                that.velocity.y -= wallDeltaY * that.accelerationFromWall / (wallDistance * wallDistance);
+            } else if (entity instanceof Zombie || entity instanceof Skeleton || entity instanceof Witch) {
+                let enemyDistance = Math.sqrt((that.x - entity.getX()) * (that.x - entity.getX()) +
+                    (that.y - entity.getY()) * (that.y - entity.getY()));
+                if (enemyDistance > 0) {
+                    let enemyDeltaX = (entity.getX() - that.x) / enemyDistance;
+                    let enemyDeltaY = (entity.getY() - that.y) / enemyDistance;
+                    that.velocity.x -= enemyDeltaX * that.accelerationFromEnemy / (enemyDistance * enemyDistance);
+                    that.velocity.y -= enemyDeltaY * that.accelerationFromEnemy / (enemyDistance * enemyDistance);
+                }
             }
         });
 

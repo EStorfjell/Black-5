@@ -9,7 +9,7 @@ class Sword {
         this.state = 0 // 0 = not equipped, 1 = secondary weapon, 2 = primary weapon, 3 = attacking
         this.facing = 0 // 0 = east, 1 = north, 2 = west, 3 = south
 
-        this.attackDamage = 15;
+        this.attackDamage = 35;
 
         this.width = 44;
         this.height = 44;

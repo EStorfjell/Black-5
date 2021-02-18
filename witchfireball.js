@@ -1,9 +1,9 @@
-class FireBall {
+class WitchFireball {
     constructor(game, targetX, targetY, isOnHeroTeam, attackDamage, x, y) {
         Object.assign(this, { game, targetX, targetY, isOnHeroTeam, attackDamage, x, y });
 
         // sprite sheet
-        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/fireBall.png");
+        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/witchfireball.png");
 
         // arrow states
         this.facing = 0 // 0 = east, 1 = north, 2 = west, 3 = south
