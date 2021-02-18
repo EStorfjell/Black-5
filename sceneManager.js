@@ -12,7 +12,6 @@ class SceneManager {
         this.wave = 5; // current wave
         this.round = 1; // current round
 
-        //this.loadLevelFive();
         this.loadRound(this.wave, this.round);
     };
 
@@ -68,22 +67,6 @@ class SceneManager {
         this.hero.x = LEVELS.LEVEL_ONE.startX;
         this.hero.y = LEVELS.LEVEL_ONE.startY;
         this.game.addEntity(this.hero);
-    };
-
-    /**
-	 * For testing purposes.
-	 */
-    loadLevelFive() {
-        this.map = new Map(this.game, LEVELS.LEVEL_ONE);
-        this.game.addEntity(this.map);
-        this.map.init();
-
-        this.hero.x = LEVELS.LEVEL_ONE.startX;
-        this.hero.y = LEVELS.LEVEL_ONE.startY;
-        this.game.addEntity(this.hero);
-
-        let boss = new Dragon(this.game, this.hero, 400, 400);
-        this.game.addEntity(boss);
     };
 
     update() {
