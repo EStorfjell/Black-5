@@ -20,6 +20,7 @@ class Zombie {
         this.velocity = { x: 0, y: 0 };
         this.accelerationToPlayer = 1000000;
         this.accelerationFromWall = 70000;
+        this.accelerationFromEnemy = 20000;
 
         this.updateBB();
 
@@ -63,10 +64,10 @@ class Zombie {
         this.x += delX;
         this.y += delY;
 
-        let deltaX = (heroX - this.x) / heroDistance;
-        let deltaY = (heroY - this.y) / heroDistance;
-        this.velocity.x += deltaX * this.accelerationToPlayer / (heroDistance * heroDistance);
-        this.velocity.y += deltaY * this.accelerationToPlayer / (heroDistance * heroDistance);
+        let heroDeltaX = (heroX - this.x) / heroDistance;
+        let heroDeltaY = (heroY - this.y) / heroDistance;
+        this.velocity.x += heroDeltaX * this.accelerationToPlayer / (heroDistance * heroDistance);
+        this.velocity.y += heroDeltaY * this.accelerationToPlayer / (heroDistance * heroDistance);
 
         // World borders
         if (this.x <= 0) this.x = 0;
@@ -107,12 +108,21 @@ class Zombie {
                 }
             }
             if (entity instanceof Wall) {
-                let wallDistance = Math.sqrt((that.x - entity.centerX) * (that.x - entity.centerX) + 
-                (that.y - entity.centerY) * (that.y - entity.centerY));
-                let deltaX = (entity.centerX - that.x) / wallDistance;
-                let deltaY = (entity.centerY - that.y) / wallDistance;
-                that.velocity.x -= deltaX * that.accelerationFromWall / (wallDistance * wallDistance);
-                that.velocity.y -= deltaY * that.accelerationFromWall / (wallDistance * wallDistance);
+                let wallDistance = Math.sqrt((that.x - entity.centerX) * (that.x - entity.centerX) +
+                    (that.y - entity.centerY) * (that.y - entity.centerY));
+                let wallDeltaX = (entity.centerX - that.x) / wallDistance;
+                let wallDeltaY = (entity.centerY - that.y) / wallDistance;
+                that.velocity.x -= wallDeltaX * that.accelerationFromWall / (wallDistance * wallDistance);
+                that.velocity.y -= wallDeltaY * that.accelerationFromWall / (wallDistance * wallDistance);
+            } else if (entity instanceof Zombie || entity instanceof Skeleton || entity instanceof Witch) {
+                let enemyDistance = Math.sqrt((that.x - entity.getX()) * (that.x - entity.getX()) +
+                    (that.y - entity.getY()) * (that.y - entity.getY()));
+                if (enemyDistance > 0) {
+                    let enemyDeltaX = (entity.getX() - that.x) / enemyDistance;
+                    let enemyDeltaY = (entity.getY() - that.y) / enemyDistance;
+                    that.velocity.x -= enemyDeltaX * that.accelerationFromEnemy / (enemyDistance * enemyDistance);
+                    that.velocity.y -= enemyDeltaY * that.accelerationFromEnemy / (enemyDistance * enemyDistance);
+                }
             }
         });
 
