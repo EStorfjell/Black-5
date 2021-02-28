@@ -20,6 +20,8 @@ ASSET_MANAGER.queueDownload("./sprites/armor.png");
 ASSET_MANAGER.queueDownload("./sprites/potions.png");
 ASSET_MANAGER.queueDownload("./sprites/dragon.png");
 ASSET_MANAGER.queueDownload("./sprites/dragonfireball.png");
+ASSET_MANAGER.queueDownload("./sprites/witchFireball.png");
+ASSET_MANAGER.queueDownload("./sprites/healthPack.png");
 
 ASSET_MANAGER.downloadAll(function () {
     let canvas = document.getElementById('gameWorld');
