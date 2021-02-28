@@ -22,10 +22,7 @@ class Dragon {
         this.acceleration = 50; // pixels per second per second
         this.turnSpeed = Math.PI / 3; // radians turned per second
 
-        this.coolDown = 3;
-        this.burstDelay = 0.05;
-        this.burstCount = 10;
-        this.burst = 4;
+        this.coolDown = 2;
         this.timer = 0;
 
         this.updateBB();
@@ -82,15 +79,13 @@ class Dragon {
         }
 
         this.timer += this.game.clockTick;
-        if (this.timer >= this.coolDown || (this.burst < this.burstCount && this.timer >= this.burstDelay)) {
+        if (this.timer >= this.coolDown) {
             this.timer = 0;
-            this.burst--;
             let fireX = this.x + this.breathLoc[this.facing].x;
             let fireY = this.y + this.breathLoc[this.facing].y;
             let fire = new DragonFireball(this.game, fireX, fireY, this.hero.x, this.hero.y);
             this.game.addEntity(fire);
         }
-        if (this.burst <= 0) this.burst = this.burstCount;
 
         // World borders
         if (this.x <= 0) this.x = 0;
