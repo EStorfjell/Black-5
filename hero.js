@@ -1,6 +1,6 @@
 class Hero {
     constructor(game, x, y) {
-        Object.assign(this, {game, x, y});
+        Object.assign(this, { game, x, y });
 
         // sprite sheet
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/hero.png");
@@ -11,13 +11,12 @@ class Hero {
         this.action = 0; // 0 = idle, 1 = walking
         this.facing = 0; // 0 = east, 1 = north, 2 = west, 3 = south
         this.health = 100;
-        this.maxHealth = 100;
 
         this.armor = 0;
-        this.maxArmor = 100;
-
-
         this.exp = new Experience();
+		
+        this.damageCooldown = 3; // Cooldown before the hero can take more damage
+        this.elapsedTime = 0; // Elapsed time since the hero last took damage
 
         this.primaryWeapon = new Pistol(game, true, this.x, this.y);
         this.primaryWeapon.setPrimaryWeapon();
@@ -28,13 +27,6 @@ class Hero {
         this.sword = new Sword(game, this.x, this.y);
         this.sword.setPrimaryWeapon();
         this.meleeEquipped = false;
-
-        this.currentWeapon = this.primaryWeapon;
-
-        this.game.addEntity(this.primaryWeapon);
-        this.game.addEntity(this.secondaryWeapon);
-        this.game.addEntity(this.tertiaryWeapon);
-        this.game.addEntity(this.sword);
 
         this.walkSpeed = 200; // pixels per second
 
@@ -110,7 +102,6 @@ class Hero {
             this.secondaryWeapon = this.tertiaryWeapon;
             this.tertiaryWeapon = temp;
             this.game.switchToSecondary = false;
-            this.ammo = this.primaryWeapon.ammo;
         }
         if (this.game.switchToMelee) {
             this.meleeEquipped = true;
@@ -131,14 +122,13 @@ class Hero {
         this.sword.updateFacing(this.facing);
 
         if (this.game.click != null) {
+            let currentWeapon;
             if (this.meleeEquipped) {
-                this.currentWeapon = this.sword;
+                currentWeapon = this.sword;
             } else {
-                this.currentWeapon = this.primaryWeapon;
-                this.ammo = this.currentWeapon.ammo;
+                currentWeapon = this.primaryWeapon;
             }
-            this.currentWeapon.attack(this.game.click.x + this.game.camera.x, this.game.click.y + this.game.camera.y);
-            this.game.pause = 1;
+            currentWeapon.attack(this.game.click.x + this.game.camera.x, this.game.click.y + this.game.camera.y);
             this.game.click = null;
         }
 
@@ -175,13 +165,9 @@ class Hero {
             }
         });
 
-        if (this.meleeEquipped) {
-            this.ammo = 0;
-        } else {
-            this.ammo = this.currentWeapon.ammo;
-        }
-
         this.updateBB();
+
+        this.elapsedTime += this.game.clockTick;
     };
 
     draw(ctx) {
@@ -263,45 +249,34 @@ class Hero {
      * @param {Number} yVectorComp The y-component of a vector specifying the knockback direction
      */
     takeDamage(damage, knockback = 0, xVectorComp = 0, yVectorComp = 0) {
-        if (damage < 0) {
-            this.health -= damage;
-            if (this.health > this.maxHealth) {
-                this.health = this.maxHealth;
-            }
-        } else if (this.armor > 0) {
-            this.armor -= damage;
-            if (this.armor < 0) {
+        if (this.elapsedTime >= this.damageCooldown) {
+            if (this.armor > 0) {
+                this.armor -= damage;
+            } else {
                 this.armor = 0;
+                this.health -= damage;
             }
-        }  else {
-            this.armor = 0;
-            this.health -= damage;
-        }
-
-        if (this.health <= 0) {
-            console.log("The player died.");
-            this.health = 0;
-            this.removeFromWorld = true;
-        }
-        if (knockback !== 0) {
-            // TODO: Allow a knockback to be applied over a period of time rather than all at once
-            // The angle of the knockback measured relative to the x-axis
-            let angle = Math.atan(Math.abs(yVectorComp) / Math.abs(xVectorComp));
-            // The new x-coordinate of the hero
-            let deltaX = knockback * Math.cos(angle);
-            // The new y-coordinate of the hero
-            let deltaY = knockback * Math.sin(angle);
-            if (xVectorComp < 0) deltaX = -deltaX;
-            if (yVectorComp < 0) deltaY = -deltaY;
-            this.x += deltaX;
-            this.y += deltaY;
+            if (this.health <= 0) {
+                console.log("The player died.");
+            }
+            if (knockback !== 0) {
+                // TODO: Allow a knockback to be applied over a period of time rather than all at once
+                // The angle of the knockback measured relative to the x-axis
+                let angle = Math.atan(Math.abs(yVectorComp) / Math.abs(xVectorComp));
+                // The new x-coordinate of the hero
+                let deltaX = knockback * Math.cos(angle);
+                // The new y-coordinate of the hero
+                let deltaY = knockback * Math.sin(angle);
+                if (xVectorComp < 0) deltaX = -deltaX;
+                if (yVectorComp < 0) deltaY = -deltaY;
+                this.x += deltaX;
+                this.y += deltaY;
+            }
+            this.elapsedTime = 0;
         }
     }
 
     pickupArmor() {
         this.armor += 50;
-        if (this.armor > this.maxArmor) {
-            this.armor = this.maxArmor;
-        }
     }
 }

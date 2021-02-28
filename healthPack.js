@@ -4,14 +4,14 @@ class HealthPack {
 
         // sprite sheet
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/healthPack.png");
-        this.width = 250;
+        this.width = 210;
         this.height = 200;
-        this.scale = 0.15;
         this.elapsedTime = 0;
-        this.BB = new BoundingBox(this.x, this.y, this.width * this.scale, this.height * this.scale);
+        this.BB = new BoundingBox(this.x, this.y, this.width, this.height);
 
         this.animations = [];
         this.loadAnimations();
+      
         this.updateBB();
 
     };
@@ -36,17 +36,15 @@ class HealthPack {
     };
 
     draw(ctx) {
-        let drawX = this.x - this.game.camera.x;
-        let drawY = this.y - this.game.camera.y;
-        this.animations.drawFrame(this.game.clockTick, ctx, drawX, drawY, this.scale);
+        this.animations.drawFrame(this.game.clockTick, ctx, this.x, this.y, 0.15);
     };
 
     loadAnimations() {
-        this.animations = new Animator(this.spritesheet, 65, 23, this.width, this.height, 2, 0.15, 30, false, true);
+        this.animations = new Animator(this.spritesheet, 60, 23, this.width, this.height, 2, 0.15, 60, false, true);
     }
 
     updateBB() {
         this.lastBB = this.BB;
-        this.BB = new BoundingBox(this.x,this.y, this.width * this.scale, this.height * this.scale);
+        this.BB = new BoundingBox(this.x,this.y, this.width, this.height);
     };
 }

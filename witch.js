@@ -1,6 +1,6 @@
 class Witch {
-    constructor(game, hero, x, y) {
-        Object.assign(this, {game, hero, x, y});
+    constructor(game, hero, wave, round, x, y) {
+        Object.assign(this, { game, hero, wave, round, x, y });
 
         // sprite sheet
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/witch.png");
@@ -12,7 +12,6 @@ class Witch {
         this.facing = 0; // 0 = east, 1 = north, 2 = west, 3 = south
         
         this.attack = 0;
-        this.attackDamage = 15;
         this.attackDistance = 200;
         this.elapsedTime = 0;
         this.firingRate = 1;
@@ -20,10 +19,11 @@ class Witch {
         this.health = 100;
         this.dead = false;
 
-        this.walkSpeed = 75; // pixels per second
-        this.velocity = {x: 0, y: 0};
+        this.walkSpeed = 50 + 2 * this.wave; // pixels per second
+        this.velocity = { x: 0, y: 0 };
         this.accelerationToPlayer = 1000000;
         this.accelerationFromWall = 70000;
+        this.accelerationFromEnemy = 20000;
 
         this.updateBB();
 
@@ -54,7 +54,7 @@ class Witch {
 
         // [xDisplaced, yDisplaced, hV]
         let cardinal = [this.x - heroX, this.y - heroY, Math.abs(delX / delY)]; // hV > 1: EAST/WEST; hV < 1:
-                                                                                // NORTH/SOUTH
+        // NORTH/SOUTH
         // xDisplaced > 0: NORTH
         if (cardinal[0] < 0 && cardinal[2] > 1) { // EAST
             this.facing = 0;
@@ -79,10 +79,10 @@ class Witch {
             this.x += delX;
             this.y += delY;
 
-            let deltaX = (heroX - this.x) / heroDistance;
-            let deltaY = (heroY - this.y) / heroDistance;
-            this.velocity.x += deltaX * this.accelerationToPlayer / (heroDistance * heroDistance);
-            this.velocity.y += deltaY * this.accelerationToPlayer / (heroDistance * heroDistance);
+            let heroDeltaX = (heroX - this.x) / heroDistance;
+            let heroDeltaY = (heroY - this.y) / heroDistance;
+            this.velocity.x += heroDeltaX * this.accelerationToPlayer / (heroDistance * heroDistance);
+            this.velocity.y += heroDeltaY * this.accelerationToPlayer / (heroDistance * heroDistance);
         }
 
         // World borders
@@ -115,18 +115,27 @@ class Witch {
                 }
             }
             if (entity instanceof Wall) {
-                let wallDistance = Math.sqrt((that.x - entity.centerX) * (that.x - entity.centerX) + 
-                (that.y - entity.centerY) * (that.y - entity.centerY));
-                let deltaX = (entity.centerX - that.x) / wallDistance;
-                let deltaY = (entity.centerY - that.y) / wallDistance;
-                that.velocity.x -= deltaX * that.accelerationFromWall / (wallDistance * wallDistance);
-                that.velocity.y -= deltaY * that.accelerationFromWall / (wallDistance * wallDistance);
+                let wallDistance = Math.sqrt((that.x - entity.centerX) * (that.x - entity.centerX) +
+                    (that.y - entity.centerY) * (that.y - entity.centerY));
+                let wallDeltaX = (entity.centerX - that.x) / wallDistance;
+                let wallDeltaY = (entity.centerY - that.y) / wallDistance;
+                that.velocity.x -= wallDeltaX * that.accelerationFromWall / (wallDistance * wallDistance);
+                that.velocity.y -= wallDeltaY * that.accelerationFromWall / (wallDistance * wallDistance);
+            } else if (entity instanceof Zombie || entity instanceof Skeleton || entity instanceof Witch) {
+                let enemyDistance = Math.sqrt((that.x - entity.getX()) * (that.x - entity.getX()) +
+                    (that.y - entity.getY()) * (that.y - entity.getY()));
+                if (enemyDistance > 0) {
+                    let enemyDeltaX = (entity.getX() - that.x) / enemyDistance;
+                    let enemyDeltaY = (entity.getY() - that.y) / enemyDistance;
+                    that.velocity.x -= enemyDeltaX * that.accelerationFromEnemy / (enemyDistance * enemyDistance);
+                    that.velocity.y -= enemyDeltaY * that.accelerationFromEnemy / (enemyDistance * enemyDistance);
+                }
             }
         });
-		
+
         this.testSpeed();
 
-		this.updateBB();
+        this.updateBB();
     };
 
     draw(ctx) {
