@@ -3,7 +3,7 @@ class WitchFireball {
         Object.assign(this, { game, targetX, targetY, isOnHeroTeam, attackDamage, x, y });
 
         // sprite sheet
-        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/witchfireball.png");
+        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/witchFireball.png");
 
         // arrow states
         this.facing = 0 // 0 = east, 1 = north, 2 = west, 3 = south
@@ -18,29 +18,24 @@ class WitchFireball {
         this.delX = this.getNextXValue(this.flySpeed * this.game.clockTick);
         this.delY = this.getNextYValue(this.flySpeed * this.game.clockTick);
 
+        this.width = 25;
+        this.height = 25;
+
         if (this.delX > 0) {
             // The target is to the right of the arrow
             this.facing = 0;
-            this.width = 34;
-            this.height = 9;
         } else {
             // The target is to the left of the arrow
             this.facing = 2;
-            this.width = 34;
-            this.height = 9;
         }
         if (Math.atan(Math.abs(this.y - this.targetY) / Math.abs(this.x - this.targetX)) > Math.PI / 4) {
             // The target is above or below the arrow at over 45 degrees
             if (this.targetY < this.y) {
                 // The target is above the arrow
                 this.facing = 1;
-                this.width = 9;
-                this.height = 34;
             } else {
                 // The target is below the arrow
                 this.facing = 3;
-                this.width = 9;
-                this.height = 34;
             }
         }
     };
@@ -115,6 +110,10 @@ class WitchFireball {
     draw(ctx) {
         let drawX = this.x - this.game.camera.x;
         let drawY = this.y - this.game.camera.y;
+        if (PARAMS.DEBUG) {
+            ctx.strokeStyle = "red";
+            ctx.strokeRect(this.x, this.y, this.width, this.height);
+        }
         this.animations[0].drawFrame(this.game.clockTick, ctx, drawX, drawY, 1);
     };
 
@@ -126,11 +125,11 @@ class WitchFireball {
             }
         }
         // south
-        this.animations[0] = new Animator(this.spritesheet, 0, 0, 64, 27, 8, 0.1, 23, false, true);
+        this.animations[0] = new Animator(this.spritesheet, 0, 0, 64, 27, 8, 0.05, 23, false, true);
     }
 
     updateBB() {
         this.lastBB = this.BB;
-        this.BB = new BoundingBox(this.x, this.y, this.width, this.height);
+        this.BB = new BoundingBox(this.x + 25, this.y, this.width, this.height);
     }
 }
