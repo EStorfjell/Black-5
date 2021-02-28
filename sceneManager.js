@@ -6,6 +6,9 @@ class SceneManager {
         this.y = 0;
 
         this.hero = new Hero(game, 50, 50);
+
+        this.shop = new Shop(game);
+
         this.map = null;
         this.wave = 5; // current wave
         this.round = 1; // current round
@@ -68,6 +71,8 @@ class SceneManager {
         this.hero.y = LEVELS.LEVEL_ONE.startY;
         this.game.addEntity(this.hero);
         this.hero.initializeWeapons();
+
+        this.game.addEntity(this.shop);
     };
 
     update() {
@@ -148,6 +153,11 @@ class SceneManager {
         ctx.fillText("Remaining Enemies: ", this.game.surfaceWidth / 2 - 160, this.game.surfaceHeight - 10);
         ctx.fillStyle = "Black";
         ctx.fillText("" + this.game.getEnemyCount(), this.game.surfaceWidth / 2 + 95, this.game.surfaceHeight - 10);
+
+        if (this.game.toggleShop) {
+            this.shop.toggle();
+            this.game.toggleShop = false;
+        }
     };
 
 }

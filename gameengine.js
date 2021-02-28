@@ -17,9 +17,12 @@ class GameEngine {
 
         this.switchToSecondary = false;
         this.switchToMelee = false;
+        this.toggleShop = false;
 
         this.surfaceWidth = null;
         this.surfaceHeight = null;
+
+        this.shopIsOpen = false;
 
         this.enemyCount = 0;
     };
@@ -100,6 +103,9 @@ class GameEngine {
                     break;
                 case "KeyE":
                     that.switchToMelee = true;
+                    break;
+                case "KeyT":
+                    that.toggleShop = true;
                     break;
             }
         }, false);
