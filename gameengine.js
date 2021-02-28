@@ -50,7 +50,7 @@ class GameEngine {
             let x = e.clientX - that.ctx.canvas.getBoundingClientRect().left;
             let y = e.clientY - that.ctx.canvas.getBoundingClientRect().top;
 
-            return {x: x, y: y};
+            return { x: x, y: y };
         };
 
         this.ctx.canvas.addEventListener("mousemove", function (e) {
@@ -146,11 +146,19 @@ class GameEngine {
 
     draw() {
         this.ctx.clearRect(0, 0, this.surfaceWidth, this.surfaceHeight);
+        let shop = null;
         for (let i = 0; i < this.entities.length; i++) {
-            this.entities[i].draw(this.ctx);
+            if (this.entities[i] instanceof Shop) {
+                shop = this.entities[i];
+            } else {
+                this.entities[i].draw(this.ctx);
+            }
         }
 
         this.camera.draw(this.ctx);
+        if (shop != null) {
+            shop.draw(this.ctx);
+        }
     };
 
     update() {
@@ -160,7 +168,11 @@ class GameEngine {
         for (i = 0; i < entitiesCount; i++) {
             let entity = this.entities[i];
 
-            if (!entity.removeFromWorld) {
+            if (!this.shopIsOpen) {
+                if (!entity.removeFromWorld) {
+                    entity.update();
+                }
+            } else if (entity instanceof Shop) {
                 entity.update();
             }
         }
@@ -171,7 +183,7 @@ class GameEngine {
             if (this.entities[i].removeFromWorld) {
                 if (this.entities[i] instanceof Zombie ||
                     this.entities[i] instanceof Skeleton || this.entities[i] instanceof Witch ||
-					this.entities[i] instanceof Dragon) {
+                    this.entities[i] instanceof Dragon) {
                     this.enemyCount--;
                 }
                 this.entities.splice(i, 1);

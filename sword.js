@@ -10,6 +10,11 @@ class Sword {
         this.facing = 0 // 0 = east, 1 = north, 2 = west, 3 = south
 
         this.attackDamage = 35;
+        this.attackDamageIncrease = 5; // attack damage increase per upgrade
+        this.attackDamageUpgradeLevel = 0;
+
+        this.attackCooldown = 1; // seconds between attacks
+        this.elapsedTime = 0; // seconds since last attack
 
         this.width = 44;
         this.height = 44;
@@ -24,9 +29,11 @@ class Sword {
 
     update() {
         if (this.state == 3) {
+            this.elapsedTime += this.game.clockTick;
             var that = this;
             this.game.entities.forEach(function (entity) {
-                if (entity instanceof Zombie || entity instanceof Skeleton || entity instanceof Witch) {
+                if ((entity instanceof Zombie || entity instanceof Skeleton || 
+                    entity instanceof Witch || entity instanceof Dragon) && this.elapsedTime >= this.attackCooldown) {
                     let distance = Math.sqrt((that.hiltX - entity.getX()) * (that.hiltX -
                         entity.getX()) + (that.hiltY - entity.getY()) * (that.hiltY - entity.getY()));
     
@@ -157,6 +164,15 @@ class Sword {
 
     updateFacing(newFacing) {
         this.facing = newFacing;
+    }
+
+    upgradeAttackDamage() {
+        this.attackDamage += this.attackDamageIncrease;
+        this.attackDamageUpgradeLevel++;
+    }
+
+    getAttackDamageUpgradeLevel() {
+        return this.attackDamageUpgradeLevel;
     }
 
     getX() {

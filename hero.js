@@ -18,15 +18,29 @@ class Hero {
         this.damageCooldown = 3; // Cooldown before the hero can take more damage
         this.elapsedTime = 0; // Elapsed time since the hero last took damage
 
-        this.primaryWeapon = new Pistol(game, true, this.x, this.y);
-        this.primaryWeapon.setPrimaryWeapon();
-        this.secondaryWeapon = new Crossbow(game, true, this.x, this.y);
-        this.secondaryWeapon.setPrimaryWeapon();
-        this.tertiaryWeapon = new Shotgun(game, true, this.x, this.y);
-        this.tertiaryWeapon.setPrimaryWeapon();
+        this.crossbow = new Crossbow(game, true, this.x, this.y);
+        this.crossbow.setPrimaryWeapon();
+        this.pistol = new Pistol(game, true, this.x, this.y);
+        this.pistol.setPrimaryWeapon();
+        this.shotgun = new Shotgun(game, true, this.x, this.y);
+        this.shotgun.setPrimaryWeapon();
         this.sword = new Sword(game, this.x, this.y);
         this.sword.setPrimaryWeapon();
+
+        this.primaryWeapon = this.crossbow;
+        //this.primaryWeapon.setPrimaryWeapon();
+        this.secondaryWeapon = null;
+        //this.secondaryWeapon.setPrimaryWeapon();
+        this.tertiaryWeapon = null;
+        //this.tertiaryWeapon.setPrimaryWeapon();
+        //this.sword = this.sword;
+        //this.sword.setPrimaryWeapon();
         this.meleeEquipped = false;
+
+        this.hasCrossbow = true;
+        this.hasPistol = false;
+        this.hasShotgun = false;
+        this.hasSword = true;
 
         this.walkSpeed = 200; // pixels per second
 
@@ -37,9 +51,9 @@ class Hero {
     };
 
     initializeWeapons() {
-        this.game.addEntity(this.primaryWeapon);
-        this.game.addEntity(this.secondaryWeapon);
-        this.game.addEntity(this.tertiaryWeapon);
+        this.game.addEntity(this.crossbow);
+        this.game.addEntity(this.pistol);
+        this.game.addEntity(this.shotgun);
         this.game.addEntity(this.sword);
     }
 
@@ -95,12 +109,21 @@ class Hero {
         this.x += delX;
         this.y += delY;
 
-        if (this.game.switchToSecondary) {
+        if (this.game.switchToSecondary && this.tertiaryWeapon != null) {
             this.meleeEquipped = false;
             let temp = this.primaryWeapon;
             this.primaryWeapon = this.secondaryWeapon;
             this.secondaryWeapon = this.tertiaryWeapon;
             this.tertiaryWeapon = temp;
+            this.game.switchToSecondary = false;
+        } else if (this.game.switchToSecondary && this.switchToSecondary != null) {
+            this.meleeEquipped = false;
+            let temp = this.primaryWeapon;
+            this.primaryWeapon = this.secondaryWeapon;
+            this.secondaryWeapon = temp;
+            this.game.switchToSecondary = false;
+        } else if (this.game.switchToSecondary) {
+            this.meleeEquipped = false;
             this.game.switchToSecondary = false;
         }
         if (this.game.switchToMelee) {
@@ -108,15 +131,15 @@ class Hero {
             this.game.switchToMelee = false;
         }
 
-        this.primaryWeapon.updateX(this.x);
-        this.primaryWeapon.updateY(this.y);
-        this.primaryWeapon.updateFacing(this.facing);
-        this.secondaryWeapon.updateX(this.x);
-        this.secondaryWeapon.updateY(this.y);
-        this.secondaryWeapon.updateFacing(this.facing);
-        this.tertiaryWeapon.updateX(this.x);
-        this.tertiaryWeapon.updateY(this.y);
-        this.tertiaryWeapon.updateFacing(this.facing);
+        this.crossbow.updateX(this.x);
+        this.crossbow.updateY(this.y);
+        this.crossbow.updateFacing(this.facing);
+        this.pistol.updateX(this.x);
+        this.pistol.updateY(this.y);
+        this.pistol.updateFacing(this.facing);
+        this.shotgun.updateX(this.x);
+        this.shotgun.updateY(this.y);
+        this.shotgun.updateFacing(this.facing);
         this.sword.updateX(this.x);
         this.sword.updateY(this.y);
         this.sword.updateFacing(this.facing);
@@ -278,5 +301,23 @@ class Hero {
 
     pickupArmor() {
         this.armor += 50;
+    }
+
+    equipPistol() {
+        if (this.secondaryWeapon != null) {
+            this.secondaryWeapon = this.pistol;
+        } else {
+            this.tertiaryWeapon = this.pistol;
+        }
+        this.hasPistol = true;
+    }
+
+    equipShotgun() {
+        if (this.secondaryWeapon != null) {
+            this.secondaryWeapon = this.shotgun;
+        } else {
+            this.tertiaryWeapon = this.shotgun;
+        }
+        this.hasShotgun = true;
     }
 }

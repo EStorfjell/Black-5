@@ -7,7 +7,7 @@ class SceneManager {
 
         this.hero = new Hero(game, 50, 50);
 
-        this.shop = new Shop(game);
+        this.shop = new Shop(game, this.hero);
 
         this.map = null;
         this.wave = 5; // current wave
@@ -110,6 +110,21 @@ class SceneManager {
                 console.log("Level complete");
             }
         }
+
+        if (this.game.toggleShop) {
+            this.shop.toggle();
+            this.game.toggleShop = false;
+        }
+
+        /*if (this.game.click != null) {
+            if (!this.hero.meleeEquipped) {
+                ctx.fillStyle = "White";
+                ctx.fillText("Ammo: ", 10, pxSize * 3);
+                ctx.fillStyle = "Gray";
+                ctx.fillText(this.hero.primaryWeapon.ammo, 105, pxSize * 3);
+            }
+            this.game.click = null;
+        }*/
     };
 
     clearEntityArray() {
@@ -119,6 +134,7 @@ class SceneManager {
     draw(ctx) {
         let pxSize = 30;
         ctx.font = '30px "Press Start 2P"';
+        ctx.textAlign = "left";
         ctx.fillStyle = "White";
         ctx.fillText("Health: ", 10, pxSize);
         ctx.fillStyle = "Red";
@@ -128,18 +144,6 @@ class SceneManager {
         ctx.fillText("Armor: ", 10, pxSize * 2);
         ctx.fillStyle = "Purple";
         ctx.fillText(this.hero.armor, 105, pxSize * 2);
-
-
-        if (this.game.click != null) {
-            if (!this.hero.meleeEquipped) {
-                ctx.fillStyle = "White";
-                ctx.fillText("Ammo: ", 10, pxSize * 3);
-                ctx.fillStyle = "Gray";
-                ctx.fillText(this.hero.primaryWeapon.ammo, 105, pxSize * 3);
-            }
-            this.game.click = null;
-        }
-
         
         ctx.fillStyle = "White";
         ctx.fillText("Exp: ", this.game.surfaceWidth / 2 - 50, this.game.surfaceHeight - 45);
@@ -153,11 +157,6 @@ class SceneManager {
         ctx.fillText("Remaining Enemies: ", this.game.surfaceWidth / 2 - 160, this.game.surfaceHeight - 10);
         ctx.fillStyle = "Black";
         ctx.fillText("" + this.game.getEnemyCount(), this.game.surfaceWidth / 2 + 95, this.game.surfaceHeight - 10);
-
-        if (this.game.toggleShop) {
-            this.shop.toggle();
-            this.game.toggleShop = false;
-        }
     };
 
 }
