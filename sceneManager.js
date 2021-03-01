@@ -5,6 +5,7 @@ class SceneManager {
         this.x = 0;
         this.y = 0;
 
+        this.hudVisible = false;
         this.elapsedTime = 0;
         this.shopTime = 0;
         this.transparency = 0; //Game Over black screen
@@ -24,6 +25,7 @@ class SceneManager {
 
     loadRound(wave, round) {
         console.log("wave: " + wave + ", round: " + round);
+        this.hudVisible = true;
 
         this.map = new Map(this.game, LEVELS.LEVEL_ONE);
         this.game.addEntity(this.map);
@@ -56,7 +58,7 @@ class SceneManager {
         let zombieCount = LEVELS.LEVEL_ONE.waves[wave - 1][round - 1].zombies;
         let skeletonCount = LEVELS.LEVEL_ONE.waves[wave - 1][round - 1].skeletons;
         let witchCount = LEVELS.LEVEL_ONE.waves[wave - 1][round - 1].witches;
-		let dragonCount = LEVELS.LEVEL_ONE.waves[wave - 1][round - 1].dragons;
+        let dragonCount = LEVELS.LEVEL_ONE.waves[wave - 1][round - 1].dragons;
 
         let count = zombieCount + skeletonCount + witchCount + dragonCount;
         this.game.setEnemyCount(count);
@@ -87,10 +89,10 @@ class SceneManager {
             } else if (enemyNumber == 3 && dragonCount > 0) {
                 let enemy = new Dragon(this.game, this.hero, 
                     LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].x, LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].y);
-			    dragonCount--;
-				count--;
-				this.game.addEntity(enemy);
-		    }
+                dragonCount--;
+                count--;
+                this.game.addEntity(enemy);
+            }
         }
 
         this.hero.x = LEVELS.LEVEL_ONE.startX;
@@ -175,7 +177,6 @@ class SceneManager {
             this.game.click = null;
         }
 
-        
         ctx.fillStyle = "Cyan";
         ctx.fillText("Exp: ", this.game.surfaceWidth / 2 - 50, this.game.surfaceHeight - 45);
         ctx.fillStyle = "White";
@@ -200,7 +201,7 @@ class SceneManager {
             this.openShop(ctx);
         }
     };
-
+  
     gameOver(ctx) {
         if (this.elapsedTime > 0) {
             ctx.fillStyle = "Black";
