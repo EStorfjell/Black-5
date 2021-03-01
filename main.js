@@ -14,10 +14,12 @@ ASSET_MANAGER.queueDownload("./sprites/crossbow.png");
 ASSET_MANAGER.queueDownload("./sprites/pistol.png");
 ASSET_MANAGER.queueDownload("./sprites/bullet.png");
 ASSET_MANAGER.queueDownload("./sprites/shotgun.png");
-ASSET_MANAGER.queueDownload("./sprites/dragon.png");
-ASSET_MANAGER.queueDownload("./sprites/dragonfireball.png");
 ASSET_MANAGER.queueDownload("./sprites/witchFireball.png");
 ASSET_MANAGER.queueDownload("./sprites/healthPack.png");
+ASSET_MANAGER.queueDownload("./sprites/armor.png");
+ASSET_MANAGER.queueDownload("./sprites/potions.png");
+ASSET_MANAGER.queueDownload("./sprites/dragon.png");
+ASSET_MANAGER.queueDownload("./sprites/dragonfireball.png");
 
 ASSET_MANAGER.downloadAll(function () {
     let canvas = document.getElementById('gameWorld');
