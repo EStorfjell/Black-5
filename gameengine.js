@@ -9,6 +9,7 @@ class GameEngine {
         this.click = null;
         this.mouse = null;
         this.wheel = null;
+        this.mouseDown = false;
 
         this.left = false;
         this.right = false;
@@ -49,6 +50,14 @@ class GameEngine {
 
             return {x: x, y: y};
         };
+
+        this.ctx.canvas.addEventListener("mousedown", function (e) {
+            that.mouseDown = true;
+        }, false);
+
+        this.ctx.canvas.addEventListener("mouseup", function (e) {
+            that.mouseDown = false;
+        }, false);
 
         this.ctx.canvas.addEventListener("mousemove", function (e) {
             //console.log(getXandY(e));
@@ -165,7 +174,7 @@ class GameEngine {
             if (this.entities[i].removeFromWorld) {
                 if (this.entities[i] instanceof Zombie ||
                     this.entities[i] instanceof Skeleton || this.entities[i] instanceof Witch ||
-					this.entities[i] instanceof Dragon) {
+                    this.entities[i] instanceof Dragon) {
                     this.enemyCount--;
                 }
                 this.entities.splice(i, 1);
