@@ -121,7 +121,7 @@ class SceneManager {
         }
 
         if (this.game.getEnemyCount() == 0) {
-            this.shopping = 1;
+            //this.shopping = 1;
             if (this.shopping == 1) {
 
             } else if (this.round == LEVELS.LEVEL_ONE.waves[this.wave - 1].length && this.wave < LEVELS.LEVEL_ONE.waves.length) {

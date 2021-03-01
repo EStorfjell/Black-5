@@ -13,6 +13,7 @@ class Witch {
         
         this.attack = 0;
         this.attackDistance = 200;
+        this.attackDamage = 15;
         this.elapsedTime = 0;
         this.firingRate = 1;
 
