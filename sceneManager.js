@@ -85,7 +85,7 @@ class SceneManager {
                 count--;
                 this.game.addEntity(enemy);
             } else if (enemyNumber == 3 && dragonCount > 0) {
-                let enemy = new Dragon(this.game, this.hero, wave, round, 
+                let enemy = new Dragon(this.game, this.hero, 
                     LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].x, LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].y);
 			    dragonCount--;
 				count--;
