@@ -67,25 +67,25 @@ class SceneManager {
             // Chooses a random enemy to spawn
             let enemyNumber = randomInt(4);
             if (enemyNumber == 0 && zombieCount > 0) {
-                let enemy = new Zombie(this.game, this.hero,
+                let enemy = new Zombie(this.game, this.hero, wave, round,
                     LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].x, LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].y);
                 zombieCount--;
                 count--;
                 this.game.addEntity(enemy);
             } else if (enemyNumber == 1 && skeletonCount > 0) {
-                let enemy = new Skeleton(this.game, this.hero, 
+                let enemy = new Skeleton(this.game, this.hero, wave, round,
                     LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].x, LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].y);
                 skeletonCount--;
                 count--;
                 this.game.addEntity(enemy);
             } else if (enemyNumber == 2 && witchCount > 0) {
-                let enemy = new Witch(this.game, this.hero, 
+                let enemy = new Witch(this.game, this.hero, wave, round,
                     LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].x, LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].y);
                 witchCount--;
                 count--;
                 this.game.addEntity(enemy);
             } else if (enemyNumber == 3 && dragonCount > 0) {
-                let enemy = new Dragon(this.game, this.hero,
+                let enemy = new Dragon(this.game, this.hero, wave, round, 
                     LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].x, LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].y);
 			    dragonCount--;
 				count--;
@@ -96,6 +96,8 @@ class SceneManager {
         this.hero.x = LEVELS.LEVEL_ONE.startX;
         this.hero.y = LEVELS.LEVEL_ONE.startY;
         this.game.addEntity(this.hero);
+
+        this.hero.initializeWeapons();
     };
 
     update() {
@@ -132,7 +134,8 @@ class SceneManager {
                 this.clearEntityArray();
                 this.loadRound(this.wave, this.round);
             } else {
-                //level end
+                // TODO: Add a level ending
+                console.log("Level complete");
                 this.shopping = 1;
             }
         }

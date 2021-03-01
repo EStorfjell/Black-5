@@ -19,6 +19,9 @@ class Hero {
 
         this.exp = new Experience();
 
+        this.damageCooldown = 3; // Cooldown before the hero can take more damage
+        this.elapsedTime = 0; // Elapsed time since the hero last took damage
+
         this.primaryWeapon = new Pistol(game, true, this.x, this.y);
         this.primaryWeapon.setPrimaryWeapon();
         this.secondaryWeapon = new Crossbow(game, true, this.x, this.y);
@@ -175,13 +178,16 @@ class Hero {
             }
         });
 
-        if (this.meleeEquipped) {
+        // for displaying ammo
+        if (this.meleeEquipped) { 
             this.ammo = 0;
         } else {
             this.ammo = this.currentWeapon.ammo;
         }
 
         this.updateBB();
+
+        this.elapsedTime += this.game.clockTick;
     };
 
     draw(ctx) {
@@ -263,38 +269,39 @@ class Hero {
      * @param {Number} yVectorComp The y-component of a vector specifying the knockback direction
      */
     takeDamage(damage, knockback = 0, xVectorComp = 0, yVectorComp = 0) {
-        if (damage < 0) {
+        if (damage < 0) { // heal hero
             this.health -= damage;
-            if (this.health > this.maxHealth) {
+            if (this.health > this.maxHealth) { // prevent from going over max
                 this.health = this.maxHealth;
             }
-        } else if (this.armor > 0) {
-            this.armor -= damage;
-            if (this.armor < 0) {
+        } else if (this.elapsedTime >= this.damageCooldown) {
+            if (this.armor > 0) { // armor takes damage instead of hearts
+                this.armor -= damage;
+            } else {
                 this.armor = 0;
+                this.health -= damage;
             }
-        }  else {
-            this.armor = 0;
-            this.health -= damage;
-        }
 
-        if (this.health <= 0) {
-            console.log("The player died.");
-            this.health = 0;
-            this.removeFromWorld = true;
-        }
-        if (knockback !== 0) {
-            // TODO: Allow a knockback to be applied over a period of time rather than all at once
-            // The angle of the knockback measured relative to the x-axis
-            let angle = Math.atan(Math.abs(yVectorComp) / Math.abs(xVectorComp));
-            // The new x-coordinate of the hero
-            let deltaX = knockback * Math.cos(angle);
-            // The new y-coordinate of the hero
-            let deltaY = knockback * Math.sin(angle);
-            if (xVectorComp < 0) deltaX = -deltaX;
-            if (yVectorComp < 0) deltaY = -deltaY;
-            this.x += deltaX;
-            this.y += deltaY;
+            if (this.health <= 0) {
+                console.log("The player died.");
+                this.health = 0;
+                this.removeFromWorld = true;
+            }
+        
+            if (knockback !== 0) {
+                // TODO: Allow a knockback to be applied over a period of time rather than all at once
+                // The angle of the knockback measured relative to the x-axis
+                let angle = Math.atan(Math.abs(yVectorComp) / Math.abs(xVectorComp));
+                // The new x-coordinate of the hero
+                let deltaX = knockback * Math.cos(angle);
+                // The new y-coordinate of the hero
+                let deltaY = knockback * Math.sin(angle);
+                if (xVectorComp < 0) deltaX = -deltaX;
+                if (yVectorComp < 0) deltaY = -deltaY;
+                this.x += deltaX;
+                this.y += deltaY;
+                this.elapsedTime = 0;
+            }
         }
     }
 
