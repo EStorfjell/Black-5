@@ -20,6 +20,9 @@ class SceneManager {
         this.round = 1; // current round
         this.shopping = 0;
 
+        let mainMenu = new StartMenu(this.game);
+        this.game.addEntity(mainMenu);
+
         this.loadRound(this.wave, this.round);
     };
 
@@ -30,7 +33,7 @@ class SceneManager {
         this.map = new Map(this.game, LEVELS.LEVEL_ONE);
         this.game.addEntity(this.map);
         this.map.init();
-        
+
         let healthPack = new HealthPack(this.game, 600, 700);
         this.game.addEntity(healthPack);
 
@@ -47,11 +50,11 @@ class SceneManager {
         // this.game.addEntity(potion);
 
         /*let zombie = new Zombie(this.game, this.hero, 400, 100);
-        this.game.addEntity(zombie);
-        let skeleton = new Skeleton(this.game, this.hero, 100, 200);
-        this.game.addEntity(skeleton);
-        let witch = new Witch(this.game, this.hero, 400, 400);
-        this.game.addEntity(witch);*/
+         this.game.addEntity(zombie);
+         let skeleton = new Skeleton(this.game, this.hero, 100, 200);
+         this.game.addEntity(skeleton);
+         let witch = new Witch(this.game, this.hero, 400, 400);
+         this.game.addEntity(witch);*/
 
         // Gets the properties of this wave and round
         let spawnPoints = LEVELS.LEVEL_ONE.spawnPoints;
@@ -87,7 +90,7 @@ class SceneManager {
                 count--;
                 this.game.addEntity(enemy);
             } else if (enemyNumber == 3 && dragonCount > 0) {
-                let enemy = new Dragon(this.game, this.hero, 
+                let enemy = new Dragon(this.game, this.hero,
                     LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].x, LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].y);
                 dragonCount--;
                 count--;
@@ -141,7 +144,7 @@ class SceneManager {
                 this.shopping = 1;
             }
         }
-        
+
     };
 
     clearEntityArray() {
@@ -149,6 +152,8 @@ class SceneManager {
     }
 
     draw(ctx) {
+        ctx.textAlign = "start";
+        ctx.textBaseline = "alphabetic";
         let pxSize = 30;
         ctx.font = '30px "Press Start 2P"';
         ctx.fillStyle = "Red";
@@ -201,7 +206,7 @@ class SceneManager {
             this.openShop(ctx);
         }
     };
-  
+
     gameOver(ctx) {
         if (this.elapsedTime > 0) {
             ctx.fillStyle = "Black";
@@ -213,7 +218,7 @@ class SceneManager {
         }
 
         ctx.globalAlpha = 1;
-        
+
         if (this.elapsedTime > 1) {
             ctx.font = '90px "Press Start 2P"';
             ctx.fillStyle = "Red";
@@ -229,7 +234,7 @@ class SceneManager {
         let buttonX = this.game.surfaceWidth / 2 - 200;
         let buttonX2 = this.game.surfaceWidth / 2 + 20;
         let buttonY = this.game.surfaceHeight / 2 + 40;
-        
+
         if (this.elapsedTime > 2.5) {
             this.newButton(ctx, "Main Menu", buttonX, buttonY, 200, 50, null);
 
@@ -275,7 +280,7 @@ class SceneManager {
         if (this.game.click != null) {
             if (this.game.click.x >= x && this.game.click.x <= x + width && this.game.click.y >= y && this.game.click.y <= y + height) {
                 func;
-            } 
+            }
         }
     }
 

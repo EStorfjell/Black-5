@@ -6,6 +6,8 @@ class GameEngine {
         this.showOutlines = false;
         this.ctx = null;
 
+        this.gameStart = false;
+
         this.click = null;
         this.mouse = null;
         this.wheel = null;
@@ -150,10 +152,14 @@ class GameEngine {
     draw() {
         this.ctx.clearRect(0, 0, this.surfaceWidth, this.surfaceHeight);
         for (let i = 0; i < this.entities.length; i++) {
-            this.entities[i].draw(this.ctx);
+            if (this.gameStart || this.entities[i] instanceof StartMenu) {
+                this.entities[i].draw(this.ctx);
+            }
         }
 
-        this.camera.draw(this.ctx);
+        if (this.gameStart) {
+            this.camera.draw(this.ctx);
+        }
     };
 
     update() {
@@ -164,7 +170,9 @@ class GameEngine {
             let entity = this.entities[i];
 
             if (!entity.removeFromWorld) {
-                entity.update();
+                if (this.gameStart || entity instanceof StartMenu) {
+                    entity.update();
+                }
             }
         }
 
@@ -187,6 +195,4 @@ class GameEngine {
         this.update();
         this.draw();
     };
-
-    
 }
