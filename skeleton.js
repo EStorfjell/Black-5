@@ -16,7 +16,7 @@ class Skeleton {
         this.elapsedTime = 0; // The time since the skeleton last shot
         this.dead = false;
 
-        this.crossbow = new Crossbow(this.game, false, this.x, this.y);
+        this.crossbow = new Crossbow(this.game, false, this.x, this.y, this.hero);
         this.crossbow.setPrimaryWeapon();
         this.game.addEntity(this.crossbow);
 

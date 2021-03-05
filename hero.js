@@ -18,13 +18,13 @@ class Hero {
         this.damageCooldown = 3; // Cooldown before the hero can take more damage
         this.elapsedTime = 0; // Elapsed time since the hero last took damage
 
-        this.crossbow = new Crossbow(game, true, this.x, this.y);
+        this.crossbow = new Crossbow(game, true, this.x, this.y, this);
         this.crossbow.setPrimaryWeapon();
-        this.pistol = new Pistol(game, true, this.x, this.y);
+        this.pistol = new Pistol(game, true, this.x, this.y, this);
         this.pistol.setPrimaryWeapon();
-        this.shotgun = new Shotgun(game, true, this.x, this.y);
+        this.shotgun = new Shotgun(game, true, this.x, this.y, this);
         this.shotgun.setPrimaryWeapon();
-        this.sword = new Sword(game, this.x, this.y);
+        this.sword = new Sword(game, this.x, this.y, this);
         this.sword.setPrimaryWeapon();
 
         this.primaryWeapon = this.crossbow;
@@ -282,7 +282,7 @@ class Hero {
             if (this.health <= 0) {
                 console.log("The player died.");
             }
-            if (knockback !== 0) {
+            if (knockback !== 0 && xVectorComp != 0) {
                 // TODO: Allow a knockback to be applied over a period of time rather than all at once
                 // The angle of the knockback measured relative to the x-axis
                 let angle = Math.atan(Math.abs(yVectorComp) / Math.abs(xVectorComp));

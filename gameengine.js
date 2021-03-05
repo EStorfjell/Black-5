@@ -168,11 +168,7 @@ class GameEngine {
         for (i = 0; i < entitiesCount; i++) {
             let entity = this.entities[i];
 
-            if (!this.shopIsOpen) {
-                if (!entity.removeFromWorld) {
-                    entity.update();
-                }
-            } else if (entity instanceof Shop) {
+            if (!entity.removeFromWorld) {
                 entity.update();
             }
         }

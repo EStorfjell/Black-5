@@ -6,14 +6,20 @@ class SceneManager {
         this.y = 0;
 
         this.hero = new Hero(game, 50, 50);
+        this.heroStartX = LEVELS.LEVEL_ONE.startX;
+        this.heroStartY = LEVELS.LEVEL_ONE.startY;
 
         this.shop = new Shop(game, this.hero);
 
         this.map = null;
-        this.wave = 5; // current wave
-        this.round = 1; // current round
+        this.wave = 1; // current wave
+        this.round = 2; // current round
 
         this.loadRound(this.wave, this.round);
+
+        this.intermissionLength = 60; // seconds
+        this.intermissionElapsedTime = 0;
+        this.isInIntermission = false;
     };
 
     loadRound(wave, round) {
@@ -67,8 +73,8 @@ class SceneManager {
 		    }
         }
 
-        this.hero.x = LEVELS.LEVEL_ONE.startX;
-        this.hero.y = LEVELS.LEVEL_ONE.startY;
+        this.hero.x = this.heroStartX;
+        this.hero.y = this.heroStartY;
         this.game.addEntity(this.hero);
         this.hero.initializeWeapons();
 
@@ -97,11 +103,11 @@ class SceneManager {
 
         if (this.game.getEnemyCount() == 0) {
             if (this.round == LEVELS.LEVEL_ONE.waves[this.wave - 1].length && this.wave < LEVELS.LEVEL_ONE.waves.length) {
-                this.wave++;
-                this.round = 1;
-                this.clearEntityArray();
-                this.loadRound(this.wave, this.round);
-            } else if (this.round < LEVELS.LEVEL_ONE.waves[this.wave - 1].length && LEVELS.LEVEL_ONE.waves.length) {
+                this.startIntermission();
+            } else if (this.round < LEVELS.LEVEL_ONE.waves[this.wave - 1].length && this.wave < LEVELS.LEVEL_ONE.waves.length) {
+                this.heroStartX = this.hero.getX();
+                this.heroStartY = this.hero.getY();
+                // New round
                 this.round++;
                 this.clearEntityArray();
                 this.loadRound(this.wave, this.round);
@@ -111,52 +117,90 @@ class SceneManager {
             }
         }
 
-        if (this.game.toggleShop) {
-            this.shop.toggle();
-            this.game.toggleShop = false;
+        if (this.isInIntermission) {
+            this.intermissionElapsedTime += this.game.clockTick;
+            if (this.intermissionElapsedTime >= this.intermissionLength) {
+                this.isInIntermission = false;
+                this.intermissionElapsedTime = 0;
+                if (this.game.shopIsOpen) {
+                    this.shop.toggle();
+                }
+                this.heroStartX = this.hero.getX();
+                this.heroStartY = this.hero.getY();
+                // New wave
+                this.wave++;
+                this.round = 1;
+                this.clearEntityArray();
+                this.loadRound(this.wave, this.round);
+            }
         }
 
-        /*if (this.game.click != null) {
-            if (!this.hero.meleeEquipped) {
-                ctx.fillStyle = "White";
-                ctx.fillText("Ammo: ", 10, pxSize * 3);
-                ctx.fillStyle = "Gray";
-                ctx.fillText(this.hero.primaryWeapon.ammo, 105, pxSize * 3);
+        if (this.game.toggleShop) {
+            if (this.isInIntermission) {
+                this.shop.toggle();
             }
-            this.game.click = null;
-        }*/
+            this.game.toggleShop = false;
+        }
     };
+
+    startIntermission() {
+        this.isInIntermission = true;
+    }
 
     clearEntityArray() {
         this.game.entities = [];
     }
 
     draw(ctx) {
-        let pxSize = 30;
-        ctx.font = '30px "Press Start 2P"';
+        let margin = 5;
+        ctx.font = '20px "Noto Sans", sans-serif';
         ctx.textAlign = "left";
         ctx.fillStyle = "White";
-        ctx.fillText("Health: ", 10, pxSize);
+        ctx.textBaseline = "top";
+        ctx.fillText("Health: ", margin, margin);
         ctx.fillStyle = "Red";
-        ctx.fillText(this.hero.health, 105, pxSize);
+        ctx.fillText(this.hero.health, 80, margin);
 
         ctx.fillStyle = "White";
-        ctx.fillText("Armor: ", 10, pxSize * 2);
+        ctx.fillText("Armor: ", margin, 25);
         ctx.fillStyle = "Purple";
-        ctx.fillText(this.hero.armor, 105, pxSize * 2);
+        ctx.fillText(this.hero.armor, 80, 25);
         
+        ctx.textBaseline = "bottom";
+        ctx.textAlign = "left";
         ctx.fillStyle = "White";
-        ctx.fillText("Exp: ", this.game.surfaceWidth / 2 - 50, this.game.surfaceHeight - 45);
+        ctx.fillText("Exp: ", margin, this.game.surfaceHeight - margin - 25);
         ctx.fillStyle = "Cyan";
-        ctx.fillText(this.hero.exp.getExp(), this.game.surfaceWidth / 2 + 12, this.game.surfaceHeight - 45);
+        ctx.fillText(this.hero.exp.getExp(), margin + 50, this.game.surfaceHeight - margin - 25);
+
         ctx.fillStyle = "White";
-
-        ctx.fillText("Wave: " + this.wave, this.game.surfaceWidth - 115, 30);
-        ctx.fillText("Round: " + this.round, this.game.surfaceWidth - 128, 60);
-
-        ctx.fillText("Remaining Enemies: ", this.game.surfaceWidth / 2 - 160, this.game.surfaceHeight - 10);
+        ctx.fillText("Remaining Enemies: ", margin, this.game.surfaceHeight - margin);
         ctx.fillStyle = "Black";
-        ctx.fillText("" + this.game.getEnemyCount(), this.game.surfaceWidth / 2 + 95, this.game.surfaceHeight - 10);
+        ctx.fillText("" + this.game.getEnemyCount(), margin + 200, this.game.surfaceHeight - margin);
+
+        ctx.fillStyle = "White";
+        ctx.textAlign = "right";
+        ctx.textBaseline = "top";
+        if (this.isInIntermission) {
+            ctx.fillText("Intermission", this.game.surfaceWidth - margin, margin);
+            ctx.fillText("Time remaining: " + Math.round(this.intermissionLength - 
+                this.intermissionElapsedTime), this.game.surfaceWidth - margin, 25);
+        } else {
+            ctx.fillText("Wave: " + this.wave, this.game.surfaceWidth - margin, margin);
+            ctx.fillText("Round: " + this.round, this.game.surfaceWidth - margin, 25);
+        }
+
+        if (this.game.click != null) {
+            if (!this.hero.meleeEquipped) {
+                ctx.fillStyle = "White";
+                ctx.textAlign = "left";
+                ctx.textBaseline = "top";
+                ctx.fillText("Ammo: ", margin, 45);
+                ctx.fillStyle = "Gray";
+                ctx.fillText(this.hero.primaryWeapon.ammo, 80, 45);
+            }
+            this.game.click = null;
+        }
     };
 
 }

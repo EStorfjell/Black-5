@@ -1,18 +1,15 @@
 ﻿<!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <title>Game Project Title Goes Here</title>
 
-    <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Felipa">
-    <style>
-      body {
-        font-family: 'Felipa', serif;
-        font-size: 30px;
-      }
-    </style>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" 
+    href="https://fonts.googleapis.com/css2?family=Felipa&family=Noto+Sans&family=Noto+Serif&display=swap" rel="stylesheet">
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script type="text/javascript" src="assetmanager.js"></script>
     <script type="text/javascript" src="timer.js"></script>
@@ -44,12 +41,104 @@
     <script type="text/javascript" src="armor.js"></script>
     <script type="text/javascript" src="shop.js"></script>
 </head>
+
 <body>
-<div>
-    <canvas id="gameWorld" width="1024" height="720" style="background: white; border: 1px solid black" tabindex="0"
-            autofocus></canvas>
+    <div>
+        <canvas id="gameWorld" width="1024" height="720" tabindex="0" autofocus></canvas>
+    </div>
+    <div id="shop">
+        <h1>Shop</h1>
+        <div id="tabRow">
+            <button id="swordButton">Sword</button>
+            <button id="crossbowButton">Crossbow</button>
+            <button id="pistolButton">Pistol</button>
+            <button id="shotgunButton">Shotgun</button>
+        </div>
+        <p id="experience">Experience points: <span id="currentExperience"></span></p>
+        <div id="swordTab">
+            <h2>Sword</h2>
+            <img id="swordImage" src="./sprites/sword_image.png" alt="sword">
+            <p class="description">A Norman sword dating to the Norman Conquest.</p>
+            <p class="price"><span class="swordCost"></span> experience points</p>
+            <p class="price">Attack damage upgrade: <span class="swordAttackDamageUpgradeCost"></span> experience points</p>
+            <h3 class="details">Weapon Details</h3>
+            <hr>
+            <p class="attackDamage">Attack damage: <span id="swordAttackDamage"></span></p>
+            <meter id="swordAttackDamageMeter" min="0" , max="50" , value="0"></meter>
+            <button id="swordAttackDamageUpgradeButton">Upgrade</button>
+        </div>
+        <div id="crossbowTab">
+            <h2>Crossbow</h2>
+            <img id="crossbowImage" src="./sprites/crossbow_image.png" alt="crossbow">
+            <p class="description">A medieval crossbow used at the Battle of
+                Hastings. It uses a rolling nut lock, an early design that
+                allows quick firing at the expense of its maximum tension.</p>
+            <p class="price"><span class="crossbowCost"></span> experience points</p>
+            <p class="price">Attack damage upgrade: <span class="crossbowAttackDamageUpgradeCost"></span> experience points</p>
+            <p class="price">Reload speed upgrade: <span class="crossbowReloadSpeedUpgradeCost"></span> experience points</p>
+            <p class="price"><span class="crossbowAmmoUnit"></span> arrows: <span class="crossbowAmmoUnitCost"></span> experience points</p>
+            <h3 class="details">Weapon Details</h3>
+            <hr>
+            <p class="attackDamage">Attack damage: <span id="crossbowAttackDamage"></span></p>
+            <meter id="crossbowAttackDamageMeter" min="0" , max="40" , value="0"></meter>
+            <button id="crossbowAttackDamageUpgradeButton">Upgrade</button>
+            <p class="attackDamage">Reload speed: <span id="crossbowReloadSpeed"></span> s</p>
+            <meter id="crossbowReloadSpeedMeter" min="0" , max="1" , value="0"></meter>
+            <button id="crossbowReloadSpeedUpgradeButton">Upgrade</button>
+            <p class="attackDamage">Ammo: <span id="crossbowAmmo"></span> arrows</p>
+            <meter id="crossbowAmmoMeter" min="0" , max="200" , value="0"></meter>
+            <button id="crossbowAmmoButton">Buy Increase</button>
+        </div>
+        <div id="pistolTab">
+            <h2>Pistol</h2>
+            <img id="pistolImage" src="./sprites/pistol_image.png" alt="pistol">
+            <p class="description">A Queen Anne flintlock pistol from early 18th-century England.
+                While it was often used as a civilian self-defense weapon, its rifled
+                barrel allows accurate shooting across long distances.
+            </p>
+            <p class="price"><span class="pistolCost"></span> experience points</p>
+            <p class="price">Attack damage upgrade: <span class="pistolAttackDamageUpgradeCost"></span> experience points</p>
+            <p class="price">Reload speed upgrade: <span class="pistolReloadSpeedUpgradeCost"></span> experience points</p>
+            <p class="price"><span class="pistolAmmoUnit"></span> shots: <span class="pistolAmmoUnitCost"></span> experience points</p>
+            <button id="pistolBuyButton">Buy</button>
+            <h3 class="details">Weapon Details</h3>
+            <hr>
+            <p class="attackDamage">Attack damage: <span id="pistolAttackDamage"></span></p>
+            <meter id="pistolAttackDamageMeter" min="0" , max="40" , value="0"></meter>
+            <button id="pistolAttackDamageUpgradeButton">Upgrade</button>
+            <p class="attackDamage">Reload speed: <span id="pistolReloadSpeed"></span> s</p>
+            <meter id="pistolReloadSpeedMeter" min="0" , max="1" , value="0"></meter>
+            <button id="pistolReloadSpeedUpgradeButton">Upgrade</button>
+            <p class="attackDamage">Ammo: <span id="pistolAmmo"></span> bullets</p>
+            <meter id="pistolAmmoMeter" min="0" , max="200" , value="0"></meter>
+            <button id="pistolAmmoButton">Buy Increase</button>
+        </div>
+        <div id="shotgunTab">
+            <h2>Shotgun</h2>
+            <img id="shotgunImage" src="./sprites/shotgun_image.png" alt="shotgun">
+            <p class="description">A double-barreled shotgun from late 19th-century
+                USA.</p>
+            <p class="price"><span class="shotgunCost"></span> experience points</p>
+            <p class="price">Attack damage upgrade: <span class="shotgunAttackDamageUpgradeCost"></span> experience points</p>
+            <p class="price">Reload speed upgrade: <span class="shotgunReloadSpeedUpgradeCost"></span> experience points</p>
+            <p class="price"><span class="shotgunAmmoUnit"></span> shots: <span class="shotgunAmmoUnitCost"></span> experience points</p>
+            <button id="shotgunBuyButton">Buy</button>
+            <h3 class="details">Weapon Details</h3>
+            <hr>
+            <p class="attackDamage">Attack damage: <span id="shotgunAttackDamage"></span></p>
+            <meter id="shotgunAttackDamageMeter" min="0" , max="40" , value="0"></meter>
+            <button id="shotgunAttackDamageUpgradeButton">Upgrade</button>
+            <p class="attackDamage">Reload speed: <span id="shotgunReloadSpeed"></span> s</p>
+            <meter id="shotgunReloadSpeedMeter" min="0" , max="1" , value="0"></meter>
+            <button id="shotgunReloadSpeedUpgradeButton">Upgrade</button>
+            <p class="attackDamage">Ammo: <span id="shotgunAmmo"></span> shots</p>
+            <meter id="shotgunAmmoMeter" min="0" , max="200" , value="0"></meter>
+            <button id="shotgunAmmoButton">Buy Increase</button>
+        </div>
+    </div>
     <p><input type="checkbox" id="debug"> Debug</p>
     <p>Use WASD for movement, Q to switch between a pistol, crossbow and shotgun, and E to switch to a sword.</p>
-</div>
+    <p>Use T to open the shop between waves.</p>
 </body>
+
 </html>
