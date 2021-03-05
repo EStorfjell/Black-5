@@ -20,6 +20,13 @@ class Shop {
     }
 
     initialize(that) {
+        $("#shop").keydown(function(event) {
+            if (event.code == "KeyT") {
+                that.toggle();
+            }
+            console.log("shop key event");
+        });
+
         $("#swordButton").click(function() {
             if ($("swordTab").css("display") != "block") {
                 if ($("#crossbowTab").css("display") != "none") {
@@ -228,10 +235,14 @@ class Shop {
         $("#crossbowTab").css("display", "none");
         $("#pistolTab").css("display", "none");
         $("#shotgunTab").css("display", "none");
+
+        $("#shop").focus();
     }
 
     close() {
         $("#shop").css("display", "none");
+
+        $("#gameWorld").focus();
     }
 
     toggle() {

@@ -4,8 +4,8 @@ class HealthPack {
 
         // sprite sheet
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/healthPack.png");
-        this.width = 250;
-        this.height = 200;
+        this.width = 256;
+        this.height = 184;
         this.scale = 0.15;
         this.elapsedTime = 0;
         this.BB = new BoundingBox(this.x, this.y, this.width * this.scale, this.height * this.scale);
@@ -22,7 +22,6 @@ class HealthPack {
         this.game.entities.forEach(function (entity) {
             if (entity.BB && that.BB.collide(entity.BB)) {
                 if (entity instanceof Hero) {
-                    // The arrow will damage the player
                     entity.takeDamage(-50, 0, 0, 0);
                     that.removeFromWorld = true;
 
@@ -31,7 +30,6 @@ class HealthPack {
                 }
             }
         });
-        this.clockTick = this.game.timer.tick();
         this.updateBB();
     };
 
@@ -42,7 +40,7 @@ class HealthPack {
     };
 
     loadAnimations() {
-        this.animations = new Animator(this.spritesheet, 65, 23, this.width, this.height, 2, 0.15, 30, false, true);
+        this.animations = new Animator(this.spritesheet, 46, 24, this.width, this.height, 1, 0.15, 0, false, true);
     }
 
     updateBB() {

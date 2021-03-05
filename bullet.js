@@ -8,7 +8,7 @@ class Bullet {
         // bullet states
         this.facing = 0; // 0 = east, 1 = north, 2 = west, 3 = south
 
-        this.flySpeed = 200; // pixels per second
+        this.flySpeed = 300; // pixels per second
 
         this.updateBB();
 
