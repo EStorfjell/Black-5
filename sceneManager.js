@@ -7,16 +7,18 @@ class SceneManager {
 
         this.hudVisible = false;
         this.elapsedTime = 0;
-        this.shopTime = 0;
         this.transparency = 0; //Game Over black screen
         this.transparency2 = 0; //Game Over Text
-        this.transparency3 = 0; //Shop screen
 
         this.hero = new Hero(game, 50, 50);
+        this.heroStartX = LEVELS.LEVEL_ONE.startX;
+        this.heroStartY = LEVELS.LEVEL_ONE.startY;
+
+        this.shop = new Shop(game, this.hero, this);
+
         this.map = null;
-        this.totalWaves = 5;
-        this.totalRounds = 4;
-        this.wave = 5; // current wave
+		
+        this.wave = 1; // current wave
         this.round = 1; // current round
         this.shopping = 0;
 
@@ -24,6 +26,10 @@ class SceneManager {
         this.game.addEntity(mainMenu);
 
         this.loadRound(this.wave, this.round);
+
+        this.intermissionLength = 60; // seconds
+        this.intermissionElapsedTime = 0;
+        this.isInIntermission = false;
     };
 
     loadRound(wave, round) {
@@ -48,13 +54,6 @@ class SceneManager {
 
         // let potion = new Potion(this.game);
         // this.game.addEntity(potion);
-
-        /*let zombie = new Zombie(this.game, this.hero, 400, 100);
-         this.game.addEntity(zombie);
-         let skeleton = new Skeleton(this.game, this.hero, 100, 200);
-         this.game.addEntity(skeleton);
-         let witch = new Witch(this.game, this.hero, 400, 400);
-         this.game.addEntity(witch);*/
 
         // Gets the properties of this wave and round
         let spawnPoints = LEVELS.LEVEL_ONE.spawnPoints;
@@ -98,8 +97,8 @@ class SceneManager {
             }
         }
 
-        this.hero.x = LEVELS.LEVEL_ONE.startX;
-        this.hero.y = LEVELS.LEVEL_ONE.startY;
+        this.hero.x = this.heroStartX;
+        this.hero.y = this.heroStartY;
         this.game.addEntity(this.hero);
 
         this.hero.initializeWeapons();
@@ -126,15 +125,12 @@ class SceneManager {
         }
 
         if (this.game.getEnemyCount() == 0) {
-            //this.shopping = 1;
-            if (this.shopping == 1) {
-
-            } else if (this.round == LEVELS.LEVEL_ONE.waves[this.wave - 1].length && this.wave < LEVELS.LEVEL_ONE.waves.length) {
-                this.wave++;
-                this.round = 1;
-                this.clearEntityArray();
-                this.loadRound(this.wave, this.round);
-            } else if (this.round < LEVELS.LEVEL_ONE.waves[this.wave - 1].length && LEVELS.LEVEL_ONE.waves.length) {
+            if (this.round == LEVELS.LEVEL_ONE.waves[this.wave - 1].length && this.wave < LEVELS.LEVEL_ONE.waves.length) {
+                this.startIntermission();
+            } else if (this.round < LEVELS.LEVEL_ONE.waves[this.wave - 1].length && this.wave < LEVELS.LEVEL_ONE.waves.length) {
+                this.heroStartX = this.hero.getX();
+                this.heroStartY = this.hero.getY();
+                // New round
                 this.round++;
                 this.clearEntityArray();
                 this.loadRound(this.wave, this.round);
@@ -145,65 +141,90 @@ class SceneManager {
             }
         }
 
+        if (this.isInIntermission) {
+            this.intermissionElapsedTime += this.game.clockTick;
+            if (this.intermissionElapsedTime >= this.intermissionLength) {
+                this.isInIntermission = false;
+                this.intermissionElapsedTime = 0;
+                if (this.game.shopIsOpen) {
+                    this.shop.toggle();
+                }
+                this.heroStartX = this.hero.getX();
+                this.heroStartY = this.hero.getY();
+                // New wave
+                this.wave++;
+                this.round = 1;
+                this.clearEntityArray();
+                this.loadRound(this.wave, this.round);
+            }
+        }
+
+        if (this.game.toggleShop) {
+            if (this.isInIntermission) {
+                this.shop.toggle();
+            }
+            this.game.toggleShop = false;
+        }
     };
+
+    startIntermission() {
+        this.isInIntermission = true;
+    }
 
     clearEntityArray() {
         this.game.entities = [];
     }
 
     draw(ctx) {
-        ctx.textAlign = "start";
-        ctx.textBaseline = "alphabetic";
-        let pxSize = 30;
-        ctx.font = '30px "Press Start 2P"';
+        let margin = 5;
+        ctx.font = '20px "Noto Sans", sans-serif';
+        ctx.textAlign = "left";
+        ctx.fillStyle = "White";
+        ctx.textBaseline = "top";
+        ctx.fillText("Health: ", margin, margin);
         ctx.fillStyle = "Red";
-        ctx.fillText("Health: ", 10, pxSize);
+        ctx.fillText(this.hero.health, 80, margin);
+
         ctx.fillStyle = "White";
-        ctx.fillText(this.hero.health, 105, pxSize);
-
-        ctx.fillStyle = "Orange";
-        ctx.fillText("Armor: ", 10, pxSize * 2);
+        ctx.fillText("Armor: ", margin, 25);
+        ctx.fillStyle = "Purple";
+        ctx.fillText(this.hero.armor, 80, 25);
+        
+        ctx.textBaseline = "bottom";
+        ctx.textAlign = "left";
         ctx.fillStyle = "White";
-        ctx.fillText(this.hero.armor, 105, pxSize * 2);
+        ctx.fillText("Exp: ", margin, this.game.surfaceHeight - margin - 25);
+        ctx.fillStyle = "Cyan";
+        ctx.fillText(this.hero.exp.getExp(), margin + 50, this.game.surfaceHeight - margin - 25);
 
-        ctx.fillStyle = "Gray";
-        ctx.fillText("Ammo: ", 10, pxSize * 3);
         ctx.fillStyle = "White";
-        ctx.fillText(this.hero.ammo, 105, pxSize * 3);
+        ctx.fillText("Remaining Enemies: ", margin, this.game.surfaceHeight - margin);
+        ctx.fillStyle = "Black";
+        ctx.fillText("" + this.game.getEnemyCount(), margin + 200, this.game.surfaceHeight - margin);
 
-
-        if (this.game.click != null) {
-            if (!this.hero.meleeEquipped) {
-                ctx.fillStyle = "Gray";
-                ctx.fillText("Ammo: ", 10, pxSize * 3);
-                ctx.fillStyle = "White";
-                ctx.fillText(this.hero.primaryWeapon.ammo, 105, pxSize * 3);
-            }
-            this.game.click = null;
+        ctx.fillStyle = "White";
+        ctx.textAlign = "right";
+        ctx.textBaseline = "top";
+        if (this.isInIntermission) {
+            ctx.fillText("Time Remaining: " + Math.round(this.intermissionLength - 
+                this.intermissionElapsedTime), this.game.surfaceWidth - margin, margin);
+        } else {
+            ctx.fillText("Wave: " + this.wave, this.game.surfaceWidth - margin, margin);
+            ctx.fillText("Round: " + this.round, this.game.surfaceWidth - margin, 25);
         }
 
-        ctx.fillStyle = "Cyan";
-        ctx.fillText("Exp: ", this.game.surfaceWidth / 2 - 50, this.game.surfaceHeight - 45);
-        ctx.fillStyle = "White";
-        ctx.fillText(this.hero.exp.getExp(), this.game.surfaceWidth / 2 + 12, this.game.surfaceHeight - 45);
-
-        ctx.fillStyle = "Violet";
-        ctx.fillText("Wave " + this.wave, this.game.surfaceWidth - 115, 60);
-        ctx.fillStyle = "Yellow";
-        ctx.fillText("Round " + this.round, this.game.surfaceWidth - 128, 30);
-
-        ctx.fillStyle = "Black";
-        ctx.fillText("Remaining Enemies: ", this.game.surfaceWidth / 2 - 160, this.game.surfaceHeight - 10);
-        ctx.fillStyle = "White";
-        ctx.fillText("" + this.game.getEnemyCount(), this.game.surfaceWidth / 2 + 95, this.game.surfaceHeight - 10);
-
-        if (this.hero.health == 0) {
+        if (!this.hero.meleeEquipped) {
+            ctx.fillStyle = "White";
+            ctx.textAlign = "left";
+            ctx.textBaseline = "top";
+            ctx.fillText("Ammo: ", margin, 45);
+            ctx.fillStyle = "Gray";
+            ctx.fillText(this.hero.primaryWeapon.ammo, 80, 45);
+        }
+		
+		 if (this.hero.health == 0) {
             this.elapsedTime += this.game.clockTick;
             this.gameOver(ctx);
-        }
-
-        if (this.shopping == 1) {
-            this.openShop(ctx);
         }
     };
 
@@ -242,23 +263,6 @@ class SceneManager {
                 //restart
 
             });
-        }
-    }
-
-    openShop(ctx) {
-        this.shopTime += this.game.clockTick;
-        ctx.fillStyle = "Purple";
-        if (this.shopping == 1 && this.transparency3 < 1) {
-            this.transparency3 += 0.01;
-        } else if (this.shopping = 0 && this.transparency > 0) {
-            this.transparency3 -= 0.01;
-        }
-        ctx.globalAlpha = this.transparency3;
-        ctx.fillRect(0, 0, this.game.surfaceWidth, this.game.surfaceHeight); // color screen purple
-        ctx.globalAlpha = 1;
-
-        if (this.shopTime > 1.5) {
-            this.newButton(ctx, "Continue", this.game.surfaceWidth - 200, this.game.surfaceHeight - 50, 200, 50);
         }
     }
 

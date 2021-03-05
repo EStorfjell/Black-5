@@ -1,6 +1,6 @@
 class Sword {
-    constructor(game, x, y) {
-        Object.assign(this, { game, x, y });
+    constructor(game, x, y, hero) {
+        Object.assign(this, { game, x, y, hero });
 
         // sprite sheet
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/sword.png");
@@ -10,6 +10,16 @@ class Sword {
         this.facing = 0 // 0 = east, 1 = north, 2 = west, 3 = south
 
         this.attackDamage = 35;
+        this.attackDamageIncrease = 5; // attack damage increase per upgrade
+        this.attackDamageUpgradeLevel = 0;
+        this.attackDamageMaxUpgradeLevel = 3;
+        this.attackDamageUpgradeCost = 10;
+        this.maxAttackDamage = 50;
+
+        this.weaponCost = 0;
+
+        this.attackCooldown = 0.5; // seconds between attacks
+        this.elapsedTime = 0; // seconds since last attack
 
         this.width = 44;
         this.height = 44;
@@ -23,24 +33,53 @@ class Sword {
     };
 
     update() {
-        if (this.state == 3) {
+        this.elapsedTime += this.game.clockTick;
+        if (this.state == 3 && this.elapsedTime >= this.attackCooldown) {
             var that = this;
             this.game.entities.forEach(function (entity) {
-                if (entity instanceof Zombie || entity instanceof Skeleton || entity instanceof Witch) {
+                if (entity instanceof Zombie || entity instanceof Skeleton || 
+                    entity instanceof Witch || entity instanceof Dragon) {
                     let distance = Math.sqrt((that.hiltX - entity.getX()) * (that.hiltX -
                         entity.getX()) + (that.hiltY - entity.getY()) * (that.hiltY - entity.getY()));
     
-                    if (that.facing == 0 && that.hiltX <= entity.getX() && distance <= 75) { // east
+                    if (that.facing == 0 && that.hiltX <= entity.getX() && distance <= 125) { // east
                         entity.takeDamage(that.attackDamage, 25, entity.getX() - that.hiltX, entity.getY() - that.hiltY);
-                    } else if (that.facing == 1 && that.hiltY >= entity.getY() && distance <= 75) { // north
+                        that.elapsedTime = 0;
+                    } else if (that.facing == 1 && that.hiltY >= entity.getY() && distance <= 125) { // north
                         entity.takeDamage(that.attackDamage, 25, entity.getX() - that.hiltX, entity.getY() - that.hiltY);
-                    } else if (that.facing == 2 && that.hiltX >= entity.getX() && distance <= 75) { // west
+                        that.elapsedTime = 0;
+                    } else if (that.facing == 2 && that.hiltX >= entity.getX() && distance <= 125) { // west
                         entity.takeDamage(that.attackDamage, 25, entity.getX() - that.hiltX, entity.getY() - that.hiltY);
-                    } else if (that.facing == 3 && that.hiltY <= entity.getY() && distance <= 75) { // south
+                        that.elapsedTime = 0;
+                    } else if (that.facing == 3 && that.hiltY <= entity.getY() && distance <= 125) { // south
                         entity.takeDamage(that.attackDamage, 25, entity.getX() - that.hiltX, entity.getY() - that.hiltY);
+                        that.elapsedTime = 0;
                     }
                 }
+                /*if ((entity instanceof Zombie || entity instanceof Skeleton || 
+                    entity instanceof Witch || entity instanceof Dragon) && that.elapsedTime >= that.attackCooldown) {
+                    let distance = Math.sqrt((that.x - entity.getX()) * (that.x -
+                        entity.getX()) + (that.x - entity.getY()) * (that.x - entity.getY()));
+    
+                    if (that.facing == 0 && distance <= 200) { // east
+                        entity.takeDamage(that.attackDamage, 25, entity.getX() - that.x, entity.getY() - that.y);
+                        that.elapsedTime = 0;
+                    } else if (that.facing == 1 && distance <= 200) { // north
+                        entity.takeDamage(that.attackDamage, 25, entity.getX() - that.x, entity.getY() - that.y);
+                        that.elapsedTime = 0;
+                    } else if (that.facing == 2 && distance <= 200) { // west
+                        entity.takeDamage(that.attackDamage, 25, entity.getX() - that.x, entity.getY() - that.y);
+                        that.elapsedTime = 0;
+                    } else if (that.facing == 3 && distance <= 200) { // south
+                        entity.takeDamage(that.attackDamage, 25, entity.getX() - that.x, entity.getY() - that.y);
+                        that.elapsedTime = 0;
+                    }
+                }*/
             });
+            this.state = 2;
+        }
+
+        if (this.state == 3) {
             this.state = 2;
         }
 
@@ -157,6 +196,23 @@ class Sword {
 
     updateFacing(newFacing) {
         this.facing = newFacing;
+    }
+
+    upgradeAttackDamage() {
+        if (this.canUpgradeAttackDamage()) {
+            this.attackDamage += this.attackDamageIncrease;
+            this.attackDamageUpgradeLevel++;
+            this.hero.exp.expCounter -= this.attackDamageUpgradeCost;
+        }
+    }
+
+    getAttackDamageUpgradeLevel() {
+        return this.attackDamageUpgradeLevel;
+    }
+
+    canUpgradeAttackDamage() {
+        return this.attackDamageUpgradeLevel < this.attackDamageMaxUpgradeLevel && 
+        this.hero.exp.getExp() >= this.attackDamageUpgradeCost && this.hero.hasSword;
     }
 
     getX() {

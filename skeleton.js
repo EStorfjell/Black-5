@@ -11,12 +11,13 @@ class Skeleton {
         this.action = 0; // 0 = idle, 1 = walking
         this.facing = 0; // 0 = east, 1 = north, 2 = west, 3 = south
         this.health = 100;
-        this.attackDamage = 10 + 2 * this.wave;
-        this.firingCooldown = 1 - 0.05 * this.wave; // The minimum number of seconds between shots
+        this.attackDamage = 3 + this.wave;
+        this.firingCooldown = 4 - 0.2 * this.wave; // The minimum number of seconds between shots
+        this.attackDistance = 300;
         this.elapsedTime = 0; // The time since the skeleton last shot
         this.dead = false;
 
-        this.crossbow = new Crossbow(this.game, false, this.x, this.y);
+        this.crossbow = new Crossbow(this.game, false, this.x, this.y, this.hero);
         this.crossbow.setPrimaryWeapon();
         this.game.addEntity(this.crossbow);
 
@@ -90,7 +91,7 @@ class Skeleton {
         this.updateBB();
 
         this.elapsedTime += this.game.clockTick;
-        if (heroDistance <= 300 && this.elapsedTime >= this.firingCooldown) {
+        if (heroDistance <= this.attackDistance && this.elapsedTime >= this.firingCooldown) {
             this.crossbow.attack(this.hero.getX(), this.hero.getY());
             this.elapsedTime = 0;
         }

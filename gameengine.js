@@ -20,9 +20,12 @@ class GameEngine {
 
         this.switchToSecondary = false;
         this.switchToMelee = false;
+        this.toggleShop = false;
 
         this.surfaceWidth = null;
         this.surfaceHeight = null;
+
+        this.shopIsOpen = false;
 
         this.enemyCount = 0;
     };
@@ -50,7 +53,7 @@ class GameEngine {
             let x = e.clientX - that.ctx.canvas.getBoundingClientRect().left;
             let y = e.clientY - that.ctx.canvas.getBoundingClientRect().top;
 
-            return {x: x, y: y};
+            return { x: x, y: y };
         };
 
         this.ctx.canvas.addEventListener("mousedown", function (e) {
@@ -111,6 +114,9 @@ class GameEngine {
                     break;
                 case "KeyE":
                     that.switchToMelee = true;
+                    break;
+                case "KeyT":
+                    that.toggleShop = true;
                     break;
             }
         }, false);

@@ -1,6 +1,6 @@
 class Shotgun {
-    constructor(game, isOwnedByHero, x, y) {
-        Object.assign(this, { game, isOwnedByHero, x, y });
+    constructor(game, isOwnedByHero, x, y, hero) {
+        Object.assign(this, { game, isOwnedByHero, x, y, hero });
 
         // sprite sheet
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/shotgun.png");
@@ -13,15 +13,27 @@ class Shotgun {
         this.attackDamage = 15;
         this.attackDamageIncrease = 5; // attack damage increase per upgrade
         this.attackDamageUpgradeLevel = 0;
+        this.attackDamageMaxUpgradeLevel = 3;
+        this.attackDamageUpgradeCost = 10;
+        this.maxAttackDamage = 30;
 
-        this.ammo = 200; // number of bullets
+        this.ammo = 200; // number of shots
+        this.ammoUnit = 15; // number of shots the player can buy at once
+        this.maxAmmo = 200;
+        this.ammoUnitCost = 5;
+
+        this.weaponCost = 100;
+
         this.attacking = false; // true if this shotgun is firing
         this.targetX = 0;
         this.targetY = 0;
 
-        this.firingRate = 1; // shots per second
-        this.firingRateIncrease = 1; // firing rate increase per upgrade
-        this.firingRateUpgradeLevel = 0;
+        this.reloadSpeed = 1; // minimum time between shots
+        this.reloadSpeedUpgradeLevel = 0;
+        this.reloadSpeedDecrease = 0.15; // percentage
+        this.reloadSpeedMaxUpgradeLevel = 3;
+        this.reloadSpeedUpgradeCost = 10;
+        this.maxReloadSpeed = this.reloadSpeed;
 
         this.elapsedTime = 0; // elapsed time since last attack
 
@@ -33,7 +45,7 @@ class Shotgun {
 
     update() {
         this.elapsedTime += this.game.clockTick;
-        if (this.attacking && this.elapsedTime >= this.firingRate && this.ammo > 0) {
+        if (this.attacking && this.elapsedTime >= this.reloadSpeed && this.ammo > 0) {
             let isOnHeroTeam = this.isOwnedByHero;
 
             let bulletX;
@@ -210,25 +222,68 @@ class Shotgun {
     }
 
     upgradeAttackDamage() {
-        this.attackDamage += this.attackDamageIncrease;
-        this.attackDamageUpgradeLevel++;
+        if (this.canUpgradeAttackDamage()) {
+            this.attackDamage += this.attackDamageIncrease;
+            this.attackDamageUpgradeLevel++;
+            this.hero.exp.expCounter -= this.attackDamageUpgradeCost;
+        }
     }
 
     getAttackDamageUpgradeLevel() {
         return this.attackDamageUpgradeLevel;
     }
 
-    upgradeFiringRate() {
-        this.firingRate += this.firingRateIncrease;
-        this.firingRateUpgradeLevel++;
+    canUpgradeAttackDamage() {
+        return this.attackDamageUpgradeLevel < this.attackDamageMaxUpgradeLevel && 
+        this.hero.exp.getExp() >= this.attackDamageUpgradeCost && this.hero.hasShotgun;
     }
 
-    getFiringRateUpgradeLevel() {
-        return this.firingRateUpgradeLevel;
+    upgradeReloadSpeed() {
+        if (this.canUpgradeReloadSpeed) {
+            this.reloadSpeed *= 1 - this.reloadSpeedDecrease;
+            this.reloadSpeedUpgradeLevel++;
+            this.hero.exp.expCounter -= this.reloadSpeedUpgradeCost;
+        }
+    }
+
+    getReloadSpeedUpgradeLevel() {
+        return this.reloadSpeedUpgradeLevel;
+    }
+
+    canUpgradeReloadSpeed() {
+        return this.reloadSpeedUpgradeLevel < this.reloadSpeedMaxUpgradeLevel && 
+        this.hero.exp.getExp() >= this.reloadSpeedUpgradeCost && this.hero.hasShotgun;
     }
 
     getAmmo() {
         return this.ammo;
+    }
+
+    addAmmo() {
+        if (this.canAddAmmo()) {
+            this.ammo += this.ammoUnit;
+            this.hero.exp.expCounter -= this.ammoUnitCost;
+        }
+    }
+
+    getAmmoUnit() {
+        return this.ammoUnit;
+    }
+
+    canAddAmmo() {
+        return this.ammo <= this.maxAmmo - this.ammoUnit && 
+        this.hero.exp.getExp() >= this.ammoUnitCost && this.hero.hasShotgun;
+    }
+
+    buy() {
+        if (this.canBuy()) {
+            this.hero.equipShotgun();
+            this.hero.exp.expCounter -= this.weaponCost;
+        }
+    }
+
+    canBuy() {
+        return this.hero.exp.getExp() >= this.weaponCost && !this.hero.hasShotgun;
     }
 
     getX() {
