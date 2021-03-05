@@ -10,6 +10,9 @@ class Arrow {
 
         this.flySpeed = 200; // pixels per second
 
+        this.range = 300; // pixels
+        this.distanceFlown = 0;
+
         this.updateBB();
 
         this.animations = [];
@@ -88,6 +91,12 @@ class Arrow {
         this.y += this.delY;
 
         this.updateBB();
+
+        this.distanceFlown += this.flySpeed * this.game.clockTick;
+        if (this.distanceFlown >= this.range) {
+            this.distanceFlown = 0;
+            this.removeFromWorld = true;
+        }
 
         // Collision check and handling
         var that = this;

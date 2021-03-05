@@ -13,14 +13,14 @@ class Witch {
         
         this.attack = 0;
         this.attackDistance = 200;
-        this.attackDamage = 15;
+        this.attackDamage = 5 + 2 * this.wave;
         this.elapsedTime = 0;
-        this.firingRate = 1;
+        this.attackCooldown = 4 - 0.2 * this.wave;
 
         this.health = 100;
         this.dead = false;
 
-        this.walkSpeed = 50 + 2 * this.wave; // pixels per second
+        this.walkSpeed = 40 + 2 * this.wave; // pixels per second
         this.velocity = { x: 0, y: 0 };
         this.accelerationToPlayer = 1000000;
         this.accelerationFromWall = 70000;
@@ -70,7 +70,7 @@ class Witch {
         this.elapsedTime += this.game.clockTick;
         if (heroDistance <= this.attackDistance) { // if hero is less than attackDistance away, stop and attack
 			this.action = 0;
-            if (this.elapsedTime >= this.firingRate) {
+            if (this.elapsedTime >= this.attackCooldown) {
                 let fireBall = new WitchFireball(this.game, this.hero.getX(), this.hero.getY(), false, this.attackDamage, this.x - 10, this.y + 30);
                 this.game.addEntity(fireBall);
                 this.elapsedTime = 0;

@@ -211,7 +211,8 @@ class Sword {
     }
 
     canUpgradeAttackDamage() {
-        return this.attackDamageUpgradeLevel < this.attackDamageMaxUpgradeLevel && this.hero.exp.getExp() >= this.attackDamageUpgradeCost;
+        return this.attackDamageUpgradeLevel < this.attackDamageMaxUpgradeLevel && 
+        this.hero.exp.getExp() >= this.attackDamageUpgradeCost && this.hero.hasSword;
     }
 
     getX() {

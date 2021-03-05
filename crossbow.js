@@ -201,7 +201,8 @@ class Crossbow {
     }
 
     canUpgradeAttackDamage() {
-        return this.attackDamageUpgradeLevel < this.attackDamageMaxUpgradeLevel && this.hero.exp.getExp() >= this.attackDamageUpgradeCost;
+        return this.attackDamageUpgradeLevel < this.attackDamageMaxUpgradeLevel && 
+        this.hero.exp.getExp() >= this.attackDamageUpgradeCost && this.hero.hasCrossbow;
     }
 
     upgradeReloadSpeed() {
@@ -217,7 +218,8 @@ class Crossbow {
     }
 
     canUpgradeReloadSpeed() {
-        return this.reloadSpeedUpgradeLevel < this.reloadSpeedMaxUpgradeLevel && this.hero.exp.getExp() >= this.reloadSpeedUpgradeCost;
+        return this.reloadSpeedUpgradeLevel < this.reloadSpeedMaxUpgradeLevel && 
+        this.hero.exp.getExp() >= this.reloadSpeedUpgradeCost && this.hero.hasCrossbow;
     }
 
     getAmmo() {
@@ -236,7 +238,8 @@ class Crossbow {
     }
 
     canAddAmmo() {
-        return this.ammo <= this.maxAmmo - this.ammoUnit && this.hero.exp.getExp() >= this.ammoUnitCost;
+        return this.ammo <= this.maxAmmo - this.ammoUnit && 
+        this.hero.exp.getExp() >= this.ammoUnitCost && this.hero.hasCrossbow;
     }
 
     getX() {

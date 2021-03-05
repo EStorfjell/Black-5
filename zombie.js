@@ -11,7 +11,7 @@ class Zombie {
         this.action = 0; // 0 = idle, 1 = walking
         this.facing = 0; // 0 = east, 1 = north, 2 = west, 3 = south
         this.health = 100;
-        this.attackDamage = 10 + 2 * this.wave;
+        this.attackDamage = 2 + this.wave;
         this.attackCooldown = 2 - 0.05 * this.wave; // The minimum number of seconds between attacks
         this.elapsedTime = 0; // The time since the zombie last attacked
         this.dead = false;

@@ -227,7 +227,8 @@ class Pistol {
     }
 
     canUpgradeAttackDamage() {
-        return this.attackDamageUpgradeLevel < this.attackDamageMaxUpgradeLevel && this.hero.exp.getExp() >= this.attackDamageUpgradeCost;
+        return this.attackDamageUpgradeLevel < this.attackDamageMaxUpgradeLevel && 
+        this.hero.exp.getExp() >= this.attackDamageUpgradeCost && this.hero.hasPistol;
     }
 
     upgradeReloadSpeed() {
@@ -243,7 +244,8 @@ class Pistol {
     }
 
     canUpgradeReloadSpeed() {
-        return this.reloadSpeedUpgradeLevel < this.reloadSpeedMaxUpgradeLevel && this.hero.exp.getExp() >= this.reloadSpeedUpgradeCost;
+        return this.reloadSpeedUpgradeLevel < this.reloadSpeedMaxUpgradeLevel && 
+        this.hero.exp.getExp() >= this.reloadSpeedUpgradeCost && this.hero.hasPistol;
     }
 
     getAmmo() {
@@ -262,7 +264,19 @@ class Pistol {
     }
 
     canAddAmmo() {
-        return this.ammo <= this.maxAmmo - this.ammoUnit && this.hero.exp.getExp() >= this.ammoUnitCost;
+        return this.ammo <= this.maxAmmo - this.ammoUnit && 
+        this.hero.exp.getExp() >= this.ammoUnitCost && this.hero.hasPistol;
+    }
+
+    buy() {
+        if (this.canBuy()) {
+            this.hero.equipPistol();
+            this.hero.exp.expCounter -= this.weaponCost;
+        }
+    }
+
+    canBuy() {
+        return this.hero.exp.getExp() >= this.weaponCost && !this.hero.hasPistol;
     }
 
     getX() {

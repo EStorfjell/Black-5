@@ -134,7 +134,7 @@ class Bullet {
         // east
         this.animations[0][0] = new Animator(this.spritesheet, 26, 21, 9, 8, 1, 0.15, 0, false, true);
         // north
-        this.animations[0][1] = new AdvancedAnimator(this.spritesheet, 26, 21, 9, 8, 1, 0.15, 0, false, true);
+        this.animations[0][1] = new Animator(this.spritesheet, 26, 21, 9, 8, 1, 0.15, 0, false, true);
     }
 
     updateBB() {

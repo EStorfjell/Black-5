@@ -16,10 +16,10 @@ class Shop {
         this.backgroundColor = "White";
         this.textColor = "Black";
 
-        this.initialize();
+        this.initialize(this);
     }
 
-    initialize() {
+    initialize(that) {
         $("#swordButton").click(function() {
             if ($("swordTab").css("display") != "block") {
                 if ($("#crossbowTab").css("display") != "none") {
@@ -81,49 +81,68 @@ class Shop {
         });
 
         $("#swordAttackDamageUpgradeButton").click(function() {
-            let sword = this.hero.sword;
-            sword.upgradeAttackDamage();
-            this.updateValues();
+            that.sword.upgradeAttackDamage();
+            that.updateValues();
         });
 
         $("#crossbowAttackDamageUpgradeButton").click(function() {
-            this.crossbow.upgradeAttackDamage();
-            this.updateValues();
+            that.crossbow.upgradeAttackDamage();
+            that.updateValues();
         });
 
         
         $("#pistolAttackDamageUpgradeButton").click(function() {
-            this.pistol.upgradeAttackDamage();
-            this.updateValues();
+            that.pistol.upgradeAttackDamage();
+            that.updateValues();
         });
 
         $("#shotgunAttackDamageUpgradeButton").click(function() {
-            this.pistol.upgradeAttackDamage();
-            this.updateValues();
+            that.pistol.upgradeAttackDamage();
+            that.updateValues();
         });
 
         $("#crossbowReloadSpeedUpgradeButton").click(function() {
-            this.crossbow.upgradeReloadSpeed();
-            this.updateValues();
+            that.crossbow.upgradeReloadSpeed();
+            that.updateValues();
         });
 
         $("#pistolReloadSpeedUpgradeButton").click(function() {
-            this.pistol.upgradeReloadSpeed();
-            this.updateValues();
+            that.pistol.upgradeReloadSpeed();
+            that.updateValues();
         });
 
         $("#shotgunReloadSpeedUpgradeButton").click(function() {
-            this.shotgun.upgradeReloadSpeed();
-            this.updateValues();
+            that.shotgun.upgradeReloadSpeed();
+            that.updateValues();
         });
 
-        $("crossbowAmmoButton").click(function() {
+        $("#crossbowAmmoButton").click(function() {
+            that.crossbow.addAmmo();
+            that.updateValues();
+        });
 
+        $("#pistolAmmoButton").click(function() {
+            that.pistol.addAmmo();
+            that.updateValues();
+        });
+
+        $("#shotgunAmmoButton").click(function() {
+            that.shotgun.addAmmo();
+            that.updateValues();
+        });
+
+        $("#pistolBuyButton").click(function() {
+            that.pistol.buy();
+            that.updateValues();
+        });
+
+        $("#shotgunBuyButton").click(function() {
+            that.shotgun.buy();
+            that.updateValues();
         });
     }
 
     update() {
-
     }
 
     updateValues() {
@@ -181,13 +200,20 @@ class Shop {
         $(".shotgunAmmoUnitCost").html("" + this.shotgun.ammoUnitCost);
 
         $("#swordAttackDamageUpgradeButton").prop("disabled", !this.sword.canUpgradeAttackDamage());
-        $("#crossbowAttackDamageUpgradeButton").prop("disabled", "" + !this.crossbow.canUpgradeAttackDamage());
-        $("#pistolAttackDamageUpgradeButton").prop("disabled", "" + !this.pistol.canUpgradeAttackDamage());
-        $("#shotgunAttackDamageUpgradeButton").prop("disabled", "" + !this.shotgun.canUpgradeAttackDamage());
+        $("#crossbowAttackDamageUpgradeButton").prop("disabled", !this.crossbow.canUpgradeAttackDamage());
+        $("#pistolAttackDamageUpgradeButton").prop("disabled", !this.pistol.canUpgradeAttackDamage());
+        $("#shotgunAttackDamageUpgradeButton").prop("disabled", !this.shotgun.canUpgradeAttackDamage());
 
-        $("#crossbowReloadSpeedUpgradeButton").prop("disabled", "" + !this.crossbow.canUpgradeReloadSpeed());
-        $("#pistolReloadSpeedUpgradeButton").prop("disabled", "" + !this.pistol.canUpgradeReloadSpeed());
-        $("#shotgunReloadSpeedUpgradeButton").prop("disabled", "" + !this.shotgun.canUpgradeReloadSpeed());
+        $("#crossbowReloadSpeedUpgradeButton").prop("disabled", !this.crossbow.canUpgradeReloadSpeed());
+        $("#pistolReloadSpeedUpgradeButton").prop("disabled", !this.pistol.canUpgradeReloadSpeed());
+        $("#shotgunReloadSpeedUpgradeButton").prop("disabled", !this.shotgun.canUpgradeReloadSpeed());
+
+        $("#crossbowAmmoButton").prop("disabled", !this.crossbow.canAddAmmo());
+        $("#pistolAmmoButton").prop("disabled", !this.pistol.canAddAmmo());
+        $("#shotgunAmmoButton").prop("disabled", !this.shotgun.canAddAmmo());
+
+        $("#pistolBuyButton").prop("disabled", !this.pistol.canBuy());
+        $("#shotgunBuyButton").prop("disabled", !this.shotgun.canBuy());
     }
 
     draw(ctx) {
@@ -209,11 +235,11 @@ class Shop {
     }
 
     toggle() {
-        this.game.shopIsOpen = !this.game.shopIsOpen;
         if (this.game.shopIsOpen) {
             this.close();
         } else {
             this.open();
         }
+        this.game.shopIsOpen = !this.game.shopIsOpen;
     }
 }

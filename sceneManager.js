@@ -9,11 +9,11 @@ class SceneManager {
         this.heroStartX = LEVELS.LEVEL_ONE.startX;
         this.heroStartY = LEVELS.LEVEL_ONE.startY;
 
-        this.shop = new Shop(game, this.hero);
+        this.shop = new Shop(game, this.hero, this);
 
         this.map = null;
         this.wave = 1; // current wave
-        this.round = 2; // current round
+        this.round = 1; // current round
 
         this.loadRound(this.wave, this.round);
 
@@ -77,8 +77,6 @@ class SceneManager {
         this.hero.y = this.heroStartY;
         this.game.addEntity(this.hero);
         this.hero.initializeWeapons();
-
-        this.game.addEntity(this.shop);
     };
 
     update() {
@@ -182,9 +180,8 @@ class SceneManager {
         ctx.textAlign = "right";
         ctx.textBaseline = "top";
         if (this.isInIntermission) {
-            ctx.fillText("Intermission", this.game.surfaceWidth - margin, margin);
-            ctx.fillText("Time remaining: " + Math.round(this.intermissionLength - 
-                this.intermissionElapsedTime), this.game.surfaceWidth - margin, 25);
+            ctx.fillText("Time Remaining: " + Math.round(this.intermissionLength - 
+                this.intermissionElapsedTime), this.game.surfaceWidth - margin, margin);
         } else {
             ctx.fillText("Wave: " + this.wave, this.game.surfaceWidth - margin, margin);
             ctx.fillText("Round: " + this.round, this.game.surfaceWidth - margin, 25);

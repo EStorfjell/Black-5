@@ -116,7 +116,7 @@ class Hero {
             this.secondaryWeapon = this.tertiaryWeapon;
             this.tertiaryWeapon = temp;
             this.game.switchToSecondary = false;
-        } else if (this.game.switchToSecondary && this.switchToSecondary != null) {
+        } else if (this.game.switchToSecondary && this.secondaryWeapon != null) {
             this.meleeEquipped = false;
             let temp = this.primaryWeapon;
             this.primaryWeapon = this.secondaryWeapon;
@@ -304,7 +304,7 @@ class Hero {
     }
 
     equipPistol() {
-        if (this.secondaryWeapon != null) {
+        if (this.secondaryWeapon == null) {
             this.secondaryWeapon = this.pistol;
         } else {
             this.tertiaryWeapon = this.pistol;
@@ -313,7 +313,7 @@ class Hero {
     }
 
     equipShotgun() {
-        if (this.secondaryWeapon != null) {
+        if (this.secondaryWeapon == null) {
             this.secondaryWeapon = this.shotgun;
         } else {
             this.tertiaryWeapon = this.shotgun;

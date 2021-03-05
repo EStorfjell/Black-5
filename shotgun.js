@@ -234,7 +234,8 @@ class Shotgun {
     }
 
     canUpgradeAttackDamage() {
-        return this.attackDamageUpgradeLevel < this.attackDamageMaxUpgradeLevel && this.hero.exp.getExp() >= this.attackDamageUpgradeCost;
+        return this.attackDamageUpgradeLevel < this.attackDamageMaxUpgradeLevel && 
+        this.hero.exp.getExp() >= this.attackDamageUpgradeCost && this.hero.hasShotgun;
     }
 
     upgradeReloadSpeed() {
@@ -250,7 +251,8 @@ class Shotgun {
     }
 
     canUpgradeReloadSpeed() {
-        return this.reloadSpeedUpgradeLevel < this.reloadSpeedMaxUpgradeLevel && this.hero.exp.getExp() >= this.reloadSpeedUpgradeCost;
+        return this.reloadSpeedUpgradeLevel < this.reloadSpeedMaxUpgradeLevel && 
+        this.hero.exp.getExp() >= this.reloadSpeedUpgradeCost && this.hero.hasShotgun;
     }
 
     getAmmo() {
@@ -269,7 +271,19 @@ class Shotgun {
     }
 
     canAddAmmo() {
-        return this.ammo <= this.maxAmmo - this.ammoUnit && this.hero.exp.getExp() >= this.ammoUnitCost;
+        return this.ammo <= this.maxAmmo - this.ammoUnit && 
+        this.hero.exp.getExp() >= this.ammoUnitCost && this.hero.hasShotgun;
+    }
+
+    buy() {
+        if (this.canBuy()) {
+            this.hero.equipShotgun();
+            this.hero.exp.expCounter -= this.weaponCost;
+        }
+    }
+
+    canBuy() {
+        return this.hero.exp.getExp() >= this.weaponCost && !this.hero.hasShotgun;
     }
 
     getX() {
