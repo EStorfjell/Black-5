@@ -4,6 +4,7 @@ const ASSET_MANAGER = new AssetManager();
 
 ASSET_MANAGER.queueDownload("./maps/Map1.png");
 ASSET_MANAGER.queueDownload("./maps/BigMap1.png");
+ASSET_MANAGER.queueDownload("./maps/BigMap2.png");
 ASSET_MANAGER.queueDownload("./sprites/hero.png");
 ASSET_MANAGER.queueDownload("./sprites/zombie.png");
 ASSET_MANAGER.queueDownload("./sprites/skeleton.png");
@@ -14,10 +15,12 @@ ASSET_MANAGER.queueDownload("./sprites/crossbow.png");
 ASSET_MANAGER.queueDownload("./sprites/pistol.png");
 ASSET_MANAGER.queueDownload("./sprites/bullet.png");
 ASSET_MANAGER.queueDownload("./sprites/shotgun.png");
-ASSET_MANAGER.queueDownload("./sprites/dragon.png");
-ASSET_MANAGER.queueDownload("./sprites/dragonfireball.png");
 ASSET_MANAGER.queueDownload("./sprites/witchFireball.png");
 ASSET_MANAGER.queueDownload("./sprites/healthPack.png");
+ASSET_MANAGER.queueDownload("./sprites/armor.png");
+ASSET_MANAGER.queueDownload("./sprites/potions.png");
+ASSET_MANAGER.queueDownload("./sprites/dragon.png");
+ASSET_MANAGER.queueDownload("./sprites/dragonfireball.png");
 
 ASSET_MANAGER.downloadAll(function () {
     let canvas = document.getElementById('gameWorld');

@@ -6,9 +6,12 @@ class GameEngine {
         this.showOutlines = false;
         this.ctx = null;
 
+        this.gameStart = false;
+
         this.click = null;
         this.mouse = null;
         this.wheel = null;
+        this.mouseDown = false;
 
         this.left = false;
         this.right = false;
@@ -52,6 +55,14 @@ class GameEngine {
 
             return { x: x, y: y };
         };
+
+        this.ctx.canvas.addEventListener("mousedown", function (e) {
+            that.mouseDown = true;
+        }, false);
+
+        this.ctx.canvas.addEventListener("mouseup", function (e) {
+            that.mouseDown = false;
+        }, false);
 
         this.ctx.canvas.addEventListener("mousemove", function (e) {
             //console.log(getXandY(e));
@@ -146,18 +157,14 @@ class GameEngine {
 
     draw() {
         this.ctx.clearRect(0, 0, this.surfaceWidth, this.surfaceHeight);
-        let shop = null;
         for (let i = 0; i < this.entities.length; i++) {
-            if (this.entities[i] instanceof Shop) {
-                shop = this.entities[i];
-            } else {
+            if (this.gameStart || this.entities[i] instanceof StartMenu) {
                 this.entities[i].draw(this.ctx);
             }
         }
 
-        this.camera.draw(this.ctx);
-        if (shop != null) {
-            shop.draw(this.ctx);
+        if (this.gameStart) {
+            this.camera.draw(this.ctx);
         }
     };
 
@@ -169,7 +176,9 @@ class GameEngine {
             let entity = this.entities[i];
 
             if (!entity.removeFromWorld) {
-                entity.update();
+                if (this.gameStart || entity instanceof StartMenu) {
+                    entity.update();
+                }
             }
         }
 

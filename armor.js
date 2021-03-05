@@ -1,6 +1,6 @@
 class Armor {
     constructor(game, x, y) {
-        Object.assign(this, { game, targetX, targetY, isOnHeroTeam, attackDamage, x, y });
+        Object.assign(this, { game, x, y });
 
         this.x = x;
         this.y = y;
@@ -8,7 +8,8 @@ class Armor {
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/armor.png");
         this.width = 84;
         this.height = 102;
-        this.BB = new BoundingBox(this.x, this.y, this.width, this.height);
+        this.scale = 0.4;
+        this.BB = new BoundingBox(this.x, this.y, this.width * this.scale, this.height * this.scale);
 
         this.animations = [];
         this.loadAnimations();
@@ -33,7 +34,9 @@ class Armor {
     };
 
     draw(ctx) {
-        this.animations.drawFrame(this.game.clockTick, ctx, this.x, this.y, 1);
+        let drawX = this.x - this.game.camera.x;
+        let drawY = this.y - this.game.camera.y;
+        this.animations.drawFrame(this.game.clockTick, ctx, drawX, drawY, this.scale);
     };
 
     loadAnimations() {

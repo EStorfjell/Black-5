@@ -1,6 +1,6 @@
 class Hero {
     constructor(game, x, y) {
-        Object.assign(this, { game, x, y });
+        Object.assign(this, {game, x, y});
 
         // sprite sheet
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/hero.png");
@@ -11,10 +11,14 @@ class Hero {
         this.action = 0; // 0 = idle, 1 = walking
         this.facing = 0; // 0 = east, 1 = north, 2 = west, 3 = south
         this.health = 100;
+        this.maxHealth = 100;
 
         this.armor = 0;
+        this.maxArmor = 100;
+
+
         this.exp = new Experience();
-		
+
         this.damageCooldown = 3; // Cooldown before the hero can take more damage
         this.elapsedTime = 0; // Elapsed time since the hero last took damage
 
@@ -28,19 +32,16 @@ class Hero {
         this.sword.setPrimaryWeapon();
 
         this.primaryWeapon = this.crossbow;
-        //this.primaryWeapon.setPrimaryWeapon();
         this.secondaryWeapon = null;
-        //this.secondaryWeapon.setPrimaryWeapon();
         this.tertiaryWeapon = null;
-        //this.tertiaryWeapon.setPrimaryWeapon();
-        //this.sword = this.sword;
-        //this.sword.setPrimaryWeapon();
         this.meleeEquipped = false;
 
         this.hasCrossbow = true;
         this.hasPistol = false;
         this.hasShotgun = false;
         this.hasSword = true;
+		
+        this.currentWeapon = this.primaryWeapon;
 
         this.walkSpeed = 200; // pixels per second
 
@@ -130,6 +131,8 @@ class Hero {
             this.meleeEquipped = true;
             this.game.switchToMelee = false;
         }
+		
+		this.ammo = this.primaryWeapon.ammo;
 
         this.crossbow.updateX(this.x);
         this.crossbow.updateY(this.y);
@@ -145,13 +148,14 @@ class Hero {
         this.sword.updateFacing(this.facing);
 
         if (this.game.click != null) {
-            let currentWeapon;
             if (this.meleeEquipped) {
-                currentWeapon = this.sword;
+                this.currentWeapon = this.sword;
             } else {
-                currentWeapon = this.primaryWeapon;
+                this.currentWeapon = this.primaryWeapon;
+                this.ammo = this.currentWeapon.ammo;
             }
-            currentWeapon.attack(this.game.click.x + this.game.camera.x, this.game.click.y + this.game.camera.y);
+            this.currentWeapon.attack(this.game.click.x + this.game.camera.x, this.game.click.y + this.game.camera.y);
+            this.game.pause = 1;
             this.game.click = null;
         }
 
@@ -187,6 +191,13 @@ class Hero {
                 }
             }
         });
+
+        // for displaying ammo
+        if (this.meleeEquipped) { 
+            this.ammo = 0;
+        } else {
+            this.ammo = this.currentWeapon.ammo;
+        }
 
         this.updateBB();
 
@@ -272,15 +283,23 @@ class Hero {
      * @param {Number} yVectorComp The y-component of a vector specifying the knockback direction
      */
     takeDamage(damage, knockback = 0, xVectorComp = 0, yVectorComp = 0) {
-        if (this.elapsedTime >= this.damageCooldown) {
-            if (this.armor > 0) {
+        if (damage < 0) { // heal hero
+            this.health -= damage;
+            if (this.health > this.maxHealth) { // prevent from going over max
+                this.health = this.maxHealth;
+            }
+        } else if (this.elapsedTime >= this.damageCooldown) {
+            if (this.armor > 0) { // armor takes damage instead of hearts
                 this.armor -= damage;
             } else {
                 this.armor = 0;
                 this.health -= damage;
             }
+
             if (this.health <= 0) {
                 console.log("The player died.");
+                this.health = 0;
+                this.removeFromWorld = true;
             }
             if (knockback !== 0 && xVectorComp != 0) {
                 // TODO: Allow a knockback to be applied over a period of time rather than all at once
@@ -294,13 +313,16 @@ class Hero {
                 if (yVectorComp < 0) deltaY = -deltaY;
                 this.x += deltaX;
                 this.y += deltaY;
+                this.elapsedTime = 0;
             }
-            this.elapsedTime = 0;
         }
     }
 
     pickupArmor() {
         this.armor += 50;
+        if (this.armor > this.maxArmor) {
+            this.armor = this.maxArmor;
+        }
     }
 
     equipPistol() {
