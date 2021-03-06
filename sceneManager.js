@@ -241,13 +241,15 @@ class SceneManager {
         ctx.globalAlpha = 1;
 
         if (this.elapsedTime > 1) {
-            ctx.font = '90px "Press Start 2P"';
+            ctx.font = '90px "Noto Serif"';
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
             ctx.fillStyle = "Red";
             if (this.transparency2 < 1) {
                 this.transparency2 += 0.01;
             }
             ctx.globalAlpha = this.transparency2;
-            ctx.fillText("Game Over", this.game.surfaceWidth / 2 - 200, this.game.surfaceHeight / 2);
+            ctx.fillText("Game Over", this.game.surfaceWidth / 2, this.game.surfaceHeight / 2);
         }
 
         ctx.globalAlpha = 1;
@@ -276,9 +278,11 @@ class SceneManager {
         ctx.fillStyle = "Gray";
         ctx.fillRect(x + buttonOffset, y + buttonOffset, width - 2 * buttonOffset, height - 2 * buttonOffset);
 
-        ctx.font = '30px "Copperplate"';
+        ctx.font = '30px "Noto Serif"';
         ctx.fillStyle = "Black";
-        ctx.fillText(text, x + width / 4 - (textLen * 3), y + height / 1.5);
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(text, x + width / 2, y + height / 2);
         ctx.font = '30px "Press Start 2P"';
 
         if (this.game.click != null) {
