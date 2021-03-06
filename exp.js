@@ -30,4 +30,9 @@ class Experience {
     witchKill() {
         this.expCounter += 15;
     }
+
+    // Gives player 50 exp for killing a dragon.
+    dragonKill() {
+        this.expCounter += 50;
+    }
 }

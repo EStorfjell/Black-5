@@ -14,15 +14,17 @@ class Pistol {
         this.attackDamageIncrease = 5; // attack damage increase per upgrade
         this.attackDamageUpgradeLevel = 0;
         this.attackDamageMaxUpgradeLevel = 3;
-        this.attackDamageUpgradeCost = 10;
+        this.attackDamageUpgradeCost = 50;
         this.maxAttackDamage = 45;
 
-        this.ammo = 200; // number of bullets
+        this.ammo = 50; // number of bullets
         this.ammoUnit = 15; // number of bullets the player can buy at once
-        this.maxAmmo = 200;
-        this.ammoUnitCost = 5;
+        this.maxAmmo = 100;
+        this.ammoUnitCost = 20;
 
-        this.weaponCost = 100;
+        this.range = 0; // infinite range
+
+        this.weaponCost = 300;
 
         this.attacking = false; // true if this pistol is firing
         this.targetX = 0;
@@ -32,7 +34,7 @@ class Pistol {
         this.reloadSpeedUpgradeLevel = 0;
         this.reloadSpeedDecrease = 0.15; // percentage
         this.reloadSpeedMaxUpgradeLevel = 3;
-        this.reloadSpeedUpgradeCost = 10;
+        this.reloadSpeedUpgradeCost = 50;
         this.maxReloadSpeed = this.reloadSpeed;
 
         this.elapsedTime = 0; // elapsed time since last attack
@@ -63,7 +65,7 @@ class Pistol {
                 bulletX = this.x + 7;
                 bulletY = this.y + 35;
             }
-            let bullet = new Bullet(this.game, this.targetX, this.targetY, isOnHeroTeam, this.attackDamage, bulletX, bulletY);
+            let bullet = new Bullet(this.game, this.targetX, this.targetY, isOnHeroTeam, this.attackDamage, this.range, bulletX, bulletY);
             this.game.addEntity(bullet);
             this.state = 4;
             this.ammo--;
@@ -233,7 +235,7 @@ class Pistol {
 
     upgradeReloadSpeed() {
         if (this.canUpgradeReloadSpeed) {
-            this.reloadSpeed *= 1 - this.reloadSpeedDecrease;
+            this.reloadSpeed = (this.reloadSpeed * (1 - this.reloadSpeedDecrease)).toFixed(2);
             this.reloadSpeedUpgradeLevel++;
             this.hero.exp.expCounter -= this.reloadSpeedUpgradeCost;
         }

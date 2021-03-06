@@ -13,13 +13,13 @@ class Crossbow {
         this.attackDamageIncrease = 5; // attack damage increase per upgrade
         this.attackDamageUpgradeLevel = 0;
         this.attackDamageMaxUpgradeLevel = 3;
-        this.attackDamageUpgradeCost = 10;
+        this.attackDamageUpgradeCost = 40;
         this.maxAttackDamage = 40;
 
-        this.ammo = 200; // number of arrows
+        this.ammo = 50; // number of arrows
         this.ammoUnit = 25; // number of arrows the player can buy at once
-        this.maxAmmo = 200;
-        this.ammoUnitCost = 5;
+        this.maxAmmo = 100;
+        this.ammoUnitCost = 15;
 
         this.weaponCost = 0;
 
@@ -31,7 +31,7 @@ class Crossbow {
         this.reloadSpeedUpgradeLevel = 0;
         this.reloadSpeedDecrease = 0.15; // percentage
         this.reloadSpeedMaxUpgradeLevel = 3;
-        this.reloadSpeedUpgradeCost = 10;
+        this.reloadSpeedUpgradeCost = 40;
         this.maxReloadSpeed = this.reloadSpeed;
 
         this.elapsedTime = 0; // elapsed time since last attack
@@ -207,7 +207,7 @@ class Crossbow {
 
     upgradeReloadSpeed() {
         if (this.canUpgradeReloadSpeed) {
-            this.reloadSpeed *= 1 - this.reloadSpeedDecrease;
+            this.reloadSpeed = (this.reloadSpeed * (1 - this.reloadSpeedDecrease)).toFixed(2);
             this.reloadSpeedUpgradeLevel++;
             this.hero.exp.expCounter -= this.reloadSpeedUpgradeCost;
         }

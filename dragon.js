@@ -182,8 +182,8 @@ class Dragon {
     takeDamage(damage, knockback = 0, xVectorComp = 0, yVectorComp = 0) {
         this.health -= damage;
         if (this.health <= 0) {
-            console.log("The dragon died.");
             this.removeFromWorld = true;
+            this.hero.exp.dragonKill();
         }
         if (knockback !== 0) {
             // TODO: Allow a knockback to be applied over a period of time rather than all at once

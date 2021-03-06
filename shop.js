@@ -104,7 +104,7 @@ class Shop {
         });
 
         $("#shotgunAttackDamageUpgradeButton").click(function() {
-            that.pistol.upgradeAttackDamage();
+            that.shotgun.upgradeAttackDamage();
             that.updateValues();
         });
 

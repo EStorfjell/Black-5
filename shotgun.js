@@ -14,15 +14,17 @@ class Shotgun {
         this.attackDamageIncrease = 5; // attack damage increase per upgrade
         this.attackDamageUpgradeLevel = 0;
         this.attackDamageMaxUpgradeLevel = 3;
-        this.attackDamageUpgradeCost = 10;
+        this.attackDamageUpgradeCost = 60;
         this.maxAttackDamage = 30;
 
-        this.ammo = 200; // number of shots
+        this.ammo = 50; // number of shots
         this.ammoUnit = 15; // number of shots the player can buy at once
-        this.maxAmmo = 200;
-        this.ammoUnitCost = 5;
+        this.maxAmmo = 100;
+        this.ammoUnitCost = 25;
 
-        this.weaponCost = 100;
+        this.range = 150;
+
+        this.weaponCost = 500;
 
         this.attacking = false; // true if this shotgun is firing
         this.targetX = 0;
@@ -32,7 +34,7 @@ class Shotgun {
         this.reloadSpeedUpgradeLevel = 0;
         this.reloadSpeedDecrease = 0.15; // percentage
         this.reloadSpeedMaxUpgradeLevel = 3;
-        this.reloadSpeedUpgradeCost = 10;
+        this.reloadSpeedUpgradeCost = 60;
         this.maxReloadSpeed = this.reloadSpeed;
 
         this.elapsedTime = 0; // elapsed time since last attack
@@ -64,27 +66,41 @@ class Shotgun {
                 bulletY = this.y + 35;
             }
 
+            // 7.5 degrees
+            let angle7p5 = 0.1308997;
             // 15 degrees
-            let angle = 0.2617994;
+            let angle15 = 0.2617994;
             // Sets the origin to the shotgun's position
             let newTargetX = this.targetX - this.x;
             let newTargetY = this.targetY - this.y;
             // Finds the new rotated coordinates relative to the shotgun
-            let rotatedTargetX1 = newTargetX * Math.cos(angle) - newTargetY * Math.sin(angle);
-            let rotatedTargetY1 = newTargetX * Math.sin(angle) + newTargetY * Math.cos(angle);
-            let rotatedTargetX2 = newTargetX * Math.cos(-angle) - newTargetY * Math.sin(-angle);
-            let rotatedTargetY2 = newTargetX * Math.sin(-angle) + newTargetY * Math.cos(-angle);
+            let rotatedTarget7p5X1 = newTargetX * Math.cos(angle7p5) - newTargetY * Math.sin(angle7p5);
+            let rotatedTarget7p5Y1 = newTargetX * Math.sin(angle7p5) + newTargetY * Math.cos(angle7p5);
+            let rotatedTarget7p5X2 = newTargetX * Math.cos(-angle7p5) - newTargetY * Math.sin(-angle7p5);
+            let rotatedTarget7p5Y2 = newTargetX * Math.sin(-angle7p5) + newTargetY * Math.cos(-angle7p5);
+            let rotatedTarget15X1 = newTargetX * Math.cos(angle15) - newTargetY * Math.sin(angle15);
+            let rotatedTarget15Y1 = newTargetX * Math.sin(angle15) + newTargetY * Math.cos(angle15);
+            let rotatedTarget15X2 = newTargetX * Math.cos(-angle15) - newTargetY * Math.sin(-angle15);
+            let rotatedTarget15Y2 = newTargetX * Math.sin(-angle15) + newTargetY * Math.cos(-angle15);
             // Sets the origin back to the map's origin
-            rotatedTargetX1 += this.x;
-            rotatedTargetY1 += this.y;
-            rotatedTargetX2 += this.x;
-            rotatedTargetY2 += this.y;
-            let bullet1 = new Bullet(this.game, rotatedTargetX1, rotatedTargetY1, isOnHeroTeam, this.attackDamage, bulletX, bulletY);
-            let bullet2 = new Bullet(this.game, this.targetX, this.targetY, isOnHeroTeam, this.attackDamage, bulletX, bulletY);
-            let bullet3 = new Bullet(this.game, rotatedTargetX2, rotatedTargetY2, isOnHeroTeam, this.attackDamage, bulletX, bulletY);
+            rotatedTarget7p5X1 += this.x;
+            rotatedTarget7p5Y1 += this.y;
+            rotatedTarget7p5X2 += this.x;
+            rotatedTarget7p5Y2 += this.y;
+            rotatedTarget15X1 += this.x;
+            rotatedTarget15Y1 += this.y;
+            rotatedTarget15X2 += this.x;
+            rotatedTarget15Y2 += this.y;
+            let bullet1 = new Bullet(this.game, rotatedTarget15X1, rotatedTarget15Y1, isOnHeroTeam, this.attackDamage, this.range, bulletX, bulletY);
+            let bullet2 = new Bullet(this.game, rotatedTarget7p5X1, rotatedTarget7p5Y1, isOnHeroTeam, this.attackDamage, this.range, bulletX, bulletY);
+            let bullet3 = new Bullet(this.game, this.targetX, this.targetY, isOnHeroTeam, this.attackDamage, this.range, bulletX, bulletY);
+            let bullet4 = new Bullet(this.game, rotatedTarget7p5X2, rotatedTarget7p5Y2, isOnHeroTeam, this.attackDamage, this.range, bulletX, bulletY);
+            let bullet5 = new Bullet(this.game, rotatedTarget15X2, rotatedTarget15Y2, isOnHeroTeam, this.attackDamage, this.range, bulletX, bulletY);
             this.game.addEntity(bullet1);
             this.game.addEntity(bullet2);
             this.game.addEntity(bullet3);
+            this.game.addEntity(bullet4);
+            this.game.addEntity(bullet5);
 
             this.state = 3;
             this.ammo--;
@@ -240,7 +256,7 @@ class Shotgun {
 
     upgradeReloadSpeed() {
         if (this.canUpgradeReloadSpeed) {
-            this.reloadSpeed *= 1 - this.reloadSpeedDecrease;
+            this.reloadSpeed = (this.reloadSpeed * (1 - this.reloadSpeedDecrease)).toFixed(2);
             this.reloadSpeedUpgradeLevel++;
             this.hero.exp.expCounter -= this.reloadSpeedUpgradeCost;
         }

@@ -17,6 +17,8 @@ body {
     margin-right: 50px;
     display: none;
     font-family: 'Noto Serif', serif;
+    padding-left: 5px;
+	padding-right: 5px;
 }
 
 h1 {

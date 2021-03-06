@@ -1,6 +1,6 @@
 class Bullet {
-    constructor(game, targetX, targetY, isOnHeroTeam, attackDamage, x, y) {
-        Object.assign(this, {game, targetX, targetY, isOnHeroTeam, attackDamage, x, y});
+    constructor(game, targetX, targetY, isOnHeroTeam, attackDamage, range, x, y) {
+        Object.assign(this, {game, targetX, targetY, isOnHeroTeam, attackDamage, range, x, y});
 
         // sprite sheet
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/bullet.png");
@@ -9,6 +9,8 @@ class Bullet {
         this.facing = 0; // 0 = east, 1 = north, 2 = west, 3 = south
 
         this.flySpeed = 300; // pixels per second
+
+        this.distanceFlown = 0;
 
         this.updateBB();
 
@@ -88,6 +90,14 @@ class Bullet {
         this.y += this.delY;
 
         this.updateBB();
+
+        this.distanceFlown += this.flySpeed * this.game.clockTick;
+        if (this.range != 0) {
+            if (this.distanceFlown >= this.range) {
+                this.distanceFlown = 0;
+                this.removeFromWorld = true;
+            }
+        }
 
         // Collision check and handling
         var that = this;

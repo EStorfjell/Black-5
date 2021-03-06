@@ -297,7 +297,6 @@ class Hero {
             }
 
             if (this.health <= 0) {
-                console.log("The player died.");
                 this.health = 0;
                 this.removeFromWorld = true;
             }

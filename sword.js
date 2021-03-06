@@ -13,7 +13,7 @@ class Sword {
         this.attackDamageIncrease = 5; // attack damage increase per upgrade
         this.attackDamageUpgradeLevel = 0;
         this.attackDamageMaxUpgradeLevel = 3;
-        this.attackDamageUpgradeCost = 10;
+        this.attackDamageUpgradeCost = 30;
         this.maxAttackDamage = 50;
 
         this.weaponCost = 0;
