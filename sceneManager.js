@@ -17,7 +17,7 @@ class SceneManager {
         this.shop = new Shop(game, this.hero, this);
 
         this.map = null;
-		
+
         this.wave = 1; // current wave
         this.round = 1; // current round
         this.shopping = 0;
@@ -104,8 +104,18 @@ class SceneManager {
         this.hero.initializeWeapons();
     };
 
+    updateAudio() {
+        let mute = document.getElementById("mute").checked;
+        let volume = document.getElementById("volume").value;
+
+        ASSET_MANAGER.muteAudio(mute);
+        ASSET_MANAGER.adjustVolume(volume);
+    };
+
     update() {
         PARAMS.DEBUG = document.getElementById("debug").checked;
+
+        this.updateAudio();
 
         let heroMidX = this.hero.x + (this.hero.width / 2);
         let heroMidY = this.hero.y + (this.hero.height / 2);
@@ -189,7 +199,7 @@ class SceneManager {
         ctx.fillText("Armor: ", margin, 25);
         ctx.fillStyle = "Purple";
         ctx.fillText(this.hero.armor, 80, 25);
-        
+
         ctx.textBaseline = "bottom";
         ctx.textAlign = "left";
         ctx.fillStyle = "White";
@@ -206,7 +216,7 @@ class SceneManager {
         ctx.textAlign = "right";
         ctx.textBaseline = "top";
         if (this.isInIntermission) {
-            ctx.fillText("Time Remaining: " + Math.round(this.intermissionLength - 
+            ctx.fillText("Time Remaining: " + Math.round(this.intermissionLength -
                 this.intermissionElapsedTime), this.game.surfaceWidth - margin, margin);
         } else {
             ctx.fillText("Wave: " + this.wave, this.game.surfaceWidth - margin, margin);
@@ -221,8 +231,8 @@ class SceneManager {
             ctx.fillStyle = "Gray";
             ctx.fillText(this.hero.primaryWeapon.ammo, 80, 45);
         }
-		
-		 if (this.hero.health == 0) {
+
+        if (this.hero.health == 0) {
             this.elapsedTime += this.game.clockTick;
             this.gameOver(ctx);
         }
