@@ -116,5 +116,37 @@ const LEVELS = {
                 {zombies: 5, skeletons: 3, witches: 2, dragons: 1}
             ]
         ]
+    },
+
+    LEVEL_THREE: {
+        imgPath: "./maps/BigMap3.png",
+        walls: [
+            {x: 153, y: 36, width: 24, height: 48}, {x: 177, y: 36, width: 536, height: 24},
+            {x: 713, y: 36, width: 24, height: 36}, {x: 321, y: 60, width: 24, height: 160},
+            {x: 153, y: 180, width: 24, height: 160}, {x: 153, y: 340, width: 60, height: 24},
+            {x: 321, y: 316, width: 24, height: 24}, {x: 309, y: 340, width: 260, height: 24},
+            {x: 713, y: 168, width: 24, height: 172}, {x: 665, y: 340, width: 72, height: 24},
+            {x: 1223, y: 31, width: 256, height: 24}, {x: 1455, y: 55, width: 24, height: 96},
+            {x: 1223, y: 151, width: 24, height: 156}, {x: 1223, y: 307, width: 112, height: 24},
+            {x: 1455, y: 247, width: 24, height: 60}, {x: 1431, y: 307, width: 48, height: 24},
+            {x: 458, y: 461, width: 24, height: 204}, {x: 578, y: 461, width: 500, height: 24},
+            {x: 770, y: 581, width: 24, height: 88}, {x: 794, y: 633, width: 260, height: 24},
+            {x: 1054, y: 581, width: 24, height: 76}, {x: 458, y: 761, width: 24, height: 140},
+            {x: 482, y: 773, width: 120, height: 24}, {x: 698, y: 773, width: 72, height: 24},
+            {x: 770, y: 765, width: 24, height: 112}, {x: 578, y: 893, width: 24, height: 104},
+            {x: 770, y: 973, width: 24, height: 24}, {x: 458, y: 997, width: 336, height: 24},
+            {x: 1599, y: 460, width: 288, height: 24}, {x: 1599, y: 484, width: 24, height: 48},
+            {x: 1863, y: 484, width: 24, height: 456}, {x: 1599, y: 628, width: 24, height: 144},
+            {x: 1623, y: 724, width: 48, height: 24}, {x: 1767, y: 724, width: 96, height: 24},
+            {x: 1599, y: 868, width: 24, height: 48}, {x: 1599, y: 916, width: 168, height: 24}
+        ],
+        startX: 1290,
+        startY: 505,
+        spawnPoints: [
+            {x: 100, y: 980}, {x: 50, y: 50}, {x: 1820, y: 100}, {x: 1820, y: 1000}
+        ],
+        waves: [
+            // TODO: Waves
+        ]
     }
 };
