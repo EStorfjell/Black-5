@@ -5,6 +5,7 @@ const ASSET_MANAGER = new AssetManager();
 ASSET_MANAGER.queueDownload("./maps/Map1.png");
 ASSET_MANAGER.queueDownload("./maps/BigMap1.png");
 ASSET_MANAGER.queueDownload("./maps/BigMap2.png");
+ASSET_MANAGER.queueDownload("./maps/BigMap3.png");
 ASSET_MANAGER.queueDownload("./sprites/hero.png");
 ASSET_MANAGER.queueDownload("./sprites/zombie.png");
 ASSET_MANAGER.queueDownload("./sprites/skeleton.png");
