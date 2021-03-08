@@ -115,7 +115,7 @@ class SceneManager {
         ASSET_MANAGER.muteAudio(mute);
         ASSET_MANAGER.adjustVolume(volume);
 
-        if (!this.jukeboxPlaying && !this.game.shopIsOpen) {
+        if (this.game.gameStart && !this.jukeboxPlaying && !this.game.shopIsOpen) {
             ASSET_MANAGER.pauseBackgroundMusic();
             this.jukeboxPlaying = true;
             let that = this;
