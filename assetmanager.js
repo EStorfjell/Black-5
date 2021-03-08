@@ -17,17 +17,17 @@ class AssetManager {
 
     downloadAll(callback) {
         if (this.downloadQueue.length === 0) setTimeout(callback, 20);
-        for (var i = 0; i < this.downloadQueue.length; i++) {
-            var that = this;
+        for (let i = 0; i < this.downloadQueue.length; i++) {
+            let that = this;
 
-            var path = this.downloadQueue[i];
+            let path = this.downloadQueue[i];
             console.log(path);
-            var ext = path.substring(path.length - 3);
+            let ext = path.substring(path.length - 3);
 
             switch (ext) {
                 case 'jpg':
                 case 'png':
-                    var img = new Image();
+                    let img = new Image();
                     img.addEventListener("load", function () {
                         console.log("Loaded " + this.src);
                         that.successCount++;
@@ -46,7 +46,7 @@ class AssetManager {
                 case 'wav':
                 case 'mp3':
                 case 'mp4':
-                    var aud = new Audio();
+                    let aud = new Audio();
                     aud.addEventListener("loadeddata", function () {
                         console.log("Loaded " + this.src);
                         that.successCount++;
@@ -81,10 +81,11 @@ class AssetManager {
         let audio = this.cache[path];
         audio.currentTime = 0;
         audio.play();
+        return audio;
     };
 
     muteAudio(mute) {
-        for (var key in this.cache) {
+        for (let key in this.cache) {
             let asset = this.cache[key];
             if (asset instanceof Audio) {
                 asset.muted = mute;
@@ -93,7 +94,7 @@ class AssetManager {
     };
 
     adjustVolume(volume) {
-        for (var key in this.cache) {
+        for (let key in this.cache) {
             let asset = this.cache[key];
             if (asset instanceof Audio) {
                 asset.volume = volume;
@@ -102,7 +103,7 @@ class AssetManager {
     };
 
     pauseBackgroundMusic() {
-        for (var key in this.cache) {
+        for (let key in this.cache) {
             let asset = this.cache[key];
             if (asset instanceof Audio) {
                 asset.pause();
@@ -112,7 +113,7 @@ class AssetManager {
     };
 
     autoRepeat(path) {
-        var aud = this.cache[path];
+        let aud = this.cache[path];
         aud.addEventListener("ended", function () {
             aud.play();
         });
