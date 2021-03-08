@@ -17,19 +17,23 @@ class SceneManager {
         this.shop = new Shop(game, this.hero, this);
 
         this.map = null;
-		
+
         this.wave = 1; // current wave
         this.round = 1; // current round
         this.shopping = 0;
+
+        this.intermissionLength = 60; // seconds
+        this.intermissionElapsedTime = 0;
+        this.isInIntermission = false;
+
+        this.jukebox = ["./music/wretched-destroyer.mp3", "./music/unholy-knight.mp3", "./music/grim-idol.mp3"];
+        this.jukeboxPlaying = false;
+        this.currentSong = 0;
 
         let mainMenu = new StartMenu(this.game);
         this.game.addEntity(mainMenu);
 
         this.loadRound(this.wave, this.round);
-
-        this.intermissionLength = 60; // seconds
-        this.intermissionElapsedTime = 0;
-        this.isInIntermission = false;
     };
 
     loadRound(wave, round) {
@@ -70,25 +74,25 @@ class SceneManager {
             let spawnPoint = randomInt(spawnPoints.length);
             // Chooses a random enemy to spawn
             let enemyNumber = randomInt(4);
-            if (enemyNumber == 0 && zombieCount > 0) {
+            if (enemyNumber === 0 && zombieCount > 0) {
                 let enemy = new Zombie(this.game, this.hero, wave, round,
                     LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].x, LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].y);
                 zombieCount--;
                 count--;
                 this.game.addEntity(enemy);
-            } else if (enemyNumber == 1 && skeletonCount > 0) {
+            } else if (enemyNumber === 1 && skeletonCount > 0) {
                 let enemy = new Skeleton(this.game, this.hero, wave, round,
                     LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].x, LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].y);
                 skeletonCount--;
                 count--;
                 this.game.addEntity(enemy);
-            } else if (enemyNumber == 2 && witchCount > 0) {
+            } else if (enemyNumber === 2 && witchCount > 0) {
                 let enemy = new Witch(this.game, this.hero, wave, round,
                     LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].x, LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].y);
                 witchCount--;
                 count--;
                 this.game.addEntity(enemy);
-            } else if (enemyNumber == 3 && dragonCount > 0) {
+            } else if (enemyNumber === 3 && dragonCount > 0) {
                 let enemy = new Dragon(this.game, this.hero,
                     LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].x, LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].y);
                 dragonCount--;
@@ -104,8 +108,29 @@ class SceneManager {
         this.hero.initializeWeapons();
     };
 
+    updateAudio() {
+        let mute = document.getElementById("mute").checked;
+        let volume = document.getElementById("volume").value;
+
+        ASSET_MANAGER.muteAudio(mute);
+        ASSET_MANAGER.adjustVolume(volume);
+
+        if (!this.jukeboxPlaying && !this.game.shopIsOpen) {
+            ASSET_MANAGER.pauseBackgroundMusic();
+            this.jukeboxPlaying = true;
+            let that = this;
+            let song = ASSET_MANAGER.playAsset(this.jukebox[this.currentSong]);
+            song.addEventListener("ended", function () {
+                that.jukeboxPlaying = false;
+                that.currentSong = (that.currentSong + 1) % that.jukebox.length;
+            });
+        }
+    };
+
     update() {
         PARAMS.DEBUG = document.getElementById("debug").checked;
+
+        this.updateAudio();
 
         let heroMidX = this.hero.x + (this.hero.width / 2);
         let heroMidY = this.hero.y + (this.hero.height / 2);
@@ -124,8 +149,8 @@ class SceneManager {
             this.y = Math.min(this.map.height - PARAMS.CANVAS_HEIGHT, heroMidY - halfHeight);
         }
 
-        if (this.game.getEnemyCount() == 0) {
-            if (this.round == LEVELS.LEVEL_ONE.waves[this.wave - 1].length && this.wave < LEVELS.LEVEL_ONE.waves.length) {
+        if (this.game.getEnemyCount() === 0) {
+            if (this.round === LEVELS.LEVEL_ONE.waves[this.wave - 1].length && this.wave < LEVELS.LEVEL_ONE.waves.length) {
                 this.startIntermission();
             } else if (this.round < LEVELS.LEVEL_ONE.waves[this.wave - 1].length && this.wave < LEVELS.LEVEL_ONE.waves.length) {
                 this.heroStartX = this.hero.getX();
@@ -147,6 +172,10 @@ class SceneManager {
                 this.isInIntermission = false;
                 this.intermissionElapsedTime = 0;
                 if (this.game.shopIsOpen) {
+                    this.jukeboxPlaying = false;
+                    this.currentSong = (this.currentSong + 1) % this.jukebox.length;
+                    ASSET_MANAGER.pauseBackgroundMusic();
+                    ASSET_MANAGER.autoRepeat("./music/ChillVibes.mp3");
                     this.shop.toggle();
                 }
                 this.heroStartX = this.hero.getX();
@@ -189,7 +218,7 @@ class SceneManager {
         ctx.fillText("Armor: ", margin, 25);
         ctx.fillStyle = "Purple";
         ctx.fillText(this.hero.armor, 80, 25);
-        
+
         ctx.textBaseline = "bottom";
         ctx.textAlign = "left";
         ctx.fillStyle = "White";
@@ -206,7 +235,7 @@ class SceneManager {
         ctx.textAlign = "right";
         ctx.textBaseline = "top";
         if (this.isInIntermission) {
-            ctx.fillText("Time Remaining: " + Math.round(this.intermissionLength - 
+            ctx.fillText("Time Remaining: " + Math.round(this.intermissionLength -
                 this.intermissionElapsedTime), this.game.surfaceWidth - margin, margin);
         } else {
             ctx.fillText("Wave: " + this.wave, this.game.surfaceWidth - margin, margin);
@@ -221,8 +250,8 @@ class SceneManager {
             ctx.fillStyle = "Gray";
             ctx.fillText(this.hero.primaryWeapon.ammo, 80, 45);
         }
-		
-		 if (this.hero.health == 0) {
+
+        if (this.hero.health === 0) {
             this.elapsedTime += this.game.clockTick;
             this.gameOver(ctx);
         }

@@ -6,6 +6,7 @@ ASSET_MANAGER.queueDownload("./maps/Map1.png");
 ASSET_MANAGER.queueDownload("./maps/BigMap1.png");
 ASSET_MANAGER.queueDownload("./maps/BigMap2.png");
 ASSET_MANAGER.queueDownload("./maps/BigMap3.png");
+
 ASSET_MANAGER.queueDownload("./sprites/hero.png");
 ASSET_MANAGER.queueDownload("./sprites/zombie.png");
 ASSET_MANAGER.queueDownload("./sprites/skeleton.png");
@@ -22,6 +23,11 @@ ASSET_MANAGER.queueDownload("./sprites/armor.png");
 ASSET_MANAGER.queueDownload("./sprites/potions.png");
 ASSET_MANAGER.queueDownload("./sprites/dragon.png");
 ASSET_MANAGER.queueDownload("./sprites/dragonfireball.png");
+
+ASSET_MANAGER.queueDownload("./music/ChillVibes.mp3");
+ASSET_MANAGER.queueDownload("./music/grim-idol.mp3");
+ASSET_MANAGER.queueDownload("./music/unholy-knight.mp3");
+ASSET_MANAGER.queueDownload("./music/wretched-destroyer.mp3");
 
 ASSET_MANAGER.downloadAll(function () {
     let canvas = document.getElementById('gameWorld');
