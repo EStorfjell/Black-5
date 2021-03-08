@@ -208,46 +208,48 @@ class SceneManager {
         let margin = 5;
         ctx.font = '20px "Noto Sans", sans-serif';
         ctx.textAlign = "left";
-        ctx.fillStyle = "White";
+        ctx.fillStyle = "Red";
         ctx.textBaseline = "top";
         ctx.fillText("Health: ", margin, margin);
-        ctx.fillStyle = "Red";
+        ctx.fillStyle = "White";
         ctx.fillText(this.hero.health, 80, margin);
 
-        ctx.fillStyle = "White";
+        ctx.fillStyle = "Orange";
         ctx.fillText("Armor: ", margin, 25);
-        ctx.fillStyle = "Purple";
+        ctx.fillStyle = "White";
         ctx.fillText(this.hero.armor, 80, 25);
 
         ctx.textBaseline = "bottom";
         ctx.textAlign = "left";
-        ctx.fillStyle = "White";
-        ctx.fillText("Exp: ", margin, this.game.surfaceHeight - margin - 25);
         ctx.fillStyle = "Cyan";
+        ctx.fillText("Exp: ", margin, this.game.surfaceHeight - margin - 25);
+        ctx.fillStyle = "White";
         ctx.fillText(this.hero.exp.getExp(), margin + 50, this.game.surfaceHeight - margin - 25);
 
-        ctx.fillStyle = "White";
-        ctx.fillText("Remaining Enemies: ", margin, this.game.surfaceHeight - margin);
         ctx.fillStyle = "Black";
+        ctx.fillText("Remaining Enemies: ", margin, this.game.surfaceHeight - margin);
+        ctx.fillStyle = "White";
         ctx.fillText("" + this.game.getEnemyCount(), margin + 200, this.game.surfaceHeight - margin);
 
-        ctx.fillStyle = "White";
         ctx.textAlign = "right";
         ctx.textBaseline = "top";
         if (this.isInIntermission) {
+            ctx.fillStyle = "White";
             ctx.fillText("Time Remaining: " + Math.round(this.intermissionLength -
                 this.intermissionElapsedTime), this.game.surfaceWidth - margin, margin);
         } else {
+            ctx.fillStyle = "Violet";
             ctx.fillText("Wave: " + this.wave, this.game.surfaceWidth - margin, margin);
+            ctx.fillStyle = "Yellow";
             ctx.fillText("Round: " + this.round, this.game.surfaceWidth - margin, 25);
         }
 
         if (!this.hero.meleeEquipped) {
-            ctx.fillStyle = "White";
+            ctx.fillStyle = "Gray";
             ctx.textAlign = "left";
             ctx.textBaseline = "top";
             ctx.fillText("Ammo: ", margin, 45);
-            ctx.fillStyle = "Gray";
+            ctx.fillStyle = "White";
             ctx.fillText(this.hero.primaryWeapon.ammo, 80, 45);
         }
 
