@@ -47,16 +47,12 @@ h2 {
     font-family: 'Noto Serif', serif;
 }
 
-#crossbowTab {
+.tab {
     display: none;
 }
 
-#pistolTab {
-    display: none;
-}
-
-#shotgunTab {
-    display: none;
+#swordTab {
+    display: block;
 }
 
 button {
@@ -114,7 +110,7 @@ img {
     font-size: 14px;
 }
 
-.attackDamage {
+.weaponDetail {
     margin-bottom: 0px;
     font-family: 'Noto Serif', serif;
     font-size: 14px;
@@ -124,7 +120,7 @@ meter {
     width: 300px;
 }
 
-#swordAttackDamageUpgradeButton {
+.upgradeButton {
     display: block;
     background-color:lightgray;
     border-width: 0px;
@@ -132,138 +128,6 @@ meter {
     font-size: 14px;
 }
 
-#swordAttackDamageUpgradeButton:hover {
-    background-color: gray;
-}
-
-#crossbowAttackDamageUpgradeButton {
-    display: block;
-    background-color:lightgray;
-    border-width: 0px;
-    margin-top: 5px;
-    font-size: 14px;
-}
-
-#crossbowAttackDamageUpgradeButton:hover {
-    background-color: gray;
-}
-
-#crossbowReloadSpeedUpgradeButton {
-    display: block;
-    background-color:lightgray;
-    border-width: 0px;
-    margin-top: 5px;
-    font-size: 14px;
-}
-
-#crossbowReloadSpeedUpgradeButton:hover {
-    background-color: gray;
-}
-
-#crossbowAmmoButton {
-    display: block;
-    background-color:lightgray;
-    border-width: 0px;
-    margin-top: 5px;
-    font-size: 14px;
-}
-
-#crossbowAmmoButton:hover {
-    background-color: gray;
-}
-
-#pistolBuyButton {
-    display: block;
-    background-color:lightgray;
-    border-width: 0px;
-    margin-top: 5px;
-    font-size: 14px;
-}
-
-#pistolBuyButton:hover {
-    background-color: gray;
-}
-
-#pistolAttackDamageUpgradeButton {
-    display: block;
-    background-color:lightgray;
-    border-width: 0px;
-    margin-top: 5px;
-    font-size: 14px;
-}
-
-#pistolAttackDamageUpgradeButton:hover {
-    background-color: gray;
-}
-
-#pistolReloadSpeedUpgradeButton {
-    display: block;
-    background-color:lightgray;
-    border-width: 0px;
-    margin-top: 5px;
-    font-size: 14px;
-}
-
-#pistolReloadSpeedUpgradeButton:hover {
-    background-color: gray;
-}
-
-#pistolAmmoButton {
-    display: block;
-    background-color:lightgray;
-    border-width: 0px;
-    margin-top: 5px;
-    font-size: 14px;
-}
-
-#pistolAmmoButton:hover {
-    background-color: gray;
-}
-
-#shotgunBuyButton {
-    display: block;
-    background-color:lightgray;
-    border-width: 0px;
-    margin-top: 5px;
-    font-size: 14px;
-}
-
-#shotgunBuyButton:hover {
-    background-color: gray;
-}
-
-#shotgunAttackDamageUpgradeButton {
-    display: block;
-    background-color:lightgray;
-    border-width: 0px;
-    margin-top: 5px;
-    font-size: 14px;
-}
-
-#shotgunAttackDamageUpgradeButton:hover {
-    background-color: gray;
-}
-
-#shotgunReloadSpeedUpgradeButton {
-    display: block;
-    background-color:lightgray;
-    border-width: 0px;
-    margin-top: 5px;
-    font-size: 14px;
-}
-
-#shotgunReloadSpeedUpgradeButton:hover {
-    background-color: gray;
-}
-
-#shotgunAmmoButton {
-    display: block;
-    background-color:lightgray;
-    border-width: 0px;
-    margin-top: 5px;
-    font-size: 14px;
-}
-
-#shotgunAmmoButton:hover {
+.upgradeButton:hover {
     background-color: gray;
 }

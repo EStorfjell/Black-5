@@ -20,60 +20,28 @@ class Shop {
 
         $("#swordButton").click(function() {
             if ($("swordTab").css("display") != "block") {
-                if ($("#crossbowTab").css("display") != "none") {
-                    $("#crossbowTab").css("display", "none");
-                }
-                if ($("#pistolTab").css("display") != "none") {
-                    $("#pistolTab").css("display", "none");
-                }
-                if ($("#shotgunTab").css("display") != "none") {
-                    $("#shotgunTab").css("display", "none");
-                }
+                $(".tab").css("display", "none");
                 $("#swordTab").css("display", "block");
             }
         });
     
         $("#crossbowButton").click(function() {
             if ($("crossbowTab").css("display") != "block") {
-                if ($("#swordTab").css("display") != "none") {
-                    $("#swordTab").css("display", "none");
-                }
-                if ($("#pistolTab").css("display") != "none") {
-                    $("#pistolTab").css("display", "none");
-                }
-                if ($("#shotgunTab").css("display") != "none") {
-                    $("#shotgunTab").css("display", "none");
-                }
+                $(".tab").css("display", "none");
                 $("#crossbowTab").css("display", "block");
             }
         });
     
         $("#pistolButton").click(function() {
             if ($("pistolTab").css("display") != "block") {
-                if ($("#swordTab").css("display") != "none") {
-                    $("#swordTab").css("display", "none");
-                }
-                if ($("#crossbowTab").css("display") != "none") {
-                    $("#crossbowTab").css("display", "none");
-                }
-                if ($("#shotgunTab").css("display") != "none") {
-                    $("#shotgunTab").css("display", "none");
-                }
+                $(".tab").css("display", "none");
                 $("#pistolTab").css("display", "block");
             }
         });
     
         $("#shotgunButton").click(function() {
             if ($("shotgunTab").css("display") != "block") {
-                if ($("#swordTab").css("display") != "none") {
-                    $("#swordTab").css("display", "none");
-                }
-                if ($("#crossbowTab").css("display") != "none") {
-                    $("#crossbowTab").css("display", "none");
-                }
-                if ($("#pistolTab").css("display") != "none") {
-                    $("#pistolTab").css("display", "none");
-                }
+                $(".tab").css("display", "none");
                 $("#shotgunTab").css("display", "block");
             }
         });
@@ -144,54 +112,54 @@ class Shop {
     }
 
     updateValues() {
-        $("#currentExperience").html("" + this.hero.exp.getExp());
+        $(".currentExperience").html("" + this.hero.exp.getExp());
 
         $(".swordCost").html("" + this.sword.weaponCost);
-        $("#swordAttackDamage").html("" + this.sword.attackDamage);
+        $(".swordAttackDamage").html("" + this.sword.attackDamage);
         $("#swordAttackDamageMeter").prop("value", "" + this.sword.attackDamage);
         $("#swordAttackDamageMeter").prop("max", "" + this.sword.maxAttackDamage);
         $(".swordAttackDamageUpgradeCost").html("" + this.sword.attackDamageUpgradeCost);
     
         $(".crossbowCost").html("" + this.crossbow.weaponCost);
-        $("#crossbowAttackDamage").html("" + this.crossbow.attackDamage);
+        $(".crossbowAttackDamage").html("" + this.crossbow.attackDamage);
         $("#crossbowAttackDamageMeter").prop("value", "" + this.crossbow.attackDamage);
         $("#crossbowAttackDamageMeter").prop("max", "" + this.crossbow.maxAttackDamage);
         $(".crossbowAttackDamageUpgradeCost").html("" + this.crossbow.attackDamageUpgradeCost);
         $(".crossbowReloadSpeedUpgradeCost").html("" + this.crossbow.reloadSpeedUpgradeCost);
-        $("#crossbowReloadSpeed").html("" + this.crossbow.reloadSpeed);
+        $(".crossbowReloadSpeed").html("" + this.crossbow.reloadSpeed);
         $("#crossbowReloadSpeedMeter").prop("value", "" + this.crossbow.reloadSpeed);
         $("#crossbowReloadSpeedMeter").prop("max", "" + this.crossbow.maxReloadSpeed);
-        $("#crossbowAmmo").html("" + this.crossbow.ammo);
+        $(".crossbowAmmo").html("" + this.crossbow.ammo);
         $("#crossbowAmmoMeter").prop("value", "" + this.crossbow.ammo);
         $("#crossbowAmmoMeter").prop("max", "" + this.crossbow.maxAmmo);
         $(".crossbowAmmoUnit").html("" + this.crossbow.getAmmoUnit());
         $(".crossbowAmmoUnitCost").html("" + this.crossbow.ammoUnitCost);
     
         $(".pistolCost").html("" + this.pistol.weaponCost);
-        $("#pistolAttackDamage").html("" + this.pistol.attackDamage);
+        $(".pistolAttackDamage").html("" + this.pistol.attackDamage);
         $("#pistolAttackDamageMeter").prop("value", "" + this.pistol.attackDamage);
         $("#pistolAttackDamageMeter").prop("max", "" + this.pistol.maxAttackDamage);
         $(".pistolAttackDamageUpgradeCost").html("" + this.pistol.attackDamageUpgradeCost);
         $(".pistolReloadSpeedUpgradeCost").html("" + this.pistol.reloadSpeedUpgradeCost);
-        $("#pistolReloadSpeed").html("" + this.pistol.reloadSpeed);
+        $(".pistolReloadSpeed").html("" + this.pistol.reloadSpeed);
         $("#pistolReloadSpeedMeter").prop("value", "" + this.pistol.reloadSpeed);
         $("#pistolReloadSpeedMeter").prop("max", "" + this.pistol.maxReloadSpeed);
-        $("#pistolAmmo").html("" + this.pistol.ammo);
+        $(".pistolAmmo").html("" + this.pistol.ammo);
         $("#pistolAmmoMeter").prop("value", "" + this.pistol.ammo);
         $("#pistolAmmoMeter").prop("max", "" + this.pistol.maxAmmo);
         $(".pistolAmmoUnit").html("" + this.pistol.getAmmoUnit());
         $(".pistolAmmoUnitCost").html("" + this.pistol.ammoUnitCost);
     
         $(".shotgunCost").html("" + this.shotgun.weaponCost);
-        $("#shotgunAttackDamage").html("" + this.shotgun.attackDamage);
+        $(".shotgunAttackDamage").html("" + this.shotgun.attackDamage);
         $("#shotgunAttackDamageMeter").prop("value", "" + this.shotgun.attackDamage);
         $("#shotgunAttackDamageMeter").prop("max", "" + this.shotgun.maxAttackDamage);
         $(".shotgunAttackDamageUpgradeCost").html("" + this.shotgun.attackDamageUpgradeCost);
         $(".shotgunReloadSpeedUpgradeCost").html("" + this.shotgun.reloadSpeedUpgradeCost);
-        $("#shotgunReloadSpeed").html("" + this.shotgun.reloadSpeed);
+        $(".shotgunReloadSpeed").html("" + this.shotgun.reloadSpeed);
         $("#shotgunReloadSpeedMeter").prop("value", "" + this.shotgun.reloadSpeed);
         $("#shotgunReloadSpeedMeter").prop("max", "" + this.shotgun.maxReloadSpeed);
-        $("#shotgunAmmo").html("" + this.shotgun.ammo);
+        $(".shotgunAmmo").html("" + this.shotgun.ammo);
         $("#shotgunAmmoMeter").prop("value", "" + this.shotgun.ammo);
         $("#shotgunAmmoMeter").prop("max", "" + this.shotgun.maxAmmo);
         $(".shotgunAmmoUnit").html("" + this.shotgun.getAmmoUnit());
@@ -222,10 +190,8 @@ class Shop {
 
         $("#shop").css("display", "block");
 
+        $(".tab").css("display", "none");
         $("#swordTab").css("display", "block");
-        $("#crossbowTab").css("display", "none");
-        $("#pistolTab").css("display", "none");
-        $("#shotgunTab").css("display", "none");
 
         $("#shop").focus();
     }
