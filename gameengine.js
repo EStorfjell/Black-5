@@ -12,6 +12,7 @@ class GameEngine {
         this.mouse = null;
         this.wheel = null;
         this.mouseDown = false;
+        this.space = false;
 
         this.left = false;
         this.right = false;
@@ -113,6 +114,10 @@ class GameEngine {
                 case "KeyS":
                     // console.log("down");
                     that.down = true;
+                    break;
+                case "Space":
+                    e.preventDefault();
+                    that.space = true;
                     break;
                 case "KeyQ":
                     that.switchToSecondary = true;

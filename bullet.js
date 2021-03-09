@@ -17,34 +17,58 @@ class Bullet {
         this.animations = [];
         this.loadAnimations();
 
-        this.delX = this.getNextXValue(this.flySpeed * this.game.clockTick);
-        this.delY = this.getNextYValue(this.flySpeed * this.game.clockTick);
+        this.delX = 0;
+        this.delY = 0;
 
-        if (this.delX > 0) {
-            // The target is to the right of the bullet
-            this.facing = 0;
-            this.width = 9;
-            this.height = 8;
-        } else {
-            // The target is to the left of the bullet
-            this.facing = 2;
-            this.width = 9;
-            this.height = 8;
-        }
-        if (Math.atan(Math.abs(this.y - this.targetY) / Math.abs(this.x - this.targetX)) > Math.PI / 4) {
-            // The target is above or below the bullet at over 45 degrees
-            if (this.targetY < this.y) {
-                // The target is above the bullet
+        if (this.x == this.targetX) {
+            if (this.y - this.targetY > 0) {
+                // north
                 this.facing = 1;
-                this.width = 9;
-                this.height = 8;
+                this.delX = 0;
+                this.delY = -this.flySpeed * this.game.clockTick;
             } else {
-                // The target is below the bullet
+                // south
                 this.facing = 3;
-                this.width = 9;
-                this.height = 8;
+                this.delX = 0;
+                this.delY = this.flySpeed * this.game.clockTick;
+            }
+        } else if (this.y == this.targetY) {
+            if (this.x - this.targetX < 0) {
+                // east
+                this.facing = 0;
+                this.delX = this.flySpeed * this.game.clockTick;
+                this.delY = 0;
+            } else {
+                // west
+                this.facing = 2;
+                this.delX = -this.flySpeed * this.game.clockTick;
+                this.delY = 0;
+            }
+        } else {
+            this.delX = this.getNextXValue(this.flySpeed * this.game.clockTick);
+            this.delY = this.getNextYValue(this.flySpeed * this.game.clockTick);
+
+            if (this.delX > 0) {
+                // The target is to the right of the bullet
+                this.facing = 0;
+            } else {
+                // The target is to the left of the bullet
+                this.facing = 2;
+            }
+            if (Math.abs(this.delX / this.delY) < 1) {
+                // The target is above or below the bullet at over 45 degrees
+                if (this.targetY < this.y) {
+                    // The target is above the bullet
+                    this.facing = 1;
+                } else {
+                    // The target is below the bullet
+                    this.facing = 3;
+                }
             }
         }
+
+        this.width = 9;
+        this.height = 8;
     };
 
     /**

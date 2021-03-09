@@ -7,15 +7,6 @@ class Shop {
         this.pistol = this.hero.pistol;
         this.shotgun = this.hero.shotgun;
 
-        this.x = 0;
-        this.y = 0;
-        this.width = game.surfaceWidth;
-        this.height = game.surfaceHeight;
-
-
-        this.backgroundColor = "White";
-        this.textColor = "Black";
-
         this.initialize(this);
     }
 
