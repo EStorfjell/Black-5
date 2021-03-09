@@ -235,12 +235,13 @@ class SceneManager {
         ctx.textBaseline = "top";
         if (this.isInIntermission) {
             ctx.fillStyle = "White";
+            ctx.fillText("Shop is Available", this.game.surfaceWidth - margin, margin);
             ctx.fillText("Time Remaining: " + Math.round(this.intermissionLength -
-                this.intermissionElapsedTime), this.game.surfaceWidth - margin, margin);
+                this.intermissionElapsedTime), this.game.surfaceWidth - margin, 25);
         } else {
-            ctx.fillStyle = "Violet";
+            ctx.fillStyle = "White";
             ctx.fillText("Wave: " + this.wave, this.game.surfaceWidth - margin, margin);
-            ctx.fillStyle = "Yellow";
+            ctx.fillStyle = "White";
             ctx.fillText("Round: " + this.round, this.game.surfaceWidth - margin, 25);
         }
 
