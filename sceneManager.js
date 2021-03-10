@@ -116,36 +116,35 @@ class SceneManager {
         ASSET_MANAGER.muteAudio(mute);
         ASSET_MANAGER.adjustVolume(volume);
 
-        // if (this.game.gameStart && !this.jukeboxPlaying && !this.isInIntermission) {
-        //     ASSET_MANAGER.pauseBackgroundMusic();
-        //     this.jukeboxPlaying = true;
-        //     this.interPlaying = false;
-        //     let that = this;
-        //     let song = ASSET_MANAGER.playAsset(this.jukebox[this.currentSong]);
-        //     song.addEventListener("ended", function () {
-        //         that.jukeboxPlaying = false;
-        //         that.currentSong = (that.currentSong + 1) % that.jukebox.length;
-        //     });
-        //     song.addEventListener("paused", function () {
-        //         that.jukeboxPlaying = false;
-        //         that.currentSong = (that.currentSong + 1) % that.jukebox.length;
-        //     });
-        // }
-        //
-        // if (this.game.gameStart && this.isInIntermission && !this.interPlaying) {
-        //     ASSET_MANAGER.pauseBackgroundMusic();
-        //     this.jukeboxPlaying = false;
-        //     this.interPlaying = true;
-        //     this.currentSong = (this.currentSong + 1) % this.jukebox.length;
-        //     let that = this;
-        //     let song = ASSET_MANAGER.playAsset("./music/ChillVibes.mp3");
-        //     song.addEventListener("ended", function () {
-        //         that.interPlaying = false;
-        //     });
-        //     song.addEventListener("paused", function () {
-        //         that.interPlaying = false;
-        //     });
-        // }
+        if (this.game.gameStart && !this.jukeboxPlaying && !this.isInIntermission) {
+            ASSET_MANAGER.pauseBackgroundMusic();
+            this.jukeboxPlaying = true;
+            this.interPlaying = false;
+            let that = this;
+            let song = ASSET_MANAGER.playAsset(this.jukebox[this.currentSong]);
+            song.addEventListener("ended", function () {
+                that.jukeboxPlaying = false;
+                that.currentSong = (that.currentSong + 1) % that.jukebox.length;
+            });
+            song.addEventListener("paused", function () {
+                that.jukeboxPlaying = false;
+                that.currentSong = (that.currentSong + 1) % that.jukebox.length;
+            });
+        }
+
+        if (this.game.gameStart && this.isInIntermission && !this.interPlaying) {
+            ASSET_MANAGER.pauseBackgroundMusic();
+            this.jukeboxPlaying = false;
+            this.interPlaying = true;
+            let that = this;
+            let song = ASSET_MANAGER.playAsset("./music/ChillVibes.mp3");
+            song.addEventListener("ended", function () {
+                that.interPlaying = false;
+            });
+            song.addEventListener("paused", function () {
+                that.interPlaying = false;
+            });
+        }
     };
 
     update() {
