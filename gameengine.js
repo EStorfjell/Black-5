@@ -21,6 +21,7 @@ class GameEngine {
 
         this.switchToSecondary = false;
         this.switchToMelee = false;
+        this.toggleGrenade = false;
         this.toggleShop = false;
 
         this.surfaceWidth = null;
@@ -124,6 +125,9 @@ class GameEngine {
                     break;
                 case "KeyE":
                     that.switchToMelee = true;
+                    break;
+                case "KeyG":
+                    that.toggleGrenade = true;
                     break;
                 case "KeyT":
                     that.toggleShop = true;

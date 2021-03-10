@@ -1,12 +1,12 @@
 class Grenade {
-    constructor(game, x, y) {
-        Object.assign(this, { game, x, y });
+    constructor(game, x, y, hero) {
+        Object.assign(this, { game, x, y, hero });
 
         // sprite sheet
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/grenade.png");
         this.width = 555;
         this.height = 568;
-        this.scale = 20 / this.width;
+        this.scale = 25 / this.width;
 
         this.attackDamage = 50;
         this.attackRadius = 200;
@@ -62,61 +62,6 @@ class Grenade {
         });
         this.removeFromWorld = true;
     }
-
-    /*collide(BB) {
-        let yValues = [];
-        let xValues = [];
-
-        // Left edge
-        let discriminant1 = this.attackRadius * this.attackRadius - (BB.left - this.x) * (BB.left - this.x);
-        if (discriminant1 === 0) {
-            yValues.push(this.y + Math.sqrt(discriminant1));
-        } else if (discriminant1 > 0) {
-            yValues.push(this.y + Math.sqrt(discriminant1));
-            yValues.push(this.y - Math.sqrt(discriminant1));
-        }
-
-        // Right edge
-        let discriminant2 = this.attackRadius * this.attackRadius - (BB.right - this.x) * (BB.right - this.x);
-        if (discriminant2 === 0) {
-            yValues.push(this.y + Math.sqrt(discriminant2));
-        } else if (discriminant2 > 0) {
-            yValues.push(this.y + Math.sqrt(discriminant2));
-            yValues.push(this.y - Math.sqrt(discriminant2));
-        }
-
-        // Top edge
-        let discriminant3 = this.attackRadius * this.attackRadius - (BB.top - this.y) * (BB.top - this.y);
-        if (discriminant3 === 0) {
-            xValues.push(this.x + Math.sqrt(discriminant3));
-        } else if (discriminant3 > 0) {
-            xValues.push(this.x + Math.sqrt(discriminant3));
-            xValues.push(this.x - Math.sqrt(discriminant3));
-        }
-
-        // Bottom edge
-        let discriminant4 = this.attackRadius * this.attackRadius - (BB.bottom - this.y) * (BB.bottom - this.y);
-        if (discriminant4 === 0) {
-            xValues.push(this.x + Math.sqrt(discriminant4));
-        } else if (discriminant4 > 0) {
-            xValues.push(this.x + Math.sqrt(discriminant4));
-            xValues.push(this.x - Math.sqrt(discriminant4));
-        }
-
-        for (let i = 0; i < yValues.length; i++) {
-            if (BB.top <= yValues[i] && yValues[i] <= BB.bottom) {
-                return true;
-            }
-        }
-
-        for (let i = 0; i < xValues.length; i++) {
-            if (BB.left <= xValues[i] && xValues[i] <= BB.right) {
-                return true;
-            }
-        }
-
-        return false;
-    }*/
 
     updateBB() {
         this.lastBB = this.BB;

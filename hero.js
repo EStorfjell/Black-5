@@ -43,6 +43,8 @@ class Hero {
 		
         this.currentWeapon = this.primaryWeapon;
 
+        this.grenades = new Grenades(this.game, this);
+
         this.walkSpeed = 200; // pixels per second
 
         this.updateBB();
@@ -56,6 +58,7 @@ class Hero {
         this.game.addEntity(this.pistol);
         this.game.addEntity(this.shotgun);
         this.game.addEntity(this.sword);
+        this.game.addEntity(this.grenades);
     }
 
     update() {
@@ -153,7 +156,7 @@ class Hero {
         this.sword.updateY(this.y);
         this.sword.updateFacing(this.facing);
 
-        if (this.game.click != null) {
+        if (this.game.click != null && !this.grenades.isEquipped()) {
             if (!this.meleeEquipped) {
                 this.ammo = this.currentWeapon.ammo;
             }
