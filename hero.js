@@ -40,7 +40,7 @@ class Hero {
         this.hasPistol = false;
         this.hasShotgun = false;
         this.hasSword = true;
-		
+
         this.currentWeapon = this.primaryWeapon;
 
         this.walkSpeed = 200; // pixels per second
@@ -131,8 +131,8 @@ class Hero {
             this.meleeEquipped = true;
             this.game.switchToMelee = false;
         }
-		
-		this.ammo = this.primaryWeapon.ammo;
+
+        this.ammo = this.primaryWeapon.ammo;
 
         this.crossbow.updateX(this.x);
         this.crossbow.updateY(this.y);
@@ -172,6 +172,9 @@ class Hero {
         this.game.entities.forEach(function (entity) {
             if (entity.BB && that.BB.collide(entity.BB)) {
                 if (entity instanceof Wall) {
+                    that.lastWallHit = that.wallHit;
+                    that.wallHit = entity;
+                    if (that.wallHit !== that.lastWallHit) ASSET_MANAGER.playAsset("./sounds/bonk.mp3");
                     if (delX > 0 && that.lastBB.right <= entity.BB.left) { // collision from left
                         delX = 0;
                         that.x = entity.BB.left - that.width;
@@ -193,7 +196,7 @@ class Hero {
         });
 
         // for displaying ammo
-        if (this.meleeEquipped) { 
+        if (this.meleeEquipped) {
             this.ammo = 0;
         } else {
             this.ammo = this.currentWeapon.ammo;
@@ -220,7 +223,7 @@ class Hero {
 
         let heroDrawX = this.x - this.game.camera.x;
         let heroDrawY = this.y - this.game.camera.y;
-        if (this.facing == 1) {
+        if (this.facing === 1) {
             currentWeaponAnimation.drawFrame(this.game.clockTick, ctx, currentWeaponDrawX, currentWeaponDrawY, 1);
             this.animations[this.action][this.facing].drawFrame(this.game.clockTick, ctx, heroDrawX, heroDrawY, 1);
         } else {
@@ -297,10 +300,13 @@ class Hero {
             }
 
             if (this.health <= 0) {
+                ASSET_MANAGER.playAsset("./sounds/lose.mp3");
                 this.health = 0;
                 this.removeFromWorld = true;
+            } else {
+                ASSET_MANAGER.playAsset("./sounds/hit.mp3");
             }
-            if (knockback !== 0 && xVectorComp != 0) {
+            if (knockback !== 0 && xVectorComp !== 0) {
                 // TODO: Allow a knockback to be applied over a period of time rather than all at once
                 // The angle of the knockback measured relative to the x-axis
                 let angle = Math.atan(Math.abs(yVectorComp) / Math.abs(xVectorComp));

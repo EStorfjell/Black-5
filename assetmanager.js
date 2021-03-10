@@ -81,7 +81,7 @@ class AssetManager {
         let audio = this.cache[path];
         audio.currentTime = 0;
         audio.play();
-        // Return only added for background music. Sound effects can ignore.d
+        // Return only added for background music. Sound effects can ignore.
         return audio;
     };
 

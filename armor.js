@@ -1,6 +1,6 @@
 class Armor {
     constructor(game, x, y) {
-        Object.assign(this, { game, x, y });
+        Object.assign(this, {game, x, y});
 
         this.x = x;
         this.y = y;
@@ -25,7 +25,7 @@ class Armor {
                     // The player gains 50 armor
                     entity.pickupArmor();
                     that.removeFromWorld = true;
-
+                    ASSET_MANAGER.playAsset("./sounds/collect.mp3");
                 } else if (entity instanceof Wall) {
                     that.removeFromWorld = true;
                 }
