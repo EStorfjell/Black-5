@@ -167,10 +167,26 @@ class Crossbow {
         this.y = ownerY + playerOffset + crossbowOffset;
     }
 
-    attack(targetX, targetY) {
+    attack(specificTargetExists, targetX = 0, targetY = 0) {
         this.attacking = true;
-        this.targetX = targetX;
-        this.targetY = targetY;
+        if (specificTargetExists) {
+            this.targetX = targetX;
+            this.targetY = targetY;
+        } else {
+            if (this.facing == 0) { // east
+                this.targetX = this.x + 1;
+                this.targetY = this.y;
+            } else if (this.facing == 1) { // north
+                this.targetX = this.x;
+                this.targetY = this.y - 1;
+            } else if (this.facing == 2) { // west
+                this.targetX = this.x - 1;
+                this.targetY = this.y;
+            } else { // south
+                this.targetX = this.x;
+                this.targetY = this.y + 1;
+            }
+        }
     }
 
     setNotEquipped() {
@@ -207,7 +223,7 @@ class Crossbow {
     }
 
     upgradeReloadSpeed() {
-        if (this.canUpgradeReloadSpeed) {
+        if (this.canUpgradeReloadSpeed()) {
             this.reloadSpeed = (this.reloadSpeed * (1 - this.reloadSpeedDecrease)).toFixed(2);
             this.reloadSpeedUpgradeLevel++;
             this.hero.exp.expCounter -= this.reloadSpeedUpgradeCost;

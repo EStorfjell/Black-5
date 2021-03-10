@@ -179,7 +179,7 @@ class Sword {
         }
     }
 
-    attack(targetX, targetY) {
+    attack(specificTargetExists, targetX, targetY) {
         this.state = 3;
     }
 

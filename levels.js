@@ -146,7 +146,37 @@ const LEVELS = {
             {x: 100, y: 980}, {x: 50, y: 50}, {x: 1820, y: 100}, {x: 1820, y: 1000}
         ],
         waves: [
-            // TODO: Waves
+            [
+                {zombies: 4, skeletons: 2, witches: 2, dragons: 0},
+                {zombies: 5, skeletons: 3, witches: 3, dragons: 0}
+            ],
+            [
+                {zombies: 4, skeletons: 4, witches: 3, dragons: 0},
+                {zombies: 5, skeletons: 5, witches: 4, dragons: 0}
+            ],
+            [
+                {zombies: 5, skeletons: 4, witches: 5, dragons: 0},
+                {zombies: 5, skeletons: 5, witches: 6, dragons: 0}
+            ], [
+                {zombies: 5, skeletons: 6, witches: 5, dragons: 0},
+                {zombies: 5, skeletons: 7, witches: 6, dragons: 0}
+            ], [
+                {zombies: 2, skeletons: 2, witches: 3, dragons: 1}
+            ], [
+                {zombies: 3, skeletons: 2, witches: 3, dragons: 0},
+                {zombies: 4, skeletons: 3, witches: 4, dragons: 0}
+            ], [
+                {zombies: 3, skeletons: 2, witches: 3, dragons: 0},
+                {zombies: 4, skeletons: 3, witches: 5, dragons: 0}
+            ], [
+                {zombies: 4, skeletons: 3, witches: 4, dragons: 0},
+                {zombies: 4, skeletons: 3, witches: 6, dragons: 0}
+            ], [
+                {zombies: 4, skeletons: 3, witches: 4, dragons: 0},
+                {zombies: 5, skeletons: 4, witches: 5, dragons: 0}
+            ], [
+                {zombies: 5, skeletons: 3, witches: 3, dragons: 1}
+            ]
         ]
     }
 };

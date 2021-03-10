@@ -215,10 +215,27 @@ class Shotgun {
         this.y = ownerY + playerOffset + shotgunOffset;
     }
 
-    attack(targetX, targetY) {
+    attack(specificTargetExists, targetX = 0, targetY = 0) {
         this.attacking = true;
-        this.targetX = targetX;
-        this.targetY = targetY;
+        if (specificTargetExists) {
+            this.targetX = targetX;
+            this.targetY = targetY;
+        } else {
+            let targetDistance = 25;
+            if (this.facing == 0) { // east
+                this.targetX = this.x + 35 + targetDistance;
+                this.targetY = this.y + 7;
+            } else if (this.facing == 1) { // north
+                this.targetX = this.x + 7;
+                this.targetY = this.y - targetDistance;
+            } else if (this.facing == 2) { // west
+                this.targetX = this.x - targetDistance;
+                this.targetY = this.y + 7;
+            } else { // south
+                this.targetX = this.x + 7;
+                this.targetY = this.y + 35 + targetDistance;
+            }
+        }
     }
 
     setNotEquipped() {
@@ -255,7 +272,7 @@ class Shotgun {
     }
 
     upgradeReloadSpeed() {
-        if (this.canUpgradeReloadSpeed) {
+        if (this.canUpgradeReloadSpeed()) {
             this.reloadSpeed = (this.reloadSpeed * (1 - this.reloadSpeedDecrease)).toFixed(2);
             this.reloadSpeedUpgradeLevel++;
             this.hero.exp.expCounter -= this.reloadSpeedUpgradeCost;

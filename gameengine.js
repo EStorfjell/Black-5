@@ -12,6 +12,7 @@ class GameEngine {
         this.mouse = null;
         this.wheel = null;
         this.mouseDown = false;
+        this.space = false;
 
         this.left = false;
         this.right = false;
@@ -90,24 +91,33 @@ class GameEngine {
         this.ctx.canvas.addEventListener("keydown", function (e) {
             switch (e.code) {
                 case "ArrowLeft":
+                    // Prevents the arrow keys from moving the page
+                    e.preventDefault();
                 case "KeyA":
                     // console.log("left");
                     that.left = true;
                     break;
                 case "ArrowRight":
+                    e.preventDefault();
                 case "KeyD":
                     // console.log("right");
                     that.right = true;
                     break;
                 case "ArrowUp":
+                    e.preventDefault();
                 case "KeyW":
                     // console.log("up");
                     that.up = true;
                     break;
                 case "ArrowDown":
+                    e.preventDefault();
                 case "KeyS":
                     // console.log("down");
                     that.down = true;
+                    break;
+                case "Space":
+                    e.preventDefault();
+                    that.space = true;
                     break;
                 case "KeyQ":
                     that.switchToSecondary = true;
@@ -124,18 +134,23 @@ class GameEngine {
         this.ctx.canvas.addEventListener("keyup", function (e) {
             switch (e.code) {
                 case "ArrowLeft":
+                    // Prevents the arrow keys from moving the page
+                    e.preventDefault();
                 case "KeyA":
                     that.left = false;
                     break;
                 case "ArrowRight":
+                    e.preventDefault();
                 case "KeyD":
                     that.right = false;
                     break;
                 case "ArrowUp":
+                    e.preventDefault();
                 case "KeyW":
                     that.up = false;
                     break;
                 case "ArrowDown":
+                    e.preventDefault();
                 case "KeyS":
                     that.down = false;
                     break;

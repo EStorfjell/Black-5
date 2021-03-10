@@ -132,7 +132,12 @@ class Hero {
             this.game.switchToMelee = false;
         }
 
-        this.ammo = this.primaryWeapon.ammo;
+        if (this.meleeEquipped) {
+            this.currentWeapon = this.sword;
+        } else {
+            this.currentWeapon = this.primaryWeapon;
+        }
+		    this.ammo = this.primaryWeapon.ammo;
 
         this.crossbow.updateX(this.x);
         this.crossbow.updateY(this.y);
@@ -148,15 +153,16 @@ class Hero {
         this.sword.updateFacing(this.facing);
 
         if (this.game.click != null) {
-            if (this.meleeEquipped) {
-                this.currentWeapon = this.sword;
-            } else {
-                this.currentWeapon = this.primaryWeapon;
+            if (!this.meleeEquipped) {
                 this.ammo = this.currentWeapon.ammo;
             }
-            this.currentWeapon.attack(this.game.click.x + this.game.camera.x, this.game.click.y + this.game.camera.y);
+            this.currentWeapon.attack(true, this.game.click.x + this.game.camera.x, this.game.click.y + this.game.camera.y);
             this.game.pause = 1;
             this.game.click = null;
+        } else if (this.game.space) {
+            this.currentWeapon.attack(false);
+            this.game.pause = 1;
+            this.game.space = false;
         }
 
         // World borders
