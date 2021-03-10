@@ -21,9 +21,12 @@ class StartMenu {
         ctx.fillText("Ye Olde Onslaught", this.game.surfaceWidth / 2, 15);
 
         ctx.font = '45px "Noto Serif"';
-        ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.fillStyle = "black";
         ctx.fillText("Click to Start", this.game.surfaceWidth / 2, this.game.surfaceHeight / 2);
+
+        ctx.font = '25px "Noto Serif"';
+        ctx.textBaseline = "alphabetic";
+        ctx.fillText("By Loren Mendoza, Kyle Oslin, and Espen Storfjell",
+            this.game.surfaceWidth / 2, this.game.surfaceHeight - 15);
     };
 }

@@ -1,6 +1,6 @@
 class HealthPack {
     constructor(game, x, y) {
-        Object.assign(this, { game, x, y });
+        Object.assign(this, {game, x, y});
 
         // sprite sheet
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/healthPack.png");
@@ -24,7 +24,7 @@ class HealthPack {
                 if (entity instanceof Hero) {
                     entity.takeDamage(-50, 0, 0, 0);
                     that.removeFromWorld = true;
-
+                    ASSET_MANAGER.playAsset("./sounds/collect.mp3");
                 } else if (entity instanceof Wall) {
                     that.removeFromWorld = true;
                 }
@@ -45,6 +45,6 @@ class HealthPack {
 
     updateBB() {
         this.lastBB = this.BB;
-        this.BB = new BoundingBox(this.x,this.y, this.width * this.scale, this.height * this.scale);
+        this.BB = new BoundingBox(this.x, this.y, this.width * this.scale, this.height * this.scale);
     };
 }

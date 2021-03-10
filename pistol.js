@@ -1,14 +1,14 @@
 class Pistol {
     constructor(game, isOwnedByHero, x, y, hero) {
-        Object.assign(this, { game, isOwnedByHero, x, y, hero });
+        Object.assign(this, {game, isOwnedByHero, x, y, hero});
 
         // sprite sheet
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/pistol.png");
 
         // weapon states
-        this.state = 0 // 0 = not equipped, 1 = secondary weapon, 
+        this.state = 0; // 0 = not equipped, 1 = secondary weapon,
         // 2 = primary weapon uncocked, 3 = primary weapon cocked, 4 = primary weapon firing
-        this.facing = 0 // 0 = east, 1 = north, 2 = west, 3 = south
+        this.facing = 0; // 0 = east, 1 = north, 2 = west, 3 = south
 
         this.attackDamage = 30;
         this.attackDamageIncrease = 5; // attack damage increase per upgrade
@@ -49,16 +49,16 @@ class Pistol {
         this.elapsedTime += this.game.clockTick;
         if (this.attacking && this.elapsedTime >= this.reloadSpeed && this.ammo > 0) {
             let isOnHeroTeam = this.isOwnedByHero;
-
+            if (isOnHeroTeam) ASSET_MANAGER.playAsset("./sounds/pistol.mp3");
             let bulletX;
             let bulletY;
-            if (this.facing == 0) { // east
+            if (this.facing === 0) { // east
                 bulletX = this.x + 35;
                 bulletY = this.y + 7;
-            } else if (this.facing == 1) { // north
+            } else if (this.facing === 1) { // north
                 bulletX = this.x + 7;
                 bulletY = this.y;
-            } else if (this.facing == 2) { // west
+            } else if (this.facing === 2) { // west
                 bulletX = this.x;
                 bulletY = this.y + 7;
             } else { // south
@@ -73,11 +73,11 @@ class Pistol {
             this.elapsedTime = 0;
         }
 
-        if (!this.attacking && this.state == 4) {
+        if (!this.attacking && this.state === 4) {
             this.state = 2;
         }
 
-        if (this.state == 2 && this.elapsedTime >= this.reloadSpeed) {
+        if (this.state === 2 && this.elapsedTime >= this.reloadSpeed) {
             this.state = 3;
         }
 
@@ -156,16 +156,20 @@ class Pistol {
         // this.x = ownerX + ownerOffset + pistolOffset
         let playerOffset;
         let pistolOffset;
-        if (this.facing == 0) { // east
+        if (this.facing === 0) { // east
             playerOffset = 10;
             pistolOffset = 0;
-        } else if (this.facing == 1) { // north
+        } else if (this.facing === 1) { // north
             playerOffset = 13;
             pistolOffset = -15;
-        } else if (this.facing == 2) { // west
+        } else if (this.facing === 2) { // west
             playerOffset = 13;
-            if (this.state == 4) pistolOffset = -47; // firing
-            else pistolOffset = -35; // not firing
+            if (this.state === 4) {
+                pistolOffset = -47;
+            }// firing
+            else {
+                pistolOffset = -35;
+            } // not firing
         } else { // south
             playerOffset = 5;
             pistolOffset = -15;
@@ -177,14 +181,18 @@ class Pistol {
         // this.y = ownerY + ownerOffset + pistolOffset
         let playerOffset;
         let pistolOffset;
-        if (this.facing == 0) { // east
+        if (this.facing === 0) { // east
             playerOffset = 28;
             pistolOffset = -15;
-        } else if (this.facing == 1) { // north
+        } else if (this.facing === 1) { // north
             playerOffset = 30;
-            if (this.state == 4) pistolOffset = -35; // firing
-            else pistolOffset = -26 // not firing
-        } else if (this.facing == 2) { // west
+            if (this.state === 4) {
+                pistolOffset = -35;
+            }// firing
+            else {
+                pistolOffset = -26;
+            } // not firing
+        } else if (this.facing === 2) { // west
             playerOffset = 28;
             pistolOffset = -15;
         } else { // south
@@ -245,8 +253,8 @@ class Pistol {
     }
 
     canUpgradeAttackDamage() {
-        return this.attackDamageUpgradeLevel < this.attackDamageMaxUpgradeLevel && 
-        this.hero.exp.getExp() >= this.attackDamageUpgradeCost && this.hero.hasPistol;
+        return this.attackDamageUpgradeLevel < this.attackDamageMaxUpgradeLevel &&
+            this.hero.exp.getExp() >= this.attackDamageUpgradeCost && this.hero.hasPistol;
     }
 
     upgradeReloadSpeed() {
@@ -262,8 +270,8 @@ class Pistol {
     }
 
     canUpgradeReloadSpeed() {
-        return this.reloadSpeedUpgradeLevel < this.reloadSpeedMaxUpgradeLevel && 
-        this.hero.exp.getExp() >= this.reloadSpeedUpgradeCost && this.hero.hasPistol;
+        return this.reloadSpeedUpgradeLevel < this.reloadSpeedMaxUpgradeLevel &&
+            this.hero.exp.getExp() >= this.reloadSpeedUpgradeCost && this.hero.hasPistol;
     }
 
     getAmmo() {
@@ -282,8 +290,8 @@ class Pistol {
     }
 
     canAddAmmo() {
-        return this.ammo <= this.maxAmmo - this.ammoUnit && 
-        this.hero.exp.getExp() >= this.ammoUnitCost && this.hero.hasPistol;
+        return this.ammo <= this.maxAmmo - this.ammoUnit &&
+            this.hero.exp.getExp() >= this.ammoUnitCost && this.hero.hasPistol;
     }
 
     buy() {

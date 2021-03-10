@@ -51,6 +51,7 @@ class Crossbow {
         this.elapsedTime += this.game.clockTick;
         if (this.attacking && this.elapsedTime >= this.reloadSpeed && this.ammo > 0) {
             let isOnHeroTeam = this.isOwnedByHero;
+            if (isOnHeroTeam) ASSET_MANAGER.playAsset("./sounds/crossbow.mp3");
             let arrow = new Arrow(this.game, this.targetX, this.targetY, isOnHeroTeam, this.attackDamage, this.x, this.y);
             this.game.addEntity(arrow);
             this.state = 2;
@@ -59,7 +60,7 @@ class Crossbow {
             this.elapsedTime = 0;
         }
 
-        if (this.state == 2 && this.elapsedTime >= this.reloadSpeed && this.ammo > 0) {
+        if (this.state === 2 && this.elapsedTime >= this.reloadSpeed && this.ammo > 0) {
             this.state = 3;
         }
 
@@ -128,15 +129,15 @@ class Crossbow {
         // this.x = ownerX + ownerOffset + crossbowOffset
         let playerOffset;
         let crossbowOffset;
-        if (this.facing == 0) { // east
+        if (this.facing === 0) { // east
             playerOffset = 13;
             crossbowOffset = 0;
-        } else if (this.facing == 1) { // north
+        } else if (this.facing === 1) { // north
             playerOffset = 13;
             crossbowOffset = -11;
-        } else if (this.facing == 2) { // west
+        } else if (this.facing === 2) { // west
             playerOffset = 13;
-            if (this.state == 2) crossbowOffset = -36; // without an arrow
+            if (this.state === 2) crossbowOffset = -36; // without an arrow
             else crossbowOffset = -48; // with an arrow
         } else { // south
             playerOffset = 12;
@@ -149,14 +150,14 @@ class Crossbow {
         // this.y = ownerY + ownerOffset + crossbowOffset
         let playerOffset;
         let crossbowOffset;
-        if (this.facing == 0) { // east
+        if (this.facing === 0) { // east
             playerOffset = 28;
             crossbowOffset = -11;
-        } else if (this.facing == 1) { // north
+        } else if (this.facing === 1) { // north
             playerOffset = 26;
-            if (this.state == 2) crossbowOffset = -36; // without an arrow
+            if (this.state === 2) crossbowOffset = -36; // without an arrow
             else crossbowOffset = -48 // with an arrow
-        } else if (this.facing == 2) { // west
+        } else if (this.facing === 2) { // west
             playerOffset = 28;
             crossbowOffset = -11;
         } else { // south
