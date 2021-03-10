@@ -106,6 +106,9 @@ class SceneManager {
         this.game.addEntity(this.hero);
 
         this.hero.initializeWeapons();
+
+        let grenade = new Grenade(this.game, 800, 800);
+        this.game.addEntity(grenade);
     };
 
     updateAudio() {
