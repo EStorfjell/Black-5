@@ -12,6 +12,7 @@ class Wall {
         if (PARAMS.DEBUG) {
             ctx.strokeStyle = "red";
             ctx.lineWidth = 1;
+            ctx.setLineDash([]);
             let drawX = this.x - this.game.camera.x;
             let drawY = this.y - this.game.camera.y;
             ctx.strokeRect(drawX, drawY, this.width, this.height);

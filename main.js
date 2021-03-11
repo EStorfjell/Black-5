@@ -23,6 +23,7 @@ ASSET_MANAGER.queueDownload("./sprites/armor.png");
 ASSET_MANAGER.queueDownload("./sprites/potions.png");
 ASSET_MANAGER.queueDownload("./sprites/dragon.png");
 ASSET_MANAGER.queueDownload("./sprites/dragonfireball.png");
+ASSET_MANAGER.queueDownload("./sprites/grenade.png");
 
 ASSET_MANAGER.queueDownload("./music/ChillVibes.mp3");
 ASSET_MANAGER.queueDownload("./music/grim-idol.mp3");

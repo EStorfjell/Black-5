@@ -16,7 +16,6 @@ class Hero {
         this.armor = 0;
         this.maxArmor = 100;
 
-
         this.exp = new Experience();
 
         this.damageCooldown = 3; // Cooldown before the hero can take more damage
@@ -30,6 +29,7 @@ class Hero {
         this.shotgun.setPrimaryWeapon();
         this.sword = new Sword(game, this.x, this.y, this);
         this.sword.setPrimaryWeapon();
+        this.grenades = new Grenades(this.game, this);
 
         this.primaryWeapon = this.crossbow;
         this.secondaryWeapon = null;
@@ -40,7 +40,8 @@ class Hero {
         this.hasPistol = false;
         this.hasShotgun = false;
         this.hasSword = true;
-
+        this.hasGrenades = false;
+		
         this.currentWeapon = this.primaryWeapon;
 
         this.walkSpeed = 200; // pixels per second
@@ -56,6 +57,7 @@ class Hero {
         this.game.addEntity(this.pistol);
         this.game.addEntity(this.shotgun);
         this.game.addEntity(this.sword);
+        this.game.addEntity(this.grenades);
     }
 
     update() {
@@ -152,7 +154,7 @@ class Hero {
         this.sword.updateY(this.y);
         this.sword.updateFacing(this.facing);
 
-        if (this.game.click != null) {
+        if (this.game.click != null && !this.grenades.isEquipped()) {
             if (!this.meleeEquipped) {
                 this.ammo = this.currentWeapon.ammo;
             }
@@ -352,5 +354,9 @@ class Hero {
             this.tertiaryWeapon = this.shotgun;
         }
         this.hasShotgun = true;
+    }
+
+    equipGrenades() {
+        this.hasGrenades = true;
     }
 }

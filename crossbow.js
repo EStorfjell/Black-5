@@ -167,7 +167,7 @@ class Crossbow {
         this.y = ownerY + playerOffset + crossbowOffset;
     }
 
-    attack(specificTargetExists, targetX = 0, targetY = 0) {
+    attack(specificTargetExists, targetX = 0, targetY = 0, attackDamage = -1) {
         this.attacking = true;
         if (specificTargetExists) {
             this.targetX = targetX;
@@ -186,6 +186,9 @@ class Crossbow {
                 this.targetX = this.x;
                 this.targetY = this.y + 1;
             }
+        }
+        if (attackDamage != -1) {
+            this.attackDamage = attackDamage;
         }
     }
 

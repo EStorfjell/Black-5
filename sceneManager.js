@@ -20,7 +20,6 @@ class SceneManager {
 
         this.wave = 1; // current wave
         this.round = 1; // current round
-        this.shopping = 0;
 
         this.intermissionLength = 60; // seconds
         this.intermissionElapsedTime = 0;
@@ -56,9 +55,6 @@ class SceneManager {
 
         let armorPack2 = new Armor(this.game, 970, 530);
         this.game.addEntity(armorPack2);
-
-        // let potion = new Potion(this.game);
-        // this.game.addEntity(potion);
 
         // Gets the properties of this wave and round
         let spawnPoints = LEVELS.LEVEL_ONE.spawnPoints;
@@ -182,7 +178,6 @@ class SceneManager {
             } else {
                 // TODO: Add a level ending
                 console.log("Level complete");
-                this.shopping = 1;
             }
         }
 
@@ -235,6 +230,20 @@ class SceneManager {
         ctx.fillStyle = "White";
         ctx.fillText(this.hero.armor, 80, 25);
 
+        ctx.fillStyle = "Gray";
+        ctx.textAlign = "left";
+        ctx.textBaseline = "top";
+        ctx.fillText("Ammo: ", margin, 45);
+        ctx.fillStyle = "White";
+        ctx.fillText(this.hero.primaryWeapon.ammo, 80, 45);
+
+        ctx.fillStyle = "Gray";
+        ctx.textAlign = "left";
+        ctx.textBaseline = "top";
+        ctx.fillText("Grenades: ", margin, 65);
+        ctx.fillStyle = "White";
+        ctx.fillText(this.hero.grenades.getAmmo(), 110, 65);
+
         ctx.textBaseline = "bottom";
         ctx.textAlign = "left";
         ctx.fillStyle = "Cyan";
@@ -259,15 +268,6 @@ class SceneManager {
             ctx.fillText("Wave: " + this.wave, this.game.surfaceWidth - margin, margin);
             ctx.fillStyle = "White";
             ctx.fillText("Round: " + this.round, this.game.surfaceWidth - margin, 25);
-        }
-
-        if (!this.hero.meleeEquipped) {
-            ctx.fillStyle = "Gray";
-            ctx.textAlign = "left";
-            ctx.textBaseline = "top";
-            ctx.fillText("Ammo: ", margin, 45);
-            ctx.fillStyle = "White";
-            ctx.fillText(this.hero.primaryWeapon.ammo, 80, 45);
         }
 
         if (this.hero.health === 0) {

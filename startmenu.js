@@ -26,7 +26,7 @@ class StartMenu {
 
         ctx.font = '25px "Noto Serif"';
         ctx.textBaseline = "alphabetic";
-        ctx.fillText("By Loren Mendoza, Kyle Oslin, and Espen Storfjell",
+        ctx.fillText("By Espen Storfjell, Kyle Oslin, and Loren Mendoza",
             this.game.surfaceWidth / 2, this.game.surfaceHeight - 15);
     };
 }
