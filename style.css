@@ -8,6 +8,11 @@ body {
     border: 1px solid black;
 }
 
+.controls {
+    margin-top: 0px;
+    margin-bottom: 5px;
+}
+
 #shop {
     position: relative;
     bottom: 720px;
@@ -38,7 +43,11 @@ h2 {
     font-size: 30px;
     margin-top: 5px;
     margin-bottom: 5px;
-    margin-left: 125px;
+}
+
+.preview {
+    text-align: center;
+    width: 300px;
 }
 
 #tabRow {
@@ -69,14 +78,14 @@ button:hover {
 }
 
 img {
-    width: 300px;
+    width: inherit;
     height: auto;
     margin-top: 0px;
     margin-right: 20px;
     margin-bottom: 350px;
+    float: left;
     image-rendering: pixelated;
     image-rendering: -moz-crisp-edges;
-    float: left;
 }
 
 .description {

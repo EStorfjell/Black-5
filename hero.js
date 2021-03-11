@@ -30,6 +30,7 @@ class Hero {
         this.shotgun.setPrimaryWeapon();
         this.sword = new Sword(game, this.x, this.y, this);
         this.sword.setPrimaryWeapon();
+        this.grenades = new Grenades(this.game, this);
 
         this.primaryWeapon = this.crossbow;
         this.secondaryWeapon = null;
@@ -40,10 +41,9 @@ class Hero {
         this.hasPistol = false;
         this.hasShotgun = false;
         this.hasSword = true;
+        this.hasGrenades = false;
 		
         this.currentWeapon = this.primaryWeapon;
-
-        this.grenades = new Grenades(this.game, this);
 
         this.walkSpeed = 200; // pixels per second
 
@@ -350,5 +350,9 @@ class Hero {
             this.tertiaryWeapon = this.shotgun;
         }
         this.hasShotgun = true;
+    }
+
+    equipGrenades() {
+        this.hasGrenades = true;
     }
 }

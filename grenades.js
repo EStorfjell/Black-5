@@ -4,17 +4,19 @@ class Grenades {
 
         this.range = 200;
 
-        this.grenadeCost = 50;
+        this.weaponCost = 50;
 
-        this.numberOfGrenades = 3;
-        this.maxNumberOfGrenades = 3;
+        this.ammo = 0; // number of grenades
+        this.ammoUnit = 1; // number of grenades the player can buy at once
+        this.maxAmmo = 3;
+        this.ammoUnitCost = 25;
 
         this.equipped = false;
     }
 
     update() {
         if (this.game.toggleGrenade) {
-            if (this.numberOfGrenades > 0 && !this.equipped) {
+            if (this.ammo > 0 && !this.equipped && this.hero.hasGrenades) {
                 this.equipped = true;
             } else if (this.equipped) {
                 this.equipped = false;
@@ -30,7 +32,7 @@ class Grenades {
             if (distance <= this.range) {
                 let grenade = new Grenade(this.game, gameX, gameY, this.hero);
                 this.game.addEntity(grenade);
-                this.numberOfGrenades--;
+                this.ammo--;
                 this.equipped = false;
             }
             this.game.click = null;
@@ -54,19 +56,42 @@ class Grenades {
     }
 
     toggleEquip() {
-        if (!this.equipped && this.numberOfGrenades > 0) {
+        if (!this.equipped && this.ammo > 0) {
             this.equipped = true;
         } else if (this.equipped) {
             this.equipped = false;
         }
     }
 
-    getNumberOfGrenades() {
-        return this.numberOfGrenades;
+    getAmmo() {
+        return this.ammo;
     }
 
-    getMaxNumberOfGrenades() {
-        return this.maxNumberOfGrenades;
+    addAmmo() {
+        if (this.canAddAmmo()) {
+            this.ammo += this.ammoUnit;
+            this.hero.exp.expCounter -= this.ammoUnitCost;
+        }
+    }
+
+    getAmmoUnit() {
+        return this.ammoUnit;
+    }
+
+    canAddAmmo() {
+        return this.ammo <= this.maxAmmo - this.ammoUnit && 
+        this.hero.exp.getExp() >= this.ammoUnitCost && this.hero.hasGrenades;
+    }
+
+    buy() {
+        if (this.canBuy()) {
+            this.hero.equipGrenades();
+            this.hero.exp.expCounter -= this.weaponCost;
+        }
+    }
+
+    canBuy() {
+        return this.hero.exp.getExp() >= this.weaponCost && !this.hero.hasGrenades;
     }
 
     isEquipped() {

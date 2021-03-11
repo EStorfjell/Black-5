@@ -92,7 +92,7 @@ class Skeleton {
 
         this.elapsedTime += this.game.clockTick;
         if (heroDistance <= this.attackDistance && this.elapsedTime >= this.firingCooldown) {
-            this.crossbow.attack(true, this.hero.getX(), this.hero.getY());
+            this.crossbow.attack(true, this.hero.getX(), this.hero.getY(), this.attackDamage);
             this.elapsedTime = 0;
         }
 

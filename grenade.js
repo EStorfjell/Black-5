@@ -9,7 +9,7 @@ class Grenade {
         this.scale = 1;
 
         this.attackDamage = 250;
-        this.attackRadius = 150;
+        this.attackRadius = 200;
         this.fuse = 3;
         this.elaspedTime = 0;
 
