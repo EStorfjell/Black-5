@@ -31,15 +31,15 @@ const LEVELS = {
         ],
         waves: [
             [
-                {zombies: 3, skeletons: 2, witches: 1, dragons: 0},
-                {zombies: 4, skeletons: 3, witches: 2, dragons: 0}
+                {zombies: 2, skeletons: 2, witches: 1, dragons: 0},
+                {zombies: 3, skeletons: 3, witches: 2, dragons: 0}
             ],
             [
                 {zombies: 4, skeletons: 3, witches: 2, dragons: 0},
                 {zombies: 5, skeletons: 4, witches: 3, dragons: 0}
             ],
             [
-                {zombies: 5, skeletons: 4, witches: 3, dragons: 0},
+                {zombies: 5, skeletons: 4, witches: 4, dragons: 0},
                 {zombies: 6, skeletons: 5, witches: 4, dragons: 0}
             ], [
                 {zombies: 6, skeletons: 5, witches: 4, dragons: 0},
@@ -47,17 +47,17 @@ const LEVELS = {
             ], [
                 {zombies: 2, skeletons: 2, witches: 1, dragons: 1}
             ], [
-                {zombies: 2, skeletons: 2, witches: 2, dragons: 0},
-                {zombies: 3, skeletons: 3, witches: 3, dragons: 0}
+                {zombies: 4, skeletons: 3, witches: 2, dragons: 0},
+                {zombies: 5, skeletons: 4, witches: 3, dragons: 0}
             ], [
-                {zombies: 2, skeletons: 2, witches: 2, dragons: 0},
-                {zombies: 3, skeletons: 3, witches: 4, dragons: 0}
+                {zombies: 5, skeletons: 4, witches: 4, dragons: 0},
+                {zombies: 6, skeletons: 5, witches: 4, dragons: 0}
             ], [
-                {zombies: 3, skeletons: 3, witches: 3, dragons: 0},
-                {zombies: 3, skeletons: 3, witches: 5, dragons: 0}
+                {zombies: 6, skeletons: 5, witches: 4, dragons: 0},
+                {zombies: 7, skeletons: 6, witches: 5, dragons: 0}
             ], [
-                {zombies: 3, skeletons: 3, witches: 3, dragons: 0},
-                {zombies: 4, skeletons: 4, witches: 4, dragons: 0}
+                {zombies: 8, skeletons: 7, witches: 6, dragons: 0},
+                {zombies: 9, skeletons: 8, witches: 7, dragons: 0}
             ], [
                 {zombies: 3, skeletons: 3, witches: 2, dragons: 1}
             ]
@@ -85,35 +85,35 @@ const LEVELS = {
         ],
         waves: [
             [
-                {zombies: 4, skeletons: 2, witches: 1, dragons: 0},
-                {zombies: 5, skeletons: 3, witches: 2, dragons: 0}
+                {zombies: 2, skeletons: 2, witches: 1, dragons: 0},
+                {zombies: 3, skeletons: 3, witches: 2, dragons: 0}
             ],
             [
-                {zombies: 4, skeletons: 4, witches: 2, dragons: 0},
-                {zombies: 5, skeletons: 5, witches: 3, dragons: 0}
+                {zombies: 4, skeletons: 3, witches: 2, dragons: 0},
+                {zombies: 5, skeletons: 4, witches: 3, dragons: 0}
             ],
             [
                 {zombies: 5, skeletons: 4, witches: 4, dragons: 0},
-                {zombies: 6, skeletons: 5, witches: 5, dragons: 0}
+                {zombies: 6, skeletons: 5, witches: 4, dragons: 0}
             ], [
-                {zombies: 6, skeletons: 6, witches: 4, dragons: 0},
-                {zombies: 7, skeletons: 7, witches: 5, dragons: 0}
+                {zombies: 6, skeletons: 5, witches: 4, dragons: 0},
+                {zombies: 7, skeletons: 6, witches: 5, dragons: 0}
             ], [
-                {zombies: 2, skeletons: 2, witches: 2, dragons: 1}
+                {zombies: 2, skeletons: 2, witches: 1, dragons: 1}
             ], [
-                {zombies: 3, skeletons: 2, witches: 2, dragons: 0},
-                {zombies: 4, skeletons: 3, witches: 3, dragons: 0}
+                {zombies: 4, skeletons: 3, witches: 2, dragons: 0},
+                {zombies: 5, skeletons: 4, witches: 3, dragons: 0}
             ], [
-                {zombies: 3, skeletons: 2, witches: 2, dragons: 0},
-                {zombies: 4, skeletons: 3, witches: 4, dragons: 0}
+                {zombies: 5, skeletons: 4, witches: 4, dragons: 0},
+                {zombies: 6, skeletons: 5, witches: 4, dragons: 0}
             ], [
-                {zombies: 4, skeletons: 3, witches: 3, dragons: 0},
-                {zombies: 4, skeletons: 3, witches: 5, dragons: 0}
+                {zombies: 6, skeletons: 5, witches: 4, dragons: 0},
+                {zombies: 7, skeletons: 6, witches: 5, dragons: 0}
             ], [
-                {zombies: 4, skeletons: 3, witches: 3, dragons: 0},
-                {zombies: 5, skeletons: 4, witches: 4, dragons: 0}
+                {zombies: 8, skeletons: 7, witches: 6, dragons: 0},
+                {zombies: 9, skeletons: 8, witches: 7, dragons: 0}
             ], [
-                {zombies: 5, skeletons: 3, witches: 2, dragons: 1}
+                {zombies: 3, skeletons: 3, witches: 2, dragons: 1}
             ]
         ]
     },
@@ -147,36 +147,60 @@ const LEVELS = {
         ],
         waves: [
             [
-                {zombies: 4, skeletons: 2, witches: 2, dragons: 0},
-                {zombies: 5, skeletons: 3, witches: 3, dragons: 0}
+                {zombies: 2, skeletons: 2, witches: 1, dragons: 0},
+                {zombies: 3, skeletons: 3, witches: 2, dragons: 0}
             ],
             [
-                {zombies: 4, skeletons: 4, witches: 3, dragons: 0},
-                {zombies: 5, skeletons: 5, witches: 4, dragons: 0}
+                {zombies: 4, skeletons: 3, witches: 2, dragons: 0},
+                {zombies: 5, skeletons: 4, witches: 3, dragons: 0}
             ],
             [
-                {zombies: 5, skeletons: 4, witches: 5, dragons: 0},
-                {zombies: 5, skeletons: 5, witches: 6, dragons: 0}
+                {zombies: 5, skeletons: 4, witches: 4, dragons: 0},
+                {zombies: 6, skeletons: 5, witches: 4, dragons: 0}
             ], [
-                {zombies: 5, skeletons: 6, witches: 5, dragons: 0},
-                {zombies: 5, skeletons: 7, witches: 6, dragons: 0}
+                {zombies: 6, skeletons: 5, witches: 4, dragons: 0},
+                {zombies: 7, skeletons: 6, witches: 5, dragons: 0}
             ], [
-                {zombies: 2, skeletons: 2, witches: 3, dragons: 1}
+                {zombies: 2, skeletons: 2, witches: 1, dragons: 1}
             ], [
-                {zombies: 3, skeletons: 2, witches: 3, dragons: 0},
-                {zombies: 4, skeletons: 3, witches: 4, dragons: 0}
+                {zombies: 4, skeletons: 3, witches: 2, dragons: 0},
+                {zombies: 5, skeletons: 4, witches: 3, dragons: 0}
             ], [
-                {zombies: 3, skeletons: 2, witches: 3, dragons: 0},
-                {zombies: 4, skeletons: 3, witches: 5, dragons: 0}
+                {zombies: 5, skeletons: 4, witches: 4, dragons: 0},
+                {zombies: 6, skeletons: 5, witches: 4, dragons: 0}
             ], [
-                {zombies: 4, skeletons: 3, witches: 4, dragons: 0},
-                {zombies: 4, skeletons: 3, witches: 6, dragons: 0}
+                {zombies: 6, skeletons: 5, witches: 4, dragons: 0},
+                {zombies: 7, skeletons: 6, witches: 5, dragons: 0}
             ], [
-                {zombies: 4, skeletons: 3, witches: 4, dragons: 0},
-                {zombies: 5, skeletons: 4, witches: 5, dragons: 0}
+                {zombies: 8, skeletons: 7, witches: 6, dragons: 0},
+                {zombies: 9, skeletons: 8, witches: 7, dragons: 0}
             ], [
-                {zombies: 5, skeletons: 3, witches: 3, dragons: 1}
+                {zombies: 3, skeletons: 3, witches: 2, dragons: 1}
             ]
         ]
     }
 };
+
+/*
+Zombie: 5 exp  Skeleton: 10 exp  Witch: 15 exp  Dragon: 100 exp
+
+Wave 1: 5 zombies, 5 skeletons, 3 witches Exp: 25 + 50 + 45 = 120 Total: 120
+
+Wave 2: 9 zombies, 7 skeletons, 5 witches Exp: 45 + 70 + 75 = 190 Total: 310
+
+Wave 3: 11 zombies, 9 skeletons, 8 witches Exp: 55 + 90 + 120 = 265 Total: 575
+
+Wave 4: 13 zombies, 11 skeletons, 9 witches Exp: 65 + 110 + 135 = 310 Total: 885
+
+Wave 5: 2 zombies, 2 skeletons, 1 witch, 1 dragon Exp: 10 + 20 + 100 = 130 Total: 1015
+
+Wave 6: 9 zombies, 7 skeletons, 5 witches Exp: 45 + 70 + 75 = 190 Total: 1205
+
+Wave 7: 11 zombies, 9 skeletons, 8 witches Exp: 55 + 90 + 120 = 265 Total: 1470
+
+Wave 8: 13 zombies, 11 skeletons, 9 witches Exp: 65 + 110 + 135 = 310 Total: 1780
+
+Wave 9: 17 zombies, 15 skeletons, 13 witches Exp: 85 + 150 + 195 = 450 Total: 2230
+
+Wave 10: 3 zombies, 3 skeletons, 2 witches, 1 dragon Exp: 15 + 30 + 100 = 145 Total: 2375
+*/

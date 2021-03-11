@@ -14,17 +14,17 @@ class Shotgun {
         this.attackDamageIncrease = 5; // attack damage increase per upgrade
         this.attackDamageUpgradeLevel = 0;
         this.attackDamageMaxUpgradeLevel = 3;
-        this.attackDamageUpgradeCost = 60;
+        this.attackDamageUpgradeCost = 250;
         this.maxAttackDamage = 30;
 
         this.ammo = 50; // number of shots
         this.ammoUnit = 15; // number of shots the player can buy at once
         this.maxAmmo = 100;
-        this.ammoUnitCost = 25;
+        this.ammoUnitCost = 30;
 
         this.range = 150;
 
-        this.weaponCost = 500;
+        this.weaponCost = 600;
 
         this.attacking = false; // true if this shotgun is firing
         this.targetX = 0;
@@ -34,7 +34,7 @@ class Shotgun {
         this.reloadSpeedUpgradeLevel = 0;
         this.reloadSpeedDecrease = 0.15; // percentage
         this.reloadSpeedMaxUpgradeLevel = 3;
-        this.reloadSpeedUpgradeCost = 60;
+        this.reloadSpeedUpgradeCost = 250;
         this.maxReloadSpeed = this.reloadSpeed;
 
         this.elapsedTime = 0; // elapsed time since last attack

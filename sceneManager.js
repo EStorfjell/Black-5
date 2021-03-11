@@ -263,7 +263,7 @@ class SceneManager {
         if (this.isInIntermission) {
             ctx.fillStyle = "White";
             ctx.fillText("Shop is Available", this.game.surfaceWidth - margin, margin);
-            ctx.fillText("Time Remaining: " + Math.round(this.intermissionLength -
+            ctx.fillText("Time Remaining: " + Math.ceil(this.intermissionLength -
                 this.intermissionElapsedTime), this.game.surfaceWidth - margin, 25);
         } else {
             ctx.fillStyle = "White";

@@ -10,7 +10,7 @@ class DragonFireball {
         this.animator = new Animator(this.spritesheet, 0, 0, this.width, this.height, 1, 1, 0, false, true);
 
         this.flySpeed = 300; // pixels per second
-        this.attackDamage = 25;
+        this.attackDamage = 45;
 
         this.xSpeed = 0;
         this.ySpeed = 0;

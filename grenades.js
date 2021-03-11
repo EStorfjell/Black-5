@@ -4,12 +4,12 @@ class Grenades {
 
         this.range = 200;
 
-        this.weaponCost = 50;
+        this.weaponCost = 150;
 
         this.ammo = 0; // number of grenades
         this.ammoUnit = 1; // number of grenades the player can buy at once
         this.maxAmmo = 3;
-        this.ammoUnitCost = 25;
+        this.ammoUnitCost = 50;
 
         this.equipped = false;
     }
@@ -52,14 +52,6 @@ class Grenades {
             ctx.beginPath();
             ctx.arc(drawX, drawY, this.range, 0, 2 * Math.PI);
             ctx.stroke();
-        }
-    }
-
-    toggleEquip() {
-        if (!this.equipped && this.ammo > 0) {
-            this.equipped = true;
-        } else if (this.equipped) {
-            this.equipped = false;
         }
     }
 

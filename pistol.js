@@ -14,17 +14,17 @@ class Pistol {
         this.attackDamageIncrease = 5; // attack damage increase per upgrade
         this.attackDamageUpgradeLevel = 0;
         this.attackDamageMaxUpgradeLevel = 3;
-        this.attackDamageUpgradeCost = 50;
+        this.attackDamageUpgradeCost = 250;
         this.maxAttackDamage = 45;
 
         this.ammo = 50; // number of bullets
         this.ammoUnit = 15; // number of bullets the player can buy at once
         this.maxAmmo = 100;
-        this.ammoUnitCost = 20;
+        this.ammoUnitCost = 25;
 
         this.range = 0; // infinite range
 
-        this.weaponCost = 300;
+        this.weaponCost = 500;
 
         this.attacking = false; // true if this pistol is firing
         this.targetX = 0;
@@ -34,7 +34,7 @@ class Pistol {
         this.reloadSpeedUpgradeLevel = 0;
         this.reloadSpeedDecrease = 0.15; // percentage
         this.reloadSpeedMaxUpgradeLevel = 3;
-        this.reloadSpeedUpgradeCost = 50;
+        this.reloadSpeedUpgradeCost = 250;
         this.maxReloadSpeed = this.reloadSpeed;
 
         this.elapsedTime = 0; // elapsed time since last attack

@@ -11,7 +11,7 @@ class Skeleton {
         this.action = 0; // 0 = idle, 1 = walking
         this.facing = 0; // 0 = east, 1 = north, 2 = west, 3 = south
         this.health = 100;
-        this.attackDamage = 3 + this.wave;
+        this.attackDamage = 6 + 2 * this.wave;
         this.firingCooldown = 4 - 0.2 * this.wave; // The minimum number of seconds between shots
         this.attackDistance = 300;
         this.elapsedTime = 0; // The time since the skeleton last shot

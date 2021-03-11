@@ -7,7 +7,7 @@ class Dragon {
         this.width = 189; // character width
         this.height = 131; // character height
 
-        this.health = 1000;
+        this.health = 350;
 
         this.heading = 0; // radians counterclockwise from East
         this.velocity = {x: 0, y: 0};

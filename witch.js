@@ -13,7 +13,7 @@ class Witch {
         
         this.attack = 0;
         this.attackDistance = 200;
-        this.attackDamage = 5 + 2 * this.wave;
+        this.attackDamage = 8 + 3 * this.wave;
 		
         this.elapsedTime = 0;
         this.attackCooldown = 4 - 0.2 * this.wave;
