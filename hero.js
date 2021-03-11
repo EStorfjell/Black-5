@@ -302,6 +302,9 @@ class Hero {
         } else if (this.elapsedTime >= this.damageCooldown) {
             if (this.armor > 0) { // armor takes damage instead of hearts
                 this.armor -= damage;
+                if (this.armor < 0) {
+                    this.armor = 0;
+                }
             } else {
                 this.armor = 0;
                 this.health -= damage;
