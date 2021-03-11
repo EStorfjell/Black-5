@@ -21,7 +21,7 @@ class SceneManager {
         this.wave = 1; // current wave
         this.round = 1; // current round
 
-        this.intermissionLength = 60; // seconds
+        this.intermissionLength = 30; // seconds
         this.intermissionElapsedTime = 0;
         this.isInIntermission = false;
 
@@ -230,19 +230,21 @@ class SceneManager {
         ctx.fillStyle = "White";
         ctx.fillText(this.hero.armor, 80, 25);
 
-        ctx.fillStyle = "Gray";
-        ctx.textAlign = "left";
-        ctx.textBaseline = "top";
-        ctx.fillText("Ammo: ", margin, 45);
-        ctx.fillStyle = "White";
-        ctx.fillText(this.hero.primaryWeapon.ammo, 80, 45);
-
-        ctx.fillStyle = "Gray";
-        ctx.textAlign = "left";
-        ctx.textBaseline = "top";
-        ctx.fillText("Grenades: ", margin, 65);
-        ctx.fillStyle = "White";
-        ctx.fillText(this.hero.grenades.getAmmo(), 110, 65);
+        if (this.hero.grenades.isEquipped()) {
+            ctx.fillStyle = "Gray";
+            ctx.textAlign = "left";
+            ctx.textBaseline = "top";
+            ctx.fillText("Grenades: ", margin, 45);
+            ctx.fillStyle = "White";
+            ctx.fillText(this.hero.grenades.getAmmo(), 110, 45);
+        } else if (!this.hero.meleeEquipped) {
+            ctx.fillStyle = "Gray";
+            ctx.textAlign = "left";
+            ctx.textBaseline = "top";
+            ctx.fillText("Ammo: ", margin, 45);
+            ctx.fillStyle = "White";
+            ctx.fillText(this.hero.primaryWeapon.ammo, 80, 45);
+        }
 
         ctx.textBaseline = "bottom";
         ctx.textAlign = "left";
