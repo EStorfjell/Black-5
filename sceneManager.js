@@ -20,7 +20,6 @@ class SceneManager {
 
         this.wave = 1; // current wave
         this.round = 1; // current round
-        this.shopping = 0;
 
         this.intermissionLength = 60; // seconds
         this.intermissionElapsedTime = 0;
@@ -55,9 +54,6 @@ class SceneManager {
 
         let armorPack2 = new Armor(this.game, 970, 530);
         this.game.addEntity(armorPack2);
-
-        // let potion = new Potion(this.game);
-        // this.game.addEntity(potion);
 
         // Gets the properties of this wave and round
         let spawnPoints = LEVELS.LEVEL_ONE.spawnPoints;
@@ -106,9 +102,6 @@ class SceneManager {
         this.game.addEntity(this.hero);
 
         this.hero.initializeWeapons();
-
-        let grenade = new Grenade(this.game, 800, 800);
-        this.game.addEntity(grenade);
     };
 
     updateAudio() {
@@ -165,7 +158,6 @@ class SceneManager {
             } else {
                 // TODO: Add a level ending
                 console.log("Level complete");
-                this.shopping = 1;
             }
         }
 

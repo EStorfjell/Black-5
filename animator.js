@@ -42,6 +42,7 @@ class Animator {
         if (PARAMS.DEBUG) {
             ctx.strokeStyle = 'teal';
             ctx.lineWidth = 1;
+            ctx.setLineDash([]);
             ctx.strokeRect(x, y, this.width * scale, this.height * scale);
         }
     };
