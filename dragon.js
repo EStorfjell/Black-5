@@ -182,6 +182,7 @@ class Dragon {
     takeDamage(damage, knockback = 0, xVectorComp = 0, yVectorComp = 0) {
         this.health -= damage;
         if (this.health <= 0) {
+            ASSET_MANAGER.playAsset("./sounds/dragon-death.mp3");
             this.removeFromWorld = true;
             this.hero.exp.dragonKill();
         }

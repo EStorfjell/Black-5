@@ -27,6 +27,7 @@ class SceneManager {
 
         this.jukebox = ["./music/wretched-destroyer.mp3", "./music/unholy-knight.mp3", "./music/grim-idol.mp3"];
         this.jukeboxPlaying = false;
+        this.interPlaying = false;
         this.currentSong = 0;
 
         let mainMenu = new StartMenu(this.game);
@@ -111,14 +112,33 @@ class SceneManager {
         ASSET_MANAGER.muteAudio(mute);
         ASSET_MANAGER.adjustVolume(volume);
 
-        if (this.game.gameStart && !this.jukeboxPlaying && !this.game.shopIsOpen) {
+        if (this.game.gameStart && !this.jukeboxPlaying && !this.isInIntermission) {
             ASSET_MANAGER.pauseBackgroundMusic();
             this.jukeboxPlaying = true;
+            this.interPlaying = false;
             let that = this;
             let song = ASSET_MANAGER.playAsset(this.jukebox[this.currentSong]);
             song.addEventListener("ended", function () {
                 that.jukeboxPlaying = false;
                 that.currentSong = (that.currentSong + 1) % that.jukebox.length;
+            });
+            song.addEventListener("paused", function () {
+                that.jukeboxPlaying = false;
+                that.currentSong = (that.currentSong + 1) % that.jukebox.length;
+            });
+        }
+
+        if (this.game.gameStart && this.isInIntermission && !this.interPlaying) {
+            ASSET_MANAGER.pauseBackgroundMusic();
+            this.jukeboxPlaying = false;
+            this.interPlaying = true;
+            let that = this;
+            let song = ASSET_MANAGER.playAsset("./music/ChillVibes.mp3");
+            song.addEventListener("ended", function () {
+                that.interPlaying = false;
+            });
+            song.addEventListener("paused", function () {
+                that.interPlaying = false;
             });
         }
     };
@@ -167,10 +187,6 @@ class SceneManager {
                 this.isInIntermission = false;
                 this.intermissionElapsedTime = 0;
                 if (this.game.shopIsOpen) {
-                    this.jukeboxPlaying = false;
-                    this.currentSong = (this.currentSong + 1) % this.jukebox.length;
-                    ASSET_MANAGER.pauseBackgroundMusic();
-                    ASSET_MANAGER.autoRepeat("./music/ChillVibes.mp3");
                     this.shop.toggle();
                 }
                 this.heroStartX = this.hero.getX();

@@ -44,6 +44,7 @@ class DragonFireball {
                     // The arrow will damage the player
                     entity.takeDamage(that.attackDamage, 25, entity.getX() - that.x, entity.getY() - that.y);
                     that.removeFromWorld = true;
+                    ASSET_MANAGER.playAsset("./sounds/fire-hit.mp3");
                 }
             }
         });

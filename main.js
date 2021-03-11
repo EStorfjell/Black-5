@@ -30,6 +30,18 @@ ASSET_MANAGER.queueDownload("./music/grim-idol.mp3");
 ASSET_MANAGER.queueDownload("./music/unholy-knight.mp3");
 ASSET_MANAGER.queueDownload("./music/wretched-destroyer.mp3");
 
+ASSET_MANAGER.queueDownload("./sounds/bonk.mp3");
+ASSET_MANAGER.queueDownload("./sounds/collect.mp3");
+ASSET_MANAGER.queueDownload("./sounds/crossbow.mp3");
+ASSET_MANAGER.queueDownload("./sounds/dragon-death.mp3");
+ASSET_MANAGER.queueDownload("./sounds/fire-hit.mp3");
+ASSET_MANAGER.queueDownload("./sounds/hit.mp3");
+ASSET_MANAGER.queueDownload("./sounds/lose.mp3");
+ASSET_MANAGER.queueDownload("./sounds/pistol.mp3");
+ASSET_MANAGER.queueDownload("./sounds/shotgun.mp3");
+ASSET_MANAGER.queueDownload("./sounds/sword.mp3");
+ASSET_MANAGER.queueDownload("./sounds/win.mp3");
+
 ASSET_MANAGER.downloadAll(function () {
     let canvas = document.getElementById('gameWorld');
     let ctx = canvas.getContext('2d');

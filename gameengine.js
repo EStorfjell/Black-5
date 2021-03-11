@@ -55,7 +55,7 @@ class GameEngine {
             let x = e.clientX - that.ctx.canvas.getBoundingClientRect().left;
             let y = e.clientY - that.ctx.canvas.getBoundingClientRect().top;
 
-            return { x: x, y: y };
+            return {x: x, y: y};
         };
 
         this.ctx.canvas.addEventListener("mousedown", function (e) {
@@ -201,7 +201,9 @@ class GameEngine {
             }
         }
 
-        this.camera.update();
+        if (this.gameStart) {
+            this.camera.update();
+        }
 
         for (i = this.entities.length - 1; i >= 0; --i) {
             if (this.entities[i].removeFromWorld) {
