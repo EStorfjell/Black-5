@@ -166,13 +166,13 @@ class Arrow {
 
         // flying
         // west
-        this.animations[0][2] = new AdvancedAnimator(this.spritesheet, [18], [44], [34], [9], 0.15, false, true);
+        this.animations[0][2] = new Animator(this.spritesheet, 18, 44, 34, 9, 1, 0.15, 0, false, true);
         // south
-        this.animations[0][3] = new AdvancedAnimator(this.spritesheet, [70], [30], [9], [34], 0.15, false, true);
+        this.animations[0][3] = new Animator(this.spritesheet, 70, 30, 9, 34, 1, 0.15, 0, false, true);
         // east
-        this.animations[0][0] = new AdvancedAnimator(this.spritesheet, [93], [42], [34], [9], 0.15, false, true);
+        this.animations[0][0] = new Animator(this.spritesheet, 93, 42, 34, 9, 1, 0.15, 0, false, true);
         // north
-        this.animations[0][1] = new AdvancedAnimator(this.spritesheet, [150], [27], [9], [34], 0.15, false, true);
+        this.animations[0][1] = new Animator(this.spritesheet, 150, 27, 9, 34, 1, 0.15, 0, false, true);
     }
 
     updateBB() {
