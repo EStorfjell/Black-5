@@ -1,5 +1,5 @@
 const LEVELS = {
-    OLD_LEVEL_ONE: {
+    /*OLD_LEVEL_ONE: {
         imgPath: "./maps/Map1.png",
         walls: [
             {x: 128, y: 32, width: 32, height: 32}, {x: 160, y: 96, width: 96, height: 32},
@@ -11,7 +11,7 @@ const LEVELS = {
         ],
         startX: 272,
         startY: 192
-    },
+    },*/
 
     LEVEL_ONE: {
         imgPath: "./maps/BigMap1.png",

@@ -18,6 +18,8 @@ class SceneManager {
 
         this.map = null;
 
+        this.maxLevel = 3;
+        this.level = 1; // current level
         this.wave = 1; // current wave
         this.round = 1; // current round
 
@@ -33,14 +35,22 @@ class SceneManager {
         let mainMenu = new StartMenu(this.game);
         this.game.addEntity(mainMenu);
 
-        this.loadRound(this.wave, this.round);
+        this.loadRound(this.level, this.wave, this.round);
     };
 
-    loadRound(wave, round) {
-        console.log("wave: " + wave + ", round: " + round);
+    loadRound(levelNumber, wave, round) {
         this.hudVisible = true;
 
-        this.map = new Map(this.game, LEVELS.LEVEL_ONE);
+        let level;
+        if (levelNumber === 1) {
+            level = LEVELS.LEVEL_ONE;
+        } else if (levelNumber === 2) {
+            level = LEVELS.LEVEL_TWO;
+        } else {
+            level = LEVELS.LEVEL_THREE;
+        }
+
+        this.map = new Map(this.game, level);
         this.game.addEntity(this.map);
         this.map.init();
 
@@ -57,11 +67,11 @@ class SceneManager {
         this.game.addEntity(armorPack2);
 
         // Gets the properties of this wave and round
-        let spawnPoints = LEVELS.LEVEL_ONE.spawnPoints;
-        let zombieCount = LEVELS.LEVEL_ONE.waves[wave - 1][round - 1].zombies;
-        let skeletonCount = LEVELS.LEVEL_ONE.waves[wave - 1][round - 1].skeletons;
-        let witchCount = LEVELS.LEVEL_ONE.waves[wave - 1][round - 1].witches;
-        let dragonCount = LEVELS.LEVEL_ONE.waves[wave - 1][round - 1].dragons;
+        let spawnPoints = level.spawnPoints;
+        let zombieCount = level.waves[wave - 1][round - 1].zombies;
+        let skeletonCount = level.waves[wave - 1][round - 1].skeletons;
+        let witchCount = level.waves[wave - 1][round - 1].witches;
+        let dragonCount = level.waves[wave - 1][round - 1].dragons;
 
         let count = zombieCount + skeletonCount + witchCount + dragonCount;
         this.game.setEnemyCount(count);
@@ -73,35 +83,39 @@ class SceneManager {
             let enemyNumber = randomInt(4);
             if (enemyNumber === 0 && zombieCount > 0) {
                 let enemy = new Zombie(this.game, this.hero, wave, round,
-                    LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].x, LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].y);
+                    level.spawnPoints[spawnPoint].x, level.spawnPoints[spawnPoint].y);
                 zombieCount--;
                 count--;
                 this.game.addEntity(enemy);
             } else if (enemyNumber === 1 && skeletonCount > 0) {
                 let enemy = new Skeleton(this.game, this.hero, wave, round,
-                    LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].x, LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].y);
+                    level.spawnPoints[spawnPoint].x, level.spawnPoints[spawnPoint].y);
                 skeletonCount--;
                 count--;
                 this.game.addEntity(enemy);
             } else if (enemyNumber === 2 && witchCount > 0) {
                 let enemy = new Witch(this.game, this.hero, wave, round,
-                    LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].x, LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].y);
+                    level.spawnPoints[spawnPoint].x, level.spawnPoints[spawnPoint].y);
                 witchCount--;
                 count--;
                 this.game.addEntity(enemy);
             } else if (enemyNumber === 3 && dragonCount > 0) {
                 let enemy = new Dragon(this.game, this.hero,
-                    LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].x, LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].y);
+                    level.spawnPoints[spawnPoint].x, level.spawnPoints[spawnPoint].y);
                 dragonCount--;
                 count--;
                 this.game.addEntity(enemy);
             }
         }
 
-        this.hero.x = this.heroStartX;
-        this.hero.y = this.heroStartY;
+        if (wave === 1 && round === 1) {
+            this.hero.x = level.startX;
+            this.hero.y = level.startY;
+        } else {
+            this.hero.x = this.heroStartX;
+            this.hero.y = this.heroStartY;
+        }
         this.game.addEntity(this.hero);
-
         this.hero.initializeWeapons();
     };
 
@@ -174,10 +188,19 @@ class SceneManager {
                 // New round
                 this.round++;
                 this.clearEntityArray();
-                this.loadRound(this.wave, this.round);
+                this.loadRound(this.level, this.wave, this.round);
             } else {
-                // TODO: Add a level ending
-                console.log("Level complete");
+                if (this.level < this.maxLevel) {
+                    // New level
+                    this.level++;
+                    this.wave = 1;
+                    this.round = 1;
+                    this.clearEntityArray();
+                    this.hero = new Hero(this.game, 50, 50);
+                    this.loadRound(this.level, this.wave, this.round);
+                } else {
+                    // TODO: Game complete screen
+                }
             }
         }
 
@@ -195,7 +218,7 @@ class SceneManager {
                 this.wave++;
                 this.round = 1;
                 this.clearEntityArray();
-                this.loadRound(this.wave, this.round);
+                this.loadRound(this.level, this.wave, this.round);
             }
         }
 
