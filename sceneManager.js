@@ -180,9 +180,18 @@ class SceneManager {
         }
 
         if (this.game.getEnemyCount() === 0) {
-            if (this.round === LEVELS.LEVEL_ONE.waves[this.wave - 1].length && this.wave < LEVELS.LEVEL_ONE.waves.length) {
+            let level;
+            if (this.level === 1) {
+                level = LEVELS.LEVEL_ONE;
+            } else if (this.level === 2) {
+                level = LEVELS.LEVEL_TWO;
+            } else {
+                level = LEVELS.LEVEL_THREE;
+            }
+
+            if (this.round === level.waves[this.wave - 1].length && this.wave < level.waves.length) {
                 this.startIntermission();
-            } else if (this.round < LEVELS.LEVEL_ONE.waves[this.wave - 1].length && this.wave < LEVELS.LEVEL_ONE.waves.length) {
+            } else if (this.round < level.waves[this.wave - 1].length && this.wave < level.waves.length) {
                 this.heroStartX = this.hero.getX();
                 this.heroStartY = this.hero.getY();
                 // New round
