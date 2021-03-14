@@ -140,6 +140,7 @@ class SceneManager {
                 that.jukeboxPlaying = false;
                 that.currentSong = (that.currentSong + 1) % that.jukebox.length;
             });
+            that.currentSong = (that.currentSong + 1) % that.jukebox.length;
         }
 
         if (this.game.gameStart && this.isInIntermission && !this.interPlaying) {
