@@ -9,6 +9,10 @@ class Sword {
         this.state = 0; // 0 = not equipped, 1 = secondary weapon, 2 = primary weapon, 3 = attacking
         this.facing = 0; // 0 = east, 1 = north, 2 = west, 3 = south
 
+        this.attackAnimationDuration = 0.10;
+        this.attackAnimationElapsedTime = 0;
+        this.attacking = false;
+
         this.attackDamage = 35;
         this.attackDamageIncrease = 5; // attack damage increase per upgrade
         this.attackDamageUpgradeLevel = 0;
@@ -34,7 +38,7 @@ class Sword {
 
     update() {
         this.elapsedTime += this.game.clockTick;
-        if (this.state === 3 && this.elapsedTime >= this.attackCooldown) {
+        if (this.attacking && this.elapsedTime >= this.attackCooldown) {
             ASSET_MANAGER.playAsset("./sounds/sword.mp3");
             var that = this;
             this.game.entities.forEach(function (entity) {
@@ -58,11 +62,16 @@ class Sword {
                     }
                 }
             });
-            this.state = 2;
+            this.attacking = false;
+            this.state = 3;
         }
 
         if (this.state === 3) {
-            this.state = 2;
+            this.attackAnimationElapsedTime += this.game.clockTick;
+            if (this.attackAnimationElapsedTime >= this.attackAnimationDuration) {
+                this.state = 2;
+                this.attackAnimationElapsedTime = 0;
+            }
         }
 
         this.updateBB();
@@ -161,7 +170,7 @@ class Sword {
     }
 
     attack(specificTargetExists, targetX, targetY) {
-        this.state = 3;
+        this.attacking = true;
     }
 
     setNotEquipped() {
