@@ -14,7 +14,7 @@ class SceneManager {
         this.heroStartX = LEVELS.LEVEL_ONE.startX;
         this.heroStartY = LEVELS.LEVEL_ONE.startY;
 
-        this.shop = new Shop(game, this.hero, this);
+        this.shop = new Shop(game, this.hero);
 
         this.map = null;
 
@@ -206,6 +206,11 @@ class SceneManager {
                     this.round = 1;
                     this.clearEntityArray();
                     this.hero = new Hero(this.game, 50, 50);
+                    this.shop.sword = this.hero.sword;
+                    this.shop.crossbow = this.hero.crossbow;
+                    this.shop.pistol = this.hero.pistol;
+                    this.shop.shotgun = this.hero.shotgun;
+                    this.shop.grenades = this.hero.grenades;
                     this.loadRound(this.level, this.wave, this.round);
                 } else {
                     // TODO: Game complete screen

@@ -215,12 +215,16 @@ class Shop {
         $("#swordTab").css("display", "block");
 
         $("#shop").focus();
+
+        this.game.shopIsOpen = true;
     }
 
     close() {
         $("#shop").css("display", "none");
 
         $("#gameWorld").focus();
+
+        this.game.shopIsOpen = false;
     }
 
     toggle() {
@@ -229,6 +233,5 @@ class Shop {
         } else {
             this.open();
         }
-        this.game.shopIsOpen = !this.game.shopIsOpen;
     }
 }
