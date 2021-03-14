@@ -7,6 +7,7 @@ class GameEngine {
         this.ctx = null;
 
         this.gameStart = false;
+        this.paused = false;
 
         this.click = null;
         this.mouse = null;
@@ -132,6 +133,9 @@ class GameEngine {
                 case "KeyT":
                     that.toggleShop = true;
                     break;
+                case "KeyP":
+                    that.paused = !that.paused;
+                    break;
             }
         }, false);
 
@@ -219,7 +223,9 @@ class GameEngine {
 
     loop() {
         this.clockTick = this.timer.tick();
-        this.update();
+        if (!this.paused) {
+            this.update();
+        }
         this.draw();
     };
 }
