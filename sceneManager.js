@@ -9,16 +9,20 @@ class SceneManager {
         this.elapsedTime = 0;
         this.transparency = 0; //Game Over black screen
         this.transparency2 = 0; //Game Over Text
+        this.transparency3 = 0; // End Screen
+        this.endTimer = 0;
 
         this.hero = new Hero(game, 50, 50);
         this.heroStartX = LEVELS.LEVEL_ONE.startX;
         this.heroStartY = LEVELS.LEVEL_ONE.startY;
 
-        this.shop = new Shop(game, this.hero, this);
+        this.shop = new Shop(game, this.hero);
 
         this.map = null;
 
-        this.wave = 1; // current wave
+        this.maxLevel = 3;
+        this.level = 3; // current level
+        this.wave = 10; // current wave
         this.round = 1; // current round
 
         this.intermissionLength = 30; // seconds
@@ -35,14 +39,22 @@ class SceneManager {
         let mainMenu = new StartMenu(this.game);
         this.game.addEntity(mainMenu);
 
-        this.loadRound(this.wave, this.round);
+        this.loadRound(this.level, this.wave, this.round);
     };
 
-    loadRound(wave, round) {
-        console.log("wave: " + wave + ", round: " + round);
+    loadRound(levelNumber, wave, round) {
         this.hudVisible = true;
 
-        this.map = new Map(this.game, LEVELS.LEVEL_ONE);
+        let level;
+        if (levelNumber === 1) {
+            level = LEVELS.LEVEL_ONE;
+        } else if (levelNumber === 2) {
+            level = LEVELS.LEVEL_TWO;
+        } else {
+            level = LEVELS.LEVEL_THREE;
+        }
+
+        this.map = new Map(this.game, level);
         this.game.addEntity(this.map);
         this.map.init();
 
@@ -59,11 +71,11 @@ class SceneManager {
         this.game.addEntity(armorPack2);
 
         // Gets the properties of this wave and round
-        let spawnPoints = LEVELS.LEVEL_ONE.spawnPoints;
-        let zombieCount = LEVELS.LEVEL_ONE.waves[wave - 1][round - 1].zombies;
-        let skeletonCount = LEVELS.LEVEL_ONE.waves[wave - 1][round - 1].skeletons;
-        let witchCount = LEVELS.LEVEL_ONE.waves[wave - 1][round - 1].witches;
-        let dragonCount = LEVELS.LEVEL_ONE.waves[wave - 1][round - 1].dragons;
+        let spawnPoints = level.spawnPoints;
+        let zombieCount = level.waves[wave - 1][round - 1].zombies;
+        let skeletonCount = level.waves[wave - 1][round - 1].skeletons;
+        let witchCount = level.waves[wave - 1][round - 1].witches;
+        let dragonCount = level.waves[wave - 1][round - 1].dragons;
 
         let count = zombieCount + skeletonCount + witchCount + dragonCount;
         this.game.setEnemyCount(count);
@@ -75,35 +87,39 @@ class SceneManager {
             let enemyNumber = randomInt(4);
             if (enemyNumber === 0 && zombieCount > 0) {
                 let enemy = new Zombie(this.game, this.hero, wave, round,
-                    LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].x, LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].y);
+                    level.spawnPoints[spawnPoint].x, level.spawnPoints[spawnPoint].y);
                 zombieCount--;
                 count--;
                 this.game.addEntity(enemy);
             } else if (enemyNumber === 1 && skeletonCount > 0) {
                 let enemy = new Skeleton(this.game, this.hero, wave, round,
-                    LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].x, LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].y);
+                    level.spawnPoints[spawnPoint].x, level.spawnPoints[spawnPoint].y);
                 skeletonCount--;
                 count--;
                 this.game.addEntity(enemy);
             } else if (enemyNumber === 2 && witchCount > 0) {
                 let enemy = new Witch(this.game, this.hero, wave, round,
-                    LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].x, LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].y);
+                    level.spawnPoints[spawnPoint].x, level.spawnPoints[spawnPoint].y);
                 witchCount--;
                 count--;
                 this.game.addEntity(enemy);
             } else if (enemyNumber === 3 && dragonCount > 0) {
                 let enemy = new Dragon(this.game, this.hero,
-                    LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].x, LEVELS.LEVEL_ONE.spawnPoints[spawnPoint].y);
+                    level.spawnPoints[spawnPoint].x, level.spawnPoints[spawnPoint].y);
                 dragonCount--;
                 count--;
                 this.game.addEntity(enemy);
             }
         }
 
-        this.hero.x = this.heroStartX;
-        this.hero.y = this.heroStartY;
+        if (wave === 1 && round === 1) {
+            this.hero.x = level.startX;
+            this.hero.y = level.startY;
+        } else {
+            this.hero.x = this.heroStartX;
+            this.hero.y = this.heroStartY;
+        }
         this.game.addEntity(this.hero);
-
         this.hero.initializeWeapons();
     };
 
@@ -128,6 +144,7 @@ class SceneManager {
                 that.jukeboxPlaying = false;
                 that.currentSong = (that.currentSong + 1) % that.jukebox.length;
             });
+            that.currentSong = (that.currentSong + 1) % that.jukebox.length;
         }
 
         if (this.game.gameStart && this.isInIntermission && !this.interPlaying) {
@@ -168,18 +185,42 @@ class SceneManager {
         }
 
         if (this.game.getEnemyCount() === 0) {
-            if (this.round === LEVELS.LEVEL_ONE.waves[this.wave - 1].length && this.wave < LEVELS.LEVEL_ONE.waves.length) {
+            let level;
+            if (this.level === 1) {
+                level = LEVELS.LEVEL_ONE;
+            } else if (this.level === 2) {
+                level = LEVELS.LEVEL_TWO;
+            } else {
+                level = LEVELS.LEVEL_THREE;
+            }
+
+            if (this.round === level.waves[this.wave - 1].length && this.wave < level.waves.length) {
                 this.startIntermission();
-            } else if (this.round < LEVELS.LEVEL_ONE.waves[this.wave - 1].length && this.wave < LEVELS.LEVEL_ONE.waves.length) {
+            } else if (this.round < level.waves[this.wave - 1].length && this.wave < level.waves.length) {
                 this.heroStartX = this.hero.getX();
                 this.heroStartY = this.hero.getY();
                 // New round
                 this.round++;
                 this.clearEntityArray();
-                this.loadRound(this.wave, this.round);
+                this.loadRound(this.level, this.wave, this.round);
             } else {
-                // TODO: Add a level ending
-                console.log("Level complete");
+                if (this.level < this.maxLevel) {
+                    // New level
+                    this.level++;
+                    this.wave = 1;
+                    this.round = 1;
+                    this.clearEntityArray();
+                    this.hero = new Hero(this.game, 50, 50);
+                    this.shop.sword = this.hero.sword;
+                    this.shop.crossbow = this.hero.crossbow;
+                    this.shop.pistol = this.hero.pistol;
+                    this.shop.shotgun = this.hero.shotgun;
+                    this.shop.grenades = this.hero.grenades;
+                    this.loadRound(this.level, this.wave, this.round);
+                } else {
+                    // Game Complete
+                    this.win = 1;
+                }
             }
         }
 
@@ -197,7 +238,7 @@ class SceneManager {
                 this.wave++;
                 this.round = 1;
                 this.clearEntityArray();
-                this.loadRound(this.wave, this.round);
+                this.loadRound(this.level, this.wave, this.round);
             }
         }
 
@@ -223,6 +264,7 @@ class SceneManager {
     }
 
     draw(ctx) {
+        this.ctx = ctx;
         let margin = 5;
         ctx.font = '20px "Noto Sans", sans-serif';
         ctx.textAlign = "left";
@@ -270,7 +312,7 @@ class SceneManager {
         if (this.isInIntermission) {
             ctx.fillStyle = "White";
             ctx.fillText("Shop is Available", this.game.surfaceWidth - margin, margin);
-            ctx.fillText("Time Remaining: " + Math.round(this.intermissionLength -
+            ctx.fillText("Time Remaining: " + Math.ceil(this.intermissionLength -
                 this.intermissionElapsedTime), this.game.surfaceWidth - margin, 25);
         } else {
             ctx.fillStyle = "White";
@@ -292,16 +334,20 @@ class SceneManager {
                 // Main Menu button function
                 if (mouseX >= menuX && mouseX <= menuX + 200 && mouseY >= buttonY && mouseY <= buttonY + 50) { 
                     console.log("Main Menu button clicked");
-                    this.reset(true);
+                    this.reset(1);
     
                     
                 // Rstart button function
                 } else if (mouseX >= restartX && mouseX <= restartX + 200 && mouseY >= buttonY && mouseY <= buttonY + 50) { 
                     console.log("Reset button clicked");
-                    this.reset(false);
+                    this.reset(0);
                     
                 };
             };
+        }
+
+        if (this.win) {
+            this.endScreen(ctx);
         }
     };
 
@@ -336,7 +382,7 @@ class SceneManager {
 
             let width = 200;
             let height = 50;
-            let menuX = this.game.surfaceWidth / 2 - 200; // x-coordinates for buttons
+            let menuX = this.game.surfaceWidth / 2 - 200; // coordinates for buttons
             let restartX = this.game.surfaceWidth / 2 + 20;
             let buttonY = this.game.surfaceHeight / 2 + 40; 
             let buttonOffset = 4;
@@ -347,11 +393,11 @@ class SceneManager {
             ctx.fillStyle = "Gray";
             ctx.fillRect(menuX + buttonOffset, buttonY + buttonOffset, width - 2 * buttonOffset, height - 2 * buttonOffset);
 
-            ctx.font = '30px "Press Start 2P"';  
-            ctx.fillStyle = "yellow";
-            // ctx.textAlign = "center";
-            // ctx.textBaseline = "middle";
-            ctx.fillText("Main Menu", menuX + this.width / 2, buttonY + this.height / 2);
+            ctx.font = '30px "Noto Serif"';
+            ctx.fillStyle = "Black";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText("Main Menu", menuX + width / 2, buttonY + height / 2);
             ctx.font = '30px "Press Start 2P"';   
 
 
@@ -361,11 +407,11 @@ class SceneManager {
             ctx.fillStyle = "Gray"; 
             ctx.fillRect(restartX + buttonOffset, buttonY + buttonOffset, width - 2 * buttonOffset, height - 2 * buttonOffset);
 
-            ctx.font = '30px "Press Start 2P"';  
-            ctx.fillStyle = "yellow";
-            // ctx.textAlign = "center";
-            // ctx.textBaseline = "middle";
-            ctx.fillText("Restart", restartX + this.width / 2, buttonY + this.height / 2);
+            ctx.font = '30px "Noto Serif"';
+            ctx.fillStyle = "Black";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText("Restart", restartX + width / 2, buttonY + height / 2);
             ctx.font = '30px "Press Start 2P"'; 
         };  
     };
@@ -386,14 +432,68 @@ class SceneManager {
         this.elapsedTime = 0;
         this.transparency = 0;
         this.transparency2 = 0;
-        this.game.wave = 1;
-        this.game.round = 1;
+        this.transparency3 = 0;
+        this.level = 1;
+        this.wave = 1;
+        this.round = 1;
+        this.heroIsDead = false;
         this.hudVisible = true;
+        this.game.gameStart = false;
 
         if (menu) {
             let mainMenu = new StartMenu(this.game);
             this.game.addEntity(mainMenu);
+            this.loadRound(this.level, this.wave, this.round);
+        } else {
+            this.game.gameStart = true;
+            this.loadRound(this.level, this.wave, this.round);
         }
-        this.loadRound(this.wave, this.round);
+
     };
+
+    endScreen(ctx) {
+        this.endTimer += this.game.clockTick;
+        ctx.fillStyle = "Blue";
+        if (this.transparency3 < 0.50) { 
+            this.transparency3 += 0.005;
+        };
+        ctx.globalAlpha = this.transparency3;
+        ctx.fillRect(0, 0, this.game.surfaceWidth, this.game.surfaceHeight);
+
+        ctx.fillStyle = "Cyan";
+        ctx.fillRect( 10,  10, this.game.surfaceWidth - 20, this.game.surfaceHeight - 20);
+
+        ctx.globalAlpha = 1;
+        
+        if (this.endTimer > 1) {
+            let num = Math.floor(this.endTimer) % 2;
+            ctx.fillStyle = "Black";
+            ctx.font = '90px "Brush Script MT"';
+            let str = "CONGRATULATIONS!";
+            ctx.fillText(str, 900, 100);
+            if (num) {
+                ctx.fillStyle = "Blue";
+            } else {
+                ctx.fillStyle = "White";
+            }
+            ctx.fillText(str, 896, 96);
+            ctx.font = '30px "Monaco"';
+            let str2 = "As the last husk fell, there stood one hero";
+            let str3 = "among the corpses. To preserve his story for"; 
+            let str4 = "future generations the developers put a";
+            let str5 = "  tupperware lid on it. Now all who wish"; 
+            let str6 = "to live through this heroic story need only";
+            let str7 = "open the fridge. Poggers."; 
+            let str8 = "Thank you for playing!";
+
+            ctx.fillStyle = "White"
+            ctx.fillText(str2, 896, 196);
+            ctx.fillText(str3, 896, 246);
+            ctx.fillText(str4, 896, 296);
+            ctx.fillText(str5, 896, 346);
+            ctx.fillText(str6, 896, 396);
+            ctx.fillText(str7, 896, 446);
+            ctx.fillText(str8, 896, 546);
+        }
+    }
 }
