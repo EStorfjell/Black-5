@@ -32,10 +32,10 @@ class SceneManager {
         this.interPlaying = false;
         this.currentSong = 0;
 
+        let menu = new StartMenu(this.game, this.level);
+        this.game.addEntity(menu);
+      
         this.heroIsDead = false;
-
-        let mainMenu = new StartMenu(this.game);
-        this.game.addEntity(mainMenu);
 
         this.loadRound(this.level, this.wave, this.round);
     };
@@ -214,6 +214,9 @@ class SceneManager {
                     this.shop.pistol = this.hero.pistol;
                     this.shop.shotgun = this.hero.shotgun;
                     this.shop.grenades = this.hero.grenades;
+
+                    let menu = new StartMenu(this.game, this.level);
+                    this.game.addEntity(menu);
                     this.loadRound(this.level, this.wave, this.round);
                 } else {
                     // TODO: Game complete screen
