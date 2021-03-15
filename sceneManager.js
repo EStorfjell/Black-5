@@ -9,6 +9,8 @@ class SceneManager {
         this.elapsedTime = 0;
         this.transparency = 0; //Game Over black screen
         this.transparency2 = 0; //Game Over Text
+        this.transparency3 = 0; // End Screen
+        this.endTimer = 0;
 
         this.hero = new Hero(game, 50, 50);
         this.heroStartX = LEVELS.LEVEL_ONE.startX;
@@ -32,10 +34,10 @@ class SceneManager {
         this.interPlaying = false;
         this.currentSong = 0;
 
-        let menu = new StartMenu(this.game, this.level);
-        this.game.addEntity(menu);
-      
         this.heroIsDead = false;
+
+        let mainMenu = new StartMenu(this.game);
+        this.game.addEntity(mainMenu);
 
         this.loadRound(this.level, this.wave, this.round);
     };
@@ -214,12 +216,10 @@ class SceneManager {
                     this.shop.pistol = this.hero.pistol;
                     this.shop.shotgun = this.hero.shotgun;
                     this.shop.grenades = this.hero.grenades;
-
-                    let menu = new StartMenu(this.game, this.level);
-                    this.game.addEntity(menu);
                     this.loadRound(this.level, this.wave, this.round);
                 } else {
-                    // TODO: Game complete screen
+                    // Game Complete
+                    this.win = 1;
                 }
             }
         }
@@ -264,6 +264,7 @@ class SceneManager {
     }
 
     draw(ctx) {
+        this.ctx = ctx;
         let margin = 5;
         ctx.font = '20px "Noto Sans", sans-serif';
         ctx.textAlign = "left";
@@ -343,6 +344,10 @@ class SceneManager {
                     
                 };
             };
+        }
+
+        if (this.win) {
+            this.endScreen(ctx);
         }
     };
 
@@ -427,6 +432,7 @@ class SceneManager {
         this.elapsedTime = 0;
         this.transparency = 0;
         this.transparency2 = 0;
+        this.transparency3 = 0;
         this.level = 1;
         this.wave = 1;
         this.round = 1;
@@ -436,7 +442,7 @@ class SceneManager {
 
         if (menu) {
             let mainMenu = new StartMenu(this.game);
-        this.game.addEntity(mainMenu);
+            this.game.addEntity(mainMenu);
             this.loadRound(this.level, this.wave, this.round);
         } else {
             this.game.gameStart = true;
@@ -444,4 +450,50 @@ class SceneManager {
         }
 
     };
+
+    endScreen(ctx) {
+        this.endTimer += this.game.clockTick;
+        ctx.fillStyle = "Blue";
+        if (this.transparency3 < 0.50) { 
+            this.transparency3 += 0.005;
+        };
+        ctx.globalAlpha = this.transparency3;
+        ctx.fillRect(0, 0, this.game.surfaceWidth, this.game.surfaceHeight);
+
+        ctx.fillStyle = "Cyan";
+        ctx.fillRect( 10,  10, this.game.surfaceWidth - 20, this.game.surfaceHeight - 20);
+
+        ctx.globalAlpha = 1;
+        
+        if (this.endTimer > 1) {
+            let num = Math.floor(this.endTimer) % 2;
+            ctx.fillStyle = "Black";
+            ctx.font = '90px "Brush Script MT"';
+            let str = "CONGRATULATIONS!";
+            ctx.fillText(str, 900, 100);
+            if (num) {
+                ctx.fillStyle = "Blue";
+            } else {
+                ctx.fillStyle = "White";
+            }
+            ctx.fillText(str, 896, 96);
+            ctx.font = '30px "Monaco"';
+            let str2 = "As the last husk fell, there stood one hero";
+            let str3 = "among the corpses. To preserve his story for"; 
+            let str4 = "future generations the developers put a";
+            let str5 = "  tupperware lid on it. Now all who wish"; 
+            let str6 = "to live through this heroic story need only";
+            let str7 = "open the fridge. Poggers."; 
+            let str8 = "Thank you for playing!";
+
+            ctx.fillStyle = "White"
+            ctx.fillText(str2, 896, 196);
+            ctx.fillText(str3, 896, 246);
+            ctx.fillText(str4, 896, 296);
+            ctx.fillText(str5, 896, 346);
+            ctx.fillText(str6, 896, 396);
+            ctx.fillText(str7, 896, 446);
+            ctx.fillText(str8, 896, 546);
+        }
+    }
 }
