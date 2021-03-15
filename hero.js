@@ -41,7 +41,9 @@ class Hero {
         this.hasShotgun = false;
         this.hasSword = true;
         this.hasGrenades = false;
-		
+
+        this.bonkDone = true;
+
         this.currentWeapon = this.primaryWeapon;
 
         this.walkSpeed = 200; // pixels per second
@@ -61,6 +63,7 @@ class Hero {
     }
 
     update() {
+        let that = this;
         let walkOrth = this.walkSpeed * this.game.clockTick;
         let walkDiag = walkOrth / Math.SQRT2;
         let delX = 0;
@@ -139,7 +142,7 @@ class Hero {
         } else {
             this.currentWeapon = this.primaryWeapon;
         }
-		    this.ammo = this.primaryWeapon.ammo;
+        this.ammo = this.primaryWeapon.ammo;
 
         this.crossbow.updateX(this.x);
         this.crossbow.updateY(this.y);
@@ -175,14 +178,24 @@ class Hero {
 
         this.updateBB();
 
+        if (this.wallWasHit && this.bonkDone) {
+            this.bonkDone = false;
+            let bonk = ASSET_MANAGER.playAsset("./sounds/bonk.mp3");
+            bonk.addEventListener("ended", function () {
+                that.bonkDone = true;
+            });
+            bonk.addEventListener("paused", function () {
+                that.bonkDone = true;
+            });
+        }
+        this.wallWasHit = false;
+
         // Collision check and handling
-        let that = this;
         this.game.entities.forEach(function (entity) {
             if (entity.BB && that.BB.collide(entity.BB)) {
                 if (entity instanceof Wall) {
-                    that.lastWallHit = that.wallHit;
+                    that.wallWasHit = true;
                     that.wallHit = entity;
-                    if (that.wallHit !== that.lastWallHit) ASSET_MANAGER.playAsset("./sounds/bonk.mp3");
                     if (delX > 0 && that.lastBB.right <= entity.BB.left) { // collision from left
                         delX = 0;
                         that.x = entity.BB.left - that.width;
