@@ -7,8 +7,6 @@ class Dragon {
         this.width = 189; // character width
         this.height = 131; // character height
 
-        this.health = 350;
-
         this.heading = 0; // radians counterclockwise from East
         this.velocity = {x: 0, y: 0};
 
@@ -18,9 +16,7 @@ class Dragon {
         this.flyAnimSpeed = 0.15; // seconds per frame
         this.breathLoc = [{x: 155, y: 95}, {x: 95, y: 5}, {x: 34, y: 95}, {x: 95, y: 107}]; // mouth locations
 
-        this.maxSpeed = 100; // pixels per second
         this.acceleration = 50; // pixels per second per second
-        this.turnSpeed = Math.PI / 3; // radians turned per second
 
         this.coolDown = 2;
         this.burstDelay = 0.05;
@@ -28,11 +24,13 @@ class Dragon {
         this.burst = 4;
         this.timer = 0;
 
+        this.init();
+
         this.updateBB();
 
         this.animations = [];
         this.loadAnimations();
-    };
+    }
 
     update() {
         let turnTickMax = this.turnSpeed * this.game.clockTick;
@@ -103,7 +101,7 @@ class Dragon {
         // TODO: Collisions
 
         this.updateBB();
-    };
+    }
 
     draw(ctx) {
         // TODO: Change animation system so wing state is preserved across "facing" changes
@@ -123,13 +121,13 @@ class Dragon {
             ctx.lineTo(endX, endY);
             ctx.stroke();
         }
-    };
+    }
 
     updateBB() {
         // TODO: Make bounding box change shape to match dragon's sprite
         this.lastBB = this.BB;
         this.BB = new BoundingBox(this.x, this.y, this.width, this.height);
-    };
+    }
 
     loadAnimations() {
         for (let i = 0; i < 1; i++) { // actions
@@ -148,7 +146,7 @@ class Dragon {
         this.animations[0][2] = new Animator(this.spritesheet, 10, 433, this.width, this.height, 4, this.flyAnimSpeed, 10, false, true);
         // south
         this.animations[0][3] = new Animator(this.spritesheet, 10, 292, this.width, this.height, 4, this.flyAnimSpeed, 10, false, true);
-    };
+    }
 
     relationToTarget(target) {
         // Determine where the target is relative to dragon
@@ -177,7 +175,7 @@ class Dragon {
         }
         relation.distance = Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2));
         return relation;
-    };
+    }
 
     takeDamage(damage, knockback = 0, xVectorComp = 0, yVectorComp = 0) {
         this.health -= damage;
@@ -199,13 +197,25 @@ class Dragon {
             this.x += deltaX;
             this.y += deltaY;
         }
-    };
+    }
 
     getX() {
         return this.x;
-    };
+    }
 
     getY() {
         return this.y;
-    };
+    }
+
+    init() {
+        if (this.game.camera.wave <= 5) {
+            this.health = 350;
+            this.maxSpeed = 100; // pixels per second
+            this.turnSpeed = Math.PI / 3; // radians turned per second
+        } else {
+            this.health = 500;
+            this.maxSpeed = 150; // pixels per second
+            this.turnSpeed = Math.PI / 2; // radians turned per second
+        }
+    }
 }
