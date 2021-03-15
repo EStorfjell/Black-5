@@ -77,10 +77,12 @@ class Skeleton {
         this.crossbow.updateY(this.y);
         this.crossbow.updateFacing(this.facing);
 
-        let heroDeltaX = (heroX - this.x) / heroDistance;
-        let heroDeltaY = (heroY - this.y) / heroDistance;
-        this.velocity.x += heroDeltaX * this.accelerationToPlayer / (heroDistance * heroDistance);
-        this.velocity.y += heroDeltaY * this.accelerationToPlayer / (heroDistance * heroDistance);
+        if (heroDistance != 0) {
+            let heroDeltaX = (heroX - this.x) / heroDistance;
+            let heroDeltaY = (heroY - this.y) / heroDistance;
+            this.velocity.x += heroDeltaX * this.accelerationToPlayer / (heroDistance * heroDistance);
+            this.velocity.y += heroDeltaY * this.accelerationToPlayer / (heroDistance * heroDistance);
+        }
 
         // World borders
         if (this.x <= 0) this.x = 0;
@@ -122,14 +124,16 @@ class Skeleton {
             if (entity instanceof Wall) {
                 let wallDistance = Math.sqrt((that.x - entity.centerX) * (that.x - entity.centerX) +
                     (that.y - entity.centerY) * (that.y - entity.centerY));
-                let wallDeltaX = (entity.centerX - that.x) / wallDistance;
-                let wallDeltaY = (entity.centerY - that.y) / wallDistance;
-                that.velocity.x -= wallDeltaX * that.accelerationFromWall / (wallDistance * wallDistance);
-                that.velocity.y -= wallDeltaY * that.accelerationFromWall / (wallDistance * wallDistance);
+                if (wallDistance != 0) {
+                    let wallDeltaX = (entity.centerX - that.x) / wallDistance;
+                    let wallDeltaY = (entity.centerY - that.y) / wallDistance;
+                    that.velocity.x -= wallDeltaX * that.accelerationFromWall / (wallDistance * wallDistance);
+                    that.velocity.y -= wallDeltaY * that.accelerationFromWall / (wallDistance * wallDistance);
+                }
             } else if (entity instanceof Zombie || entity instanceof Skeleton || entity instanceof Witch) {
                 let enemyDistance = Math.sqrt((that.x - entity.getX()) * (that.x - entity.getX()) +
                     (that.y - entity.getY()) * (that.y - entity.getY()));
-                if (enemyDistance > 0) {
+                if (enemyDistance != 0) {
                     let enemyDeltaX = (entity.getX() - that.x) / enemyDistance;
                     let enemyDeltaY = (entity.getY() - that.y) / enemyDistance;
                     that.velocity.x -= enemyDeltaX * that.accelerationFromEnemy / (enemyDistance * enemyDistance);
@@ -224,15 +228,17 @@ class Skeleton {
         if (knockback != 0) {
             // TODO: Allow a knockback to be applied over a period of time rather than all at once
             // The angle of the knockback measured relative to the x-axis
-            let angle = Math.atan(Math.abs(yVectorComp) / Math.abs(xVectorComp));
-            // The new x-coordinate of the skeleton
-            let deltaX = knockback * Math.cos(angle);
-            // The new y-coordinate of the skeleton
-            let deltaY = knockback * Math.sin(angle);
-            if (xVectorComp < 0) deltaX = -deltaX;
-            if (yVectorComp < 0) deltaY = -deltaY;
-            this.x += deltaX;
-            this.y += deltaY;
+            if (xVectorComp != 0) {
+                let angle = Math.atan(Math.abs(yVectorComp) / Math.abs(xVectorComp));
+                // The new x-coordinate of the skeleton
+                let deltaX = knockback * Math.cos(angle);
+                // The new y-coordinate of the skeleton
+                let deltaY = knockback * Math.sin(angle);
+                if (xVectorComp < 0) deltaX = -deltaX;
+                if (yVectorComp < 0) deltaY = -deltaY;
+                this.x += deltaX;
+                this.y += deltaY;
+            }
         }
     }
 }
