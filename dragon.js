@@ -40,7 +40,6 @@ class Dragon {
         // TODO: Behavior
         let relationToPlayer = this.relationToTarget(this.hero);
 
-        // TODO: Finish turning
         if (relationToPlayer.direction > this.heading && relationToPlayer.direction <= this.heading + Math.PI) {
             this.heading = Math.min(relationToPlayer.direction, this.heading + turnTickMax);
         } else if (relationToPlayer.direction < this.heading && relationToPlayer.direction > this.heading - Math.PI) {
@@ -139,13 +138,17 @@ class Dragon {
 
         // flying
         // east
-        this.animations[0][0] = new Animator(this.spritesheet, 10, 151, this.width, this.height, 4, this.flyAnimSpeed, 10, false, true);
+        this.animations[0][0] = new Animator(this.spritesheet, 10, 151, this.width, this.height, 4, this.flyAnimSpeed,
+            10, false, true);
         // north
-        this.animations[0][1] = new Animator(this.spritesheet, 10, 10, this.width, this.height, 4, this.flyAnimSpeed, 10, false, true);
+        this.animations[0][1] = new Animator(this.spritesheet, 10, 10, this.width, this.height, 4, this.flyAnimSpeed,
+            10, false, true);
         // west
-        this.animations[0][2] = new Animator(this.spritesheet, 10, 433, this.width, this.height, 4, this.flyAnimSpeed, 10, false, true);
+        this.animations[0][2] = new Animator(this.spritesheet, 10, 433, this.width, this.height, 4, this.flyAnimSpeed,
+            10, false, true);
         // south
-        this.animations[0][3] = new Animator(this.spritesheet, 10, 292, this.width, this.height, 4, this.flyAnimSpeed, 10, false, true);
+        this.animations[0][3] = new Animator(this.spritesheet, 10, 292, this.width, this.height, 4, this.flyAnimSpeed,
+            10, false, true);
     }
 
     relationToTarget(target) {
