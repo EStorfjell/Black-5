@@ -127,6 +127,12 @@ class Shop {
     }
 
     updateValues() {
+        this.sword = this.hero.sword;
+        this.crossbow = this.hero.crossbow;
+        this.pistol = this.hero.pistol;
+        this.shotgun = this.hero.shotgun;
+        this.grenades = this.hero.grenades;
+
         $(".currentExperience").html(this.hero.exp.getExp());
 
         $(".swordCost").html(this.sword.weaponCost);
