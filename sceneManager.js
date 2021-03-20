@@ -36,7 +36,7 @@ class SceneManager {
 
         this.heroIsDead = false;
 
-        let mainMenu = new StartMenu(this.game);
+        let mainMenu = new StartMenu(this.game, this.level);
         this.game.addEntity(mainMenu);
 
         this.loadRound(this.level, this.wave, this.round);
@@ -441,7 +441,7 @@ class SceneManager {
         this.game.gameStart = false;
 
         if (menu) {
-            let mainMenu = new StartMenu(this.game);
+            let mainMenu = new StartMenu(this.game, this.level);
             this.game.addEntity(mainMenu);
             this.loadRound(this.level, this.wave, this.round);
         } else {
